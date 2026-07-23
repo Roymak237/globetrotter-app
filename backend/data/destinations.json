@@ -1,0 +1,146 @@
+[
+  {
+    "id": "dest-001",
+    "name": "Kribi",
+    "region": "South",
+    "description": "Pristine beaches, warm Atlantic waters, and the famous Lobe Waterfall. A perfect beach getaway in Cameroon's South region.",
+    "tags": ["beach", "relaxation", "nature", "waterfall"],
+    "avg_cost_per_day": 25000,
+    "highlights": ["Lobe Waterfall", "Grand Batanga Beach", "Chimpanzee Island"]
+  },
+  {
+    "id": "dest-002",
+    "name": "Mount Cameroon",
+    "region": "Southwest",
+    "description": "The highest peak in West Africa (4,095m). Hike through lush rainforest, past steaming lava fields, to the summit near Limbe.",
+    "tags": ["hiking", "adventure", "nature", "mountain"],
+    "avg_cost_per_day": 45000,
+    "highlights": ["Summit hike", "Buea town", "Limbe black sand beaches"]
+  },
+  {
+    "id": "dest-003",
+    "name": "Foumban",
+    "region": "West",
+    "description": "Historic heart of the Bamoun Kingdom. Visit the Sultan's Palace, explore the vibrant craft market, and discover rich Bamileke heritage.",
+    "tags": ["culture", "history", "shopping", "museum"],
+    "avg_cost_per_day": 20000,
+    "highlights": ["Sultan's Palace", "Foumban Museum", "Craft workshops"]
+  },
+  {
+    "id": "dest-004",
+    "name": "Waza National Park",
+    "region": "Far North",
+    "description": "Premier wildlife destination in the Sahel. Spot elephants, giraffes, lions, and hartebeest on guided game drives through savanna woodland.",
+    "tags": ["wildlife", "safari", "nature", "adventure"],
+    "avg_cost_per_day": 40000,
+    "highlights": ["Game drives", "Bird watching", "Sahel landscape"]
+  },
+  {
+    "id": "dest-005",
+    "name": "Yaounde",
+    "region": "Centre",
+    "description": "Cameroon's verdant capital in the hills. Explore political landmarks, art galleries, bustling markets, and lush parks.",
+    "tags": ["city", "culture", "museum", "shopping"],
+    "avg_cost_per_day": 30000,
+    "highlights": ["Reunification Monument", "National Museum", "Biyeme Market", "Mount Febe"]
+  },
+  {
+    "id": "dest-006",
+    "name": "Douala",
+    "region": "Littoral",
+    "description": "Economic capital and cultural hub. Enjoy vibrant nightlife, river views, contemporary art, and the freshest seafood.",
+    "tags": ["city", "nightlife", "food", "beach"],
+    "avg_cost_per_day": 35000,
+    "highlights": ["La Nouvelle Liberté", "Douala Maritime Museum", "Bonanjo district"]
+  },
+  {
+    "id": "dest-007",
+    "name": "Bamenda",
+    "region": "Northwest",
+    "description": "Highland city with panoramic views, traditional grass-roofed architecture, and a rich cultural tapestry of the Northwest region.",
+    "tags": ["culture", "city", "hiking", "shopping"],
+    "avg_cost_per_day": 22000,
+    "highlights": ["Simplice Messing", "Njong Falls", "Local markets"]
+  },
+  {
+    "id": "dest-008",
+    "name": "Dschang",
+    "region": "West",
+    "description": "A charming highland town known for its steep valleys, cascading waterfalls, and cool climate. A nature lover's retreat.",
+    "tags": ["nature", "waterfall", "hiking", "relaxation"],
+    "avg_cost_per_day": 18000,
+    "highlights": ["Nachtigal Falls", "Dschang Lake", "University campus"]
+  },
+  {
+    "id": "dest-009",
+    "name": "Maroua",
+    "region": "Far North",
+    "description": "Cultural gateway to the Mandara Mountains. Experience unique Lamido palaces, craft pottery, and the rhythm of northern life.",
+    "tags": ["culture", "history", "shopping", "craft"],
+    "avg_cost_per_day": 20000,
+    "highlights": ["Lamido Palaces", "Pottery workshops", "Mandara Mountains"]
+  },
+  {
+    "id": "dest-010",
+    "name": "Bertoua",
+    "region": "East",
+    "description": "Explore the dense tropical forests of the East. Wildlife, pygmy settlements, and the serene Lobé River set this region apart.",
+    "tags": ["nature", "wildlife", "adventure", "forest"],
+    "avg_cost_per_day": 28000,
+    "highlights": ["Lobé River", "Dja Faunal Reserve", "Pygmy cultural visits"]
+  },
+  {
+    "id": "dest-011",
+    "name": "Ngaoundere",
+    "region": "Adamawa",
+    "description": "Gateway to the Adamawa Plateau. Ride horseback, visit crater lakes, and experience Fulani culture in this highland town.",
+    "tags": ["culture", "nature", "adventure", "lake"],
+    "avg_cost_per_day": 21000,
+    "highlights": ["Crater Lake", "Lamido Palace", "Horseback riding"]
+  },
+  {
+    "id": "dest-012",
+    "name": "Bafoussam",
+    "region": "West",
+    "description": "Commercial heart of the West region. Great food, warm hospitality, and easy access to nearby waterfalls and palaces.",
+    "tags": ["city", "food", "shopping", "culture"],
+    "avg_cost_per_day": 23000,
+    "highlights": ["Local cuisine", "Bamileke craft markets", "Metchie waterfalls"]
+  },
+  {
+    "id": "dest-013",
+    "name": "Kumbo",
+    "region": "Northwest",
+    "description": "Famous for its annual Nchinda horse festival and traditional sheep farming. A unique glimpse into Kom culture.",
+    "tags": ["culture", "event", "adventure", "history"],
+    "avg_cost_per_day": 19000,
+    "highlights": ["Nchinda Festival", "Traditional compounds", "Sheep markets"]
+  },
+  {
+    "id": "dest-014",
+    "name": "Ebolowa",
+    "region": "South",
+    "description": "A peaceful gateway to the South's dense rainforests. Ideal for eco-tourism and plantation tours of cocoa and palm oil.",
+    "tags": ["nature", "forest", "culture", "agriculture"],
+    "avg_cost_per_day": 17000,
+    "highlights": ["Cocoa plantations", "Rainforest walks", "Traditional villages"]
+  },
+  {
+    "id": "dest-015",
+    "name": "Garoua",
+    "region": "North",
+    "description": "Historic riverside town on the Benue River. A key trading hub with access to colonial forts and vibrant fishing culture.",
+    "tags": ["history", "culture", "city", "river"],
+    "avg_cost_per_day": 19000,
+    "highlights": ["Benue River cruises", "Rafai game reserve", "Grand Mosque"]
+  },
+  {
+    "id": "dest-016",
+    "name": "Limbe",
+    "region": "Southwest",
+    "description": "Black sand beaches against the backdrop of Mount Cameroon. Visit the Limbe Wildlife Centre and enjoy coastal charm.",
+    "tags": ["beach", "wildlife", "relaxation", "nature"],
+    "avg_cost_per_day": 27000,
+    "highlights": ["Limbe Wildlife Centre", "Sem beach", "Botanical Gardens"]
+  }
+]
