@@ -18,6 +18,7 @@ from app.auth import get_current_user
 from app.models import (
     get_itinerary_by_id,
     get_user_by_username,
+    get_all_shares,
     save_share,
     get_shares_for_itinerary,
     delete_share,
@@ -97,7 +98,7 @@ def revoke_share(share_id):
     if not username:
         return jsonify({"error": "authentication required"}), 401
 
-    share = next((s for s in __import__("app.models", fromlist=["get_all_shares"]).get_all_shares() if s.get("id") == share_id), None)
+    share = next((s for s in get_all_shares() if s.get("id") == share_id), None)
     if not share:
         return jsonify({"error": "share not found"}), 404
 

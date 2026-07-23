@@ -5,6 +5,7 @@ Flask application factory.
 """
 import os
 from flask import Flask
+from app.models import init_db
 
 
 def create_app():
@@ -14,6 +15,10 @@ def create_app():
     app.config["SECRET_KEY"] = os.environ.get(
         "SECRET_KEY", "globetrotter-secret-change-in-prod"
     )
+
+    # Initialise the database on startup (idempotent)
+    with app.app_context():
+        init_db()
 
     from app.auth import auth_bp
     from app.destinations import destinations_bp
