@@ -9,6 +9,10 @@ set(BINARY_NAME "globetrotter")
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
 cmake_policy(VERSION 3.14...3.25)
+if(POLICY CMP0175)
+  cmake_policy(SET CMP0175 OLD)
+endif()
+set(CMAKE_POLICY_DEFAULT_CMP0175 OLD)
 
 # Define build configuration option.
 get_property(IS_MULTICONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
@@ -31,6 +35,13 @@ set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 # Use Unicode for all projects.
 add_definitions(-DUNICODE -D_UNICODE)
+
+# Prevent parallel MSVC compilations from fighting over the same PDB file.
+add_compile_options(/FS)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /FS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FS")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /FS")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /FS")
 
 # Compilation settings that should be applied to most targets.
 #
@@ -56,6 +67,13 @@ add_subdirectory("runner")
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
+
+# webview_windows 0.4.0 uses the legacy coroutine header. Newer MSVC
+# toolchains require this explicit opt-in while the package is compiled.
+if(TARGET webview_windows_plugin)
+  target_compile_definitions(webview_windows_plugin PRIVATE
+    _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS)
+endif()
 
 
 # === Installation ===

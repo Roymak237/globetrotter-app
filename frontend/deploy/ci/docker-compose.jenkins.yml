@@ -1,0 +1,42 @@
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    image: kamergo-jenkins:lts
+    container_name: kamergo_jenkins
+    restart: unless-stopped
+    # Runs as the deploy user so the pipeline can write the release into the
+    # app directory, which is owned by that user on the host.
+    user: "${HOST_UID:?set HOST_UID in ci/.env}:${HOST_GID:?set HOST_GID in ci/.env}"
+    # Served through the host nginx at https://<domain>/jenkins/, so the port is
+    # bound to loopback instead of being exposed publicly.
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:50000:50000"
+    environment:
+      - JENKINS_OPTS=--prefix=/jenkins
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Dhudson.model.DownloadService.noSignatureCheck=true
+      - JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-admin}
+      - JENKINS_ADMIN_PASSWORD=${JENKINS_ADMIN_PASSWORD:?set JENKINS_ADMIN_PASSWORD in ci/.env}
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      # Lets the pipeline build images and run the Flutter toolchain in
+      # containers using the host daemon.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # The live deployment directory. Mounted at the same path it has on the
+      # host so Compose bind mounts resolve identically inside and out.
+      - ${APP_DIR:?set APP_DIR in ci/.env}:${APP_DIR:?set APP_DIR in ci/.env}
+    # Replaced at deploy time with the host's docker group id so the socket is
+    # writable from inside the container.
+    group_add:
+      - "${DOCKER_GID:-999}"
+    networks:
+      - jenkins_net
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins_net:
+    driver: bridge

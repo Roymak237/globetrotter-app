@@ -1,0 +1,55 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: globetrotter_backend
+    restart: unless-stopped
+    environment:
+      # Fails fast instead of silently signing tokens with a public default.
+      - SECRET_KEY=${SECRET_KEY:?SECRET_KEY must be set in .env}
+      - FLASK_DEBUG=${FLASK_DEBUG:-0}
+      - PORT=${PORT:-5000}
+    volumes:
+      - backend_data:/app/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request;urllib.request.urlopen('http://127.0.0.1:5000/healthz').read()",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - globetrotter_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: globetrotter_nginx
+    restart: unless-stopped
+    ports:
+      # Bound to loopback only. The host nginx terminates TLS and proxies here,
+      # so this port must never be exposed publicly.
+      - "127.0.0.1:${APP_PORT:-6003}:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      # Assembled document root: the landing page at the top level, the
+      # compiled Flutter app under app/, and release artefacts under
+      # downloads/. The CI publish stage builds this tree.
+      - ./site:/usr/share/nginx/html:ro
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - globetrotter_net
+
+volumes:
+  backend_data:
+
+networks:
+  globetrotter_net:
+    driver: bridge

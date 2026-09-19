@@ -15,3 +15,19 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Map Setup
+
+The map screen uses OpenStreetMap via `flutter_map` and `latlong2`. No API key is required.
+
+### Run the app
+
+```bash
+flutter run
+```
+
+For web:
+
+```bash
+flutter run -d chrome
+```

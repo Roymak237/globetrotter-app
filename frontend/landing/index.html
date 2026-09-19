@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kamer-Go — Plan your day in Cameroon</title>
+<meta name="description" content="Discover the landmarks, culture and nature of Cameroon — with an itinerary planner that builds your day for you.">
+<meta name="theme-color" content="#7C3AED">
+
+<meta property="og:title" content="Kamer-Go — Plan your day in Cameroon">
+<meta property="og:description" content="Discover the landmarks, culture and nature of Cameroon — with an itinerary planner that builds your day for you.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kamer-go.duckdns.org/">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- The gradient wash sits behind the whole page rather than on each section,
+     so the ramp stays continuous as the visitor scrolls. -->
+<div class="aurora" aria-hidden="true">
+  <span class="aurora__blob aurora__blob--violet"></span>
+  <span class="aurora__blob aurora__blob--ember"></span>
+  <span class="aurora__blob aurora__blob--orange"></span>
+</div>
+
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <defs>
+        <linearGradient id="brandRamp" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#7C3AED"/>
+          <stop offset="55%" stop-color="#C026D3"/>
+          <stop offset="100%" stop-color="#F97316"/>
+        </linearGradient>
+      </defs>
+      <rect width="40" height="40" rx="12" fill="url(#brandRamp)"/>
+      <path d="M20 9c-4.4 0-8 3.5-8 7.9 0 5.9 8 14.1 8 14.1s8-8.2 8-14.1C28 12.5 24.4 9 20 9Zm0 10.8a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8Z" fill="#fff"/>
+    </svg>
+    <span>Kamer-Go</span>
+  </a>
+
+  <nav class="nav__links" aria-label="Primary">
+    <a href="#downloads">Get the app</a>
+    <a href="#explore">Explore</a>
+    <a href="#features">Features</a>
+    <a href="/api/destinations">API</a>
+  </nav>
+
+  <a class="btn btn--sm btn--gradient" href="/app/">Launch web app</a>
+</header>
+
+<main id="top">
+
+  <!-- ─────────────────────────  HERO  ───────────────────────── -->
+  <section class="hero">
+    <p class="eyebrow">Built for Cameroon</p>
+    <h1 class="hero__title">
+      Plan faster.<br>
+      <span class="gradient-text">Travel smarter.</span>
+    </h1>
+    <p class="hero__lede">
+      Discover the landmarks, culture and nature of Cameroon — with an
+      itinerary planner that builds your day for you.
+    </p>
+
+    <div class="hero__actions">
+      <a class="btn btn--gradient btn--lg" href="#downloads">Get the app</a>
+      <a class="btn btn--ghost btn--lg" href="/app/">
+        Launch web app
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <dl class="stats">
+      <div class="stat">
+        <dt class="stat__value" data-count-to="57" id="statDestinations">57</dt>
+        <dd class="stat__label">Curated spots</dd>
+      </div>
+      <div class="stat">
+        <dt class="stat__value" data-count-to="2">2</dt>
+        <dd class="stat__label">Platforms</dd>
+      </div>
+      <div class="stat">
+        <dt class="stat__value stat__value--text">EN / FR</dt>
+        <dd class="stat__label">Bilingual</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ─────────────────────────  DOWNLOADS  ───────────────────────── -->
+  <section class="section" id="downloads">
+    <p class="eyebrow">Get the app</p>
+    <h2 class="section__title">Available on your device</h2>
+    <p class="section__lede">
+      Install the Android app, or launch it straight from your browser — no
+      install required.
+    </p>
+
+    <div class="cards cards--2">
+      <article class="card card--download">
+        <span class="card__icon card__icon--android">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18a1 1 0 0 0 1 1h1v3a1.5 1.5 0 0 0 3 0v-3h2v3a1.5 1.5 0 0 0 3 0v-3h1a1 1 0 0 0 1-1V9H6v9ZM3.5 9A1.5 1.5 0 0 0 2 10.5v5a1.5 1.5 0 0 0 3 0v-5A1.5 1.5 0 0 0 3.5 9Zm17 0a1.5 1.5 0 0 0-1.5 1.5v5a1.5 1.5 0 0 0 3 0v-5A1.5 1.5 0 0 0 20.5 9ZM15.8 3.6l1-1.8a.4.4 0 0 0-.7-.4l-1.1 1.9a6.8 6.8 0 0 0-5.9 0L8 1.4a.4.4 0 1 0-.7.4l1 1.8A6 6 0 0 0 6 8h12a6 6 0 0 0-2.2-4.4ZM9.5 6.2a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Zm5 0a.7.7 0 1 1 0-1.4.7.7 0 0 1 0 1.4Z" fill="currentColor"/></svg>
+        </span>
+        <h3>Android</h3>
+        <p>Install the APK directly on your phone or tablet.</p>
+        <span class="chip">.apk package</span>
+        <a class="btn btn--gradient btn--block" href="/downloads/kamer-go.apk" download>Download for Android</a>
+      </article>
+
+      <article class="card card--download">
+        <span class="card__icon card__icon--web">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </span>
+        <h3>Web app</h3>
+        <p>No download — runs right in your browser.</p>
+        <span class="chip">Chrome, Edge, Safari, Firefox</span>
+        <a class="btn btn--ghost btn--block" href="/app/">Launch web app</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────  EXPLORE  ───────────────────────── -->
+  <section class="section" id="explore">
+    <p class="eyebrow">Explore</p>
+    <h2 class="section__title">Built around real places</h2>
+    <p class="section__lede">
+      Every destination in the app is a real, hand-picked spot across Cameroon.
+    </p>
+
+    <!-- Filled from /api/destinations so the grid can never drift from the
+         catalogue the app itself serves. -->
+    <div class="tiles" id="destinationGrid" aria-busy="true">
+      <p class="tiles__loading">Loading destinations…</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────  FEATURES  ───────────────────────── -->
+  <section class="section" id="features">
+    <p class="eyebrow">Why Kamer-Go</p>
+    <h2 class="section__title">Everything you need for a day out</h2>
+
+    <div class="cards cards--4">
+      <article class="card">
+        <span class="card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6l-8-4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>Curated spots</h3>
+        <p>Landmarks, culture, markets and nature — with real photos, descriptions and locations.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        <h3>Auto-built itineraries</h3>
+        <p>Pick your stops and how much time you have — Kamer-Go builds a timed schedule for you.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
+        <h3>Maps &amp; routes</h3>
+        <p>See every stop on a map, with the route between them drawn out in order.</p>
+      </article>
+
+      <article class="card">
+        <span class="card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M9 3v2m1 0c0 5-3 8-6 9m3-3c2 2 4 3 7 4M14 20l4-9 4 9m-6.5-2h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>English &amp; French</h3>
+        <p>Fully localized for Cameroon's two official languages, plus Pidgin.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────  CTA  ───────────────────────── -->
+  <section class="section cta-band">
+    <h2 class="section__title">Ready to plan your trip?</h2>
+    <p class="section__lede">Open it in the browser — nothing to install.</p>
+    <a class="btn btn--gradient btn--lg" href="/app/">Launch Kamer-Go</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <rect width="40" height="40" rx="12" fill="url(#brandRamp)"/>
+      <path d="M20 9c-4.4 0-8 3.5-8 7.9 0 5.9 8 14.1 8 14.1s8-8.2 8-14.1C28 12.5 24.4 9 20 9Zm0 10.8a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8Z" fill="#fff"/>
+    </svg>
+    <div>
+      <strong>Kamer-Go</strong>
+      <span>Built for Cameroon.</span>
+    </div>
+  </div>
+
+  <nav class="footer__links" aria-label="Footer">
+    <a href="#downloads">Get the app</a>
+    <a href="#explore">Explore</a>
+    <a href="#features">Features</a>
+    <a href="/app/">Web app</a>
+    <a href="/api/destinations">API</a>
+  </nav>
+
+  <p class="footer__copy">© <span id="year">2026</span> Kamer-Go</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
