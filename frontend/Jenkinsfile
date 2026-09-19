@@ -1,8 +1,9 @@
 // Deployment pipeline for the KamerGo travel app.
 //
-// This file lives in the frontend repository, so `checkout scm` puts the
-// Flutter app at the workspace root. The backend is a separate repository and
-// is checked out into a subdirectory during the build.
+// Frontend and backend live in one repository, so a single `checkout scm`
+// supplies both and the two always build from the same commit. The Flutter
+// app sits under frontend/ rather than at the workspace root, so container
+// working directories and the publish step qualify their paths accordingly.
 //
 // Jenkins runs on the VPS with the host Docker socket mounted, so build
 // toolchains run in sibling containers and no SDK is installed into Jenkins
@@ -32,25 +33,20 @@ pipeline {
         // Dart version that the dependency tree rejects.
         FLUTTER_IMAGE  = 'ghcr.io/cirruslabs/flutter:3.41.6'
         PYTHON_IMAGE   = 'python:3.11-slim'
-        BACKEND_REPO   = 'https://github.com/Roymak237/kamer-go-backend.git'
-        BACKEND_BRANCH = 'shadow'
+        // Path to the Flutter app, relative to the workspace root.
+        APP_ROOT       = 'frontend'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // The frontend repository supplies the Flutter app, this
-                // Jenkinsfile and everything under deploy/.
+                // One repository supplies the Flutter app, the backend, this
+                // Jenkinsfile and everything under frontend/deploy/.
                 checkout scm
-
-                dir('backend') {
-                    git url: env.BACKEND_REPO, branch: env.BACKEND_BRANCH
-                }
 
                 sh '''#!/usr/bin/env bash
 set -euo pipefail
-echo "frontend $(git rev-parse --short HEAD)"
-echo "backend  $(git -C backend rev-parse --short HEAD)"
+echo "building $(git rev-parse --short HEAD) on $(git rev-parse --abbrev-ref HEAD)"
 '''
             }
         }
@@ -106,8 +102,33 @@ with tempfile.TemporaryDirectory() as tmp:
     login = client.post("/api/auth/login", json=creds)
     assert login.status_code == 200
     token = login.get_json()["token"]
-    assert client.get("/api/auth/me",
-                      headers={"Authorization": "Bearer " + token}).status_code == 200
+    auth = {"Authorization": "Bearer " + token}
+    assert client.get("/api/auth/me", headers=auth).status_code == 200
+
+    # Smoke test for the community layer. The stores for these start empty on
+    # a fresh data directory, which is exactly the state a first deploy sees.
+    dest_id = listing.get_json()[0]["id"]
+
+    posted = client.post(f"/api/destinations/{dest_id}/comments",
+                         json={"text": "ci smoke"}, headers=auth)
+    assert posted.status_code == 201, posted.get_data(as_text=True)
+    comment_id = posted.get_json()["id"]
+    assert client.post(f"/api/comments/{comment_id}/vote",
+                       json={"value": 1}, headers=auth).status_code == 200
+    thread = client.get(f"/api/destinations/{dest_id}/comments", headers=auth)
+    assert thread.status_code == 200 and len(thread.get_json()) == 1
+
+    rooms = client.get("/api/chat/rooms", headers=auth)
+    assert rooms.status_code == 200
+    assert any(r["id"] == "community" for r in rooms.get_json()), \
+        "every account should land in the community room"
+    sent = client.post("/api/chat/rooms/community/messages",
+                       json={"text": "ci smoke"}, headers=auth)
+    assert sent.status_code == 201, sent.get_data(as_text=True)
+
+    for path in ("/api/me/interests", "/api/me/notifications",
+                 "/api/me/submissions", "/api/app-reviews"):
+        assert client.get(path, headers=auth).status_code == 200, path
 
 print("Backend checks passed.")
 PY
@@ -125,7 +146,7 @@ set -euo pipefail
 # instead of the localhost default used during development.
 docker run --rm \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
-    -w "${WORKSPACE}" \
+    -w "${WORKSPACE}/${APP_ROOT}" \
     -e PUB_CACHE=/var/jenkins_home/.pub-cache \
     "${FLUTTER_IMAGE}" \
     bash -c "
@@ -147,7 +168,7 @@ docker run --rm \
     "${PYTHON_IMAGE}" \
     chown -R "$(id -u):$(id -g)" "${WORKSPACE}"
 
-test -f "${WORKSPACE}/build/web/index.html"
+test -f "${WORKSPACE}/${APP_ROOT}/build/web/index.html"
 '''
             }
         }
@@ -163,7 +184,7 @@ set -euo pipefail
 
 docker run --rm \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
-    -w "${WORKSPACE}" \
+    -w "${WORKSPACE}/${APP_ROOT}" \
     -e PUB_CACHE=/var/jenkins_home/.pub-cache \
     -e GRADLE_USER_HOME=/var/jenkins_home/.gradle \
     "${FLUTTER_IMAGE}" \
@@ -181,7 +202,7 @@ docker run --rm \
     "${PYTHON_IMAGE}" \
     chown -R "$(id -u):$(id -g)" "${WORKSPACE}"
 
-test -f "${WORKSPACE}/build/app/outputs/flutter-apk/app-release.apk"
+test -f "${WORKSPACE}/${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk"
 '''
                 }
             }
@@ -218,18 +239,18 @@ rsync -a --delete --exclude '__pycache__' backend/app/ "${APP_DIR}/backend/app/"
 # Flutter app under app/, release artefacts under downloads/. app/ and
 # downloads/ are excluded from the landing sync so they survive it.
 rsync -a --delete --exclude 'app/' --exclude 'downloads/' --exclude 'media/' \
-    landing/ "${APP_DIR}/site/"
-rsync -a --delete build/web/ "${APP_DIR}/site/app/"
+    "${APP_ROOT}/landing/" "${APP_DIR}/site/"
+rsync -a --delete "${APP_ROOT}/build/web/" "${APP_DIR}/site/app/"
 
 # The Flutter web build writes asset filenames percent-encoded on disk, which
 # makes them unusable from plain HTML. The landing page therefore reads the
 # photo library from media/, synced straight from source with names intact.
-rsync -a --delete assets/images/ "${APP_DIR}/site/media/"
+rsync -a --delete "${APP_ROOT}/assets/images/" "${APP_DIR}/site/media/"
 
 # Published only when the Android stage produced one, so an UNSTABLE build
 # keeps serving the previous APK instead of a broken link.
-if [ -f build/app/outputs/flutter-apk/app-release.apk ]; then
-    install -m 0644 build/app/outputs/flutter-apk/app-release.apk \
+if [ -f "${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk" ]; then
+    install -m 0644 "${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk" \
         "${APP_DIR}/site/downloads/kamer-go.apk"
 fi
 
@@ -237,9 +258,9 @@ install -m 0644 backend/requirements.txt "${APP_DIR}/backend/requirements.txt"
 install -m 0755 backend/docker-entrypoint.sh "${APP_DIR}/backend/docker-entrypoint.sh"
 install -m 0644 backend/data/destinations.json "${APP_DIR}/backend/data/destinations.json"
 
-install -m 0644 deploy/Dockerfile "${APP_DIR}/Dockerfile"
-install -m 0644 deploy/docker-compose.yml "${APP_DIR}/docker-compose.yml"
-install -m 0644 deploy/nginx/conf.d/globetrotter.conf "${APP_DIR}/nginx/conf.d/globetrotter.conf"
+install -m 0644 "${APP_ROOT}/deploy/Dockerfile" "${APP_DIR}/Dockerfile"
+install -m 0644 "${APP_ROOT}/deploy/docker-compose.yml" "${APP_DIR}/docker-compose.yml"
+install -m 0644 "${APP_ROOT}/deploy/nginx/conf.d/globetrotter.conf" "${APP_DIR}/nginx/conf.d/globetrotter.conf"
 '''
             }
         }
