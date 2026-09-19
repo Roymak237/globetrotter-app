@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "id": "it-yao-001",
+    "username": "alice",
+    "title": "Classic Yaounde City Tour",
+    "destinations": [
+      "dest-yao-002",
+      "dest-yao-003",
+      "dest-yao-006",
+      "dest-yao-005"
+    ],
+    "start_date": "2026-08-01",
+    "end_date": "2026-08-02",
+    "notes": "Explore the historic and cultural heart of Cameroon's capital. Perfect for first-time visitors.",
+    "created_at": "2026-07-23T14:00:00+01:00"
+  },
+  {
+    "id": "it-yao-002",
+    "username": "alice",
+    "title": "Weekend in Nature and History",
+    "destinations": [
+      "dest-yao-004",
+      "dest-yao-003",
+      "dest-yao-009",
+      "dest-yao-010"
+    ],
+    "start_date": "2026-08-08",
+    "end_date": "2026-08-09",
+    "notes": "A peaceful weekend combining hiking, museum visits, and park relaxation.",
+    "created_at": "2026-07-23T14:30:00+01:00"
+  },
+  {
+    "id": "it-yao-003",
+    "username": "bob",
+    "title": "Family Day Out in Yaounde",
+    "destinations": [
+      "dest-yao-007",
+      "dest-yao-010",
+      "dest-yao-005"
+    ],
+    "start_date": "2026-08-15",
+    "end_date": "2026-08-15",
+    "notes": "Fun day with the kids: zoo in the morning, park picnic at noon, and market snacks in the afternoon.",
+    "created_at": "2026-07-23T15:00:00+01:00"
+  },
+  {
+    "id": "3cee2887-a5a1-453a-9386-9a00e8cd50f6",
+    "username": "arise",
+    "title": "sleeping",
+    "destinations": [
+      "Reunification Monument"
+    ],
+    "start_date": "02-23-23",
+    "end_date": "09-05-8",
+    "notes": "nothing",
+    "created_at": "2026-07-28T15:02:39.229886+00:00"
+  }
+]

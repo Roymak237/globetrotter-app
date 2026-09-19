@@ -1,1 +1,33 @@
-[]
+[
+  {
+    "id": "15d2cb29-d6fd-4ddb-805e-cc20649176cc",
+    "username": "testuser3",
+    "password_hash": "pbkdf2:sha256:600000$qU2KbidefaZPc1bD$c5a48e1d6987be650f2149f9179a5d050f379eac9b34fd2b981a014978f3e3dd",
+    "preferences": [
+      "beach",
+      "culture"
+    ]
+  },
+  {
+    "id": "a092d816-d7f9-4999-91f8-0d177fec2991",
+    "username": "qrise",
+    "password_hash": "pbkdf2:sha256:600000$aRScgnZ3nfFiwubK$bfd4b9af88ba03e1a2e086e0f584696eec3083237ddf0e82e14db1f337bd6472",
+    "preferences": [
+      "beaches"
+    ]
+  },
+  {
+    "id": "ac7d9ca7-a856-4b09-99c1-e6f4f447f0f2",
+    "username": "testuser2",
+    "password_hash": "pbkdf2:sha256:600000$z31FgYFNibnLWOVz$996ac2d8ea23ff3e629a1f428a492653f6e1dd0f299ad8977a037e9b8b400a8e",
+    "preferences": []
+  },
+  {
+    "id": "f08bc868-7611-4b64-b46b-8840425bfed1",
+    "username": "arise",
+    "password_hash": "pbkdf2:sha256:600000$D8KvLlT38Elb3zZq$1edb935aed46fa1798118c42a2cd9469325ada05aec2c1a0e0e122db185b032c",
+    "preferences": [
+      "beach"
+    ]
+  }
+]

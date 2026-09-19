@@ -1,191 +1,184 @@
 """
 app/models.py
 
-Data models and database helpers.
+Data models and file I/O helpers.
 
-All persistent data is stored in a SQLite database at /data/globetrotter.db.
+All persistent data is stored in JSON files under the /data directory.
+  - data/users.json         – registered users
+  - data/itineraries.json   – user itineraries
+  - data/destinations.json  – static destination catalogue (seed data)
+  - data/shares.json        – shared itinerary records
+  - data/comments.json      – threaded destination comments and their votes
+  - data/reviews.json       – star ratings for the app itself
+  - data/notifications.json – per-user activity feed
+  - data/submissions.json   – community-submitted destinations awaiting review
+  - data/chat_rooms.json    – community room, groups and direct conversations
+  - data/chat_messages.json – messages belonging to those rooms
 """
 import json
 import os
-import sqlite3
-from datetime import datetime
+import threading
 
 _BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(_BASE_DIR, "data")
-DB_PATH = os.path.join(DATA_DIR, "globetrotter.db")
+
+USERS_FILE = os.path.join(DATA_DIR, "users.json")
+ITINERARIES_FILE = os.path.join(DATA_DIR, "itineraries.json")
+DESTINATIONS_FILE = os.path.join(DATA_DIR, "destinations.json")
+SHARES_FILE = os.path.join(DATA_DIR, "shares.json")
+COMMENTS_FILE = os.path.join(DATA_DIR, "comments.json")
+REVIEWS_FILE = os.path.join(DATA_DIR, "reviews.json")
+NOTIFICATIONS_FILE = os.path.join(DATA_DIR, "notifications.json")
+SUBMISSIONS_FILE = os.path.join(DATA_DIR, "submissions.json")
+CHAT_ROOMS_FILE = os.path.join(DATA_DIR, "chat_rooms.json")
+CHAT_MESSAGES_FILE = os.path.join(DATA_DIR, "chat_messages.json")
+
+# Chat writes are far more frequent than anything else in the app and several
+# gunicorn threads can service the same room at once. A process-wide lock keeps
+# a read-modify-write cycle from interleaving and losing messages.
+_WRITE_LOCK = threading.RLock()
 
 
-def _get_connection():
-    """Return a row-factory SQLite connection."""
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    return conn
+def _read_json(filepath: str) -> list:
+    """Read *filepath* and return its contents as a list.
+
+    Decoded as ``utf-8-sig`` so a byte order mark, which Windows editors and
+    PowerShell add by default, is stripped instead of derailing the parse.
+    """
+    if not os.path.exists(filepath):
+        return []
+    with open(filepath, "r", encoding="utf-8-sig") as fh:
+        content = fh.read().strip()
+        if not content:
+            return []
+        return json.loads(content)
 
 
-def init_db():
-    """Create database tables if they do not exist and seed static data."""
-    os.makedirs(DATA_DIR, exist_ok=True)
-    conn = _get_connection()
-    cursor = conn.cursor()
+def _write_json(filepath: str, data: list) -> None:
+    """Serialise *data* and write it to *filepath*.
 
-    cursor.executescript("""
-        CREATE TABLE IF NOT EXISTS users (
-            id TEXT PRIMARY KEY,
-            username TEXT UNIQUE NOT NULL,
-            password_hash TEXT NOT NULL,
-            preferences TEXT,
-            created_at TEXT
-        );
-        CREATE TABLE IF NOT EXISTS destinations (
-            id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            region TEXT NOT NULL,
-            description TEXT,
-            tags TEXT,
-            avg_cost_per_day REAL,
-            highlights TEXT,
-            image_url TEXT
-        );
-        CREATE TABLE IF NOT EXISTS itineraries (
-            id TEXT PRIMARY KEY,
-            username TEXT NOT NULL,
-            title TEXT NOT NULL,
-            destinations TEXT,
-            start_date TEXT,
-            end_date TEXT,
-            notes TEXT,
-            created_at TEXT
-        );
-        CREATE TABLE IF NOT EXISTS shares (
-            id TEXT PRIMARY KEY,
-            itinerary_id TEXT NOT NULL,
-            owner TEXT NOT NULL,
-            shared_with TEXT NOT NULL,
-            created_at TEXT
-        );
-    """)
-
-    conn.commit()
-
-    # Seed destinations if table is empty
-    cursor.execute("SELECT COUNT(*) as cnt FROM destinations")
-    if cursor.fetchone()["cnt"] == 0:
-        dest_path = os.path.join(DATA_DIR, "destinations.json")
-        if os.path.exists(dest_path):
-            with open(dest_path, "r", encoding="utf-8") as fh:
-                destinations = json.load(fh)
-            for dest in destinations:
-                cursor.execute(
-                    """INSERT INTO destinations
-                    (id, name, region, description, tags, avg_cost_per_day, highlights, image_url)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                    (
-                        dest["id"],
-                        dest["name"],
-                        dest["region"],
-                        dest["description"],
-                        json.dumps(dest.get("tags", [])),
-                        dest.get("avg_cost_per_day"),
-                        json.dumps(dest.get("highlights", [])),
-                        dest.get("image_url", ""),
-                    ),
-                )
-            conn.commit()
-
-    conn.close()
+    The write goes to a temporary file that is then moved into place, so a
+    crash midway through cannot leave a half-written file behind.
+    """
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    tmp_path = f"{filepath}.tmp"
+    with open(tmp_path, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, indent=2)
+    os.replace(tmp_path, filepath)
 
 
 # User helpers
 
-def get_all_users():
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
-    rows = cursor.fetchall()
-    conn.close()
-    users = []
-    for row in rows:
-        user = dict(row)
-        user["preferences"] = json.loads(user.get("preferences") or "[]")
-        users.append(user)
-    return users
+def get_all_users() -> list:
+    return _read_json(USERS_FILE)
 
 
 def get_user_by_username(username: str) -> dict | None:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
-    row = cursor.fetchone()
-    conn.close()
-    if row:
-        user = dict(row)
-        user["preferences"] = json.loads(user.get("preferences") or "[]")
-        return user
+    users = get_all_users()
+    for user in users:
+        if user.get("username") == username:
+            return user
     return None
 
 
 def save_user(user: dict) -> None:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO users (id, username, password_hash, preferences, created_at) VALUES (?, ?, ?, ?, ?)",
-        (
-            user["id"],
-            user["username"],
-            user["password_hash"],
-            json.dumps(user.get("preferences", [])),
-            datetime.now(datetime.utcnow().tzinfo).isoformat(),
-        ),
+    users = get_all_users()
+    users.append(user)
+    _write_json(USERS_FILE, users)
+
+
+def update_user(username: str, updates: dict) -> dict | None:
+    users = get_all_users()
+    for index, user in enumerate(users):
+        if user.get("username") == username:
+            updated = {**user, **updates}
+            users[index] = updated
+            _write_json(USERS_FILE, users)
+            return updated
+    return None
+
+
+def update_username_references(old_username: str, new_username: str) -> dict | None:
+    """Rename a user and preserve their itinerary/share relationships."""
+    users = get_all_users()
+    user = next(
+        (entry for entry in users if entry.get("username") == old_username),
+        None,
     )
-    conn.commit()
-    conn.close()
+    if user is None:
+        return None
+
+    renamed_user = {**user, "username": new_username}
+    users[users.index(user)] = renamed_user
+    _write_json(USERS_FILE, users)
+
+    itineraries = get_all_itineraries()
+    for itinerary in itineraries:
+        if itinerary.get("username") == old_username:
+            itinerary["username"] = new_username
+    _write_json(ITINERARIES_FILE, itineraries)
+
+    shares = get_all_shares()
+    for share in shares:
+        if share.get("owner") == old_username:
+            share["owner"] = new_username
+        if share.get("shared_with") == old_username:
+            share["shared_with"] = new_username
+    _write_json(SHARES_FILE, shares)
+
+    return renamed_user
+
+
+def delete_user_account(username: str) -> bool:
+    """Delete a user and cascade their owned travel data and shares."""
+    users = get_all_users()
+    remaining_users = [user for user in users if user.get("username") != username]
+    if len(remaining_users) == len(users):
+        return False
+    _write_json(USERS_FILE, remaining_users)
+
+    itineraries = get_all_itineraries()
+    deleted_itinerary_ids = {
+        itinerary.get("id")
+        for itinerary in itineraries
+        if itinerary.get("username") == username
+    }
+    remaining_itineraries = [
+        itinerary
+        for itinerary in itineraries
+        if itinerary.get("username") != username
+    ]
+    _write_json(ITINERARIES_FILE, remaining_itineraries)
+
+    shares = get_all_shares()
+    remaining_shares = [
+        share
+        for share in shares
+        if share.get("owner") != username
+        and share.get("shared_with") != username
+        and share.get("itinerary_id") not in deleted_itinerary_ids
+    ]
+    _write_json(SHARES_FILE, remaining_shares)
+    return True
 
 
 # Destination helpers
 
-def get_all_destinations():
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM destinations")
-    rows = cursor.fetchall()
-    conn.close()
-    destinations = []
-    for row in rows:
-        d = dict(row)
-        d["tags"] = json.loads(d.get("tags") or "[]")
-        d["highlights"] = json.loads(d.get("highlights") or "[]")
-        destinations.append(d)
-    return destinations
+def get_all_destinations() -> list:
+    return _read_json(DESTINATIONS_FILE)
 
 
 def get_destination_by_id(dest_id: str) -> dict | None:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM destinations WHERE id = ?", (dest_id,))
-    row = cursor.fetchone()
-    conn.close()
-    if row:
-        d = dict(row)
-        d["tags"] = json.loads(d.get("tags") or "[]")
-        d["highlights"] = json.loads(d.get("highlights") or "[]")
-        return d
+    for dest in get_all_destinations():
+        if dest.get("id") == dest_id:
+            return dest
     return None
 
 
 # Itinerary helpers
 
-def get_all_itineraries():
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM itineraries")
-    rows = cursor.fetchall()
-    conn.close()
-    itineraries = []
-    for row in rows:
-        it = dict(row)
-        it["destinations"] = json.loads(it.get("destinations") or "[]")
-        itineraries.append(it)
-    return itineraries
+def get_all_itineraries() -> list:
+    return _read_json(ITINERARIES_FILE)
 
 
 def get_itineraries_for_user(username: str) -> list:
@@ -200,77 +193,35 @@ def get_itinerary_by_id(itinerary_id: str) -> dict | None:
 
 
 def save_itinerary(itinerary: dict) -> None:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        """INSERT INTO itineraries
-        (id, username, title, destinations, start_date, end_date, notes, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (
-            itinerary["id"],
-            itinerary["username"],
-            itinerary["title"],
-            json.dumps(itinerary.get("destinations", [])),
-            itinerary.get("start_date", ""),
-            itinerary.get("end_date", ""),
-            itinerary.get("notes", ""),
-            itinerary.get("created_at"),
-        ),
-    )
-    conn.commit()
-    conn.close()
+    itineraries = get_all_itineraries()
+    itineraries.append(itinerary)
+    _write_json(ITINERARIES_FILE, itineraries)
 
 
 def update_itinerary(itinerary_id: str, updates: dict) -> dict | None:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM itineraries WHERE id = ?", (itinerary_id,))
-    row = cursor.fetchone()
-    if not row:
-        conn.close()
-        return None
-    current = dict(row)
-    current["destinations"] = json.loads(current.get("destinations") or "[]")
-    updated = {**current, **updates}
-    if "destinations" in updates and isinstance(updates["destinations"], list):
-        updated["destinations"] = updates["destinations"]
-    cursor.execute(
-        """UPDATE itineraries SET
-        title = ?, destinations = ?, start_date = ?, end_date = ?, notes = ?
-        WHERE id = ?""",
-        (
-            updated["title"],
-            json.dumps(updated.get("destinations", [])),
-            updated.get("start_date", ""),
-            updated.get("end_date", ""),
-            updated.get("notes", ""),
-            itinerary_id,
-        ),
-    )
-    conn.commit()
-    conn.close()
-    return updated
+    itineraries = get_all_itineraries()
+    for idx, it in enumerate(itineraries):
+        if it.get("id") == itinerary_id:
+            updated = {**it, **updates}
+            itineraries[idx] = updated
+            _write_json(ITINERARIES_FILE, itineraries)
+            return updated
+    return None
 
 
 def delete_itinerary(itinerary_id: str) -> bool:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM itineraries WHERE id = ?", (itinerary_id,))
-    deleted = cursor.rowcount > 0
-    conn.commit()
-    conn.close()
-    return deleted
+    itineraries = get_all_itineraries()
+    new_itineraries = [it for it in itineraries if it.get("id") != itinerary_id]
+    if len(new_itineraries) == len(itineraries):
+        return False
+    _write_json(ITINERARIES_FILE, new_itineraries)
+    return True
 
 
 # Share helpers
 
-def get_all_shares():
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM shares")
-    rows = cursor.fetchall()
-    conn.close()
-    return [dict(row) for row in rows]
+def get_all_shares() -> list:
+    return _read_json(SHARES_FILE)
 
 
 def get_shares_for_itinerary(itinerary_id: str) -> list:
@@ -278,27 +229,257 @@ def get_shares_for_itinerary(itinerary_id: str) -> list:
 
 
 def save_share(share: dict) -> None:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO shares (id, itinerary_id, owner, shared_with, created_at) VALUES (?, ?, ?, ?, ?)",
-        (
-            share["id"],
-            share["itinerary_id"],
-            share["owner"],
-            share["shared_with"],
-            share["created_at"],
-        ),
-    )
-    conn.commit()
-    conn.close()
+    shares = get_all_shares()
+    shares.append(share)
+    _write_json(SHARES_FILE, shares)
 
 
 def delete_share(share_id: str) -> bool:
-    conn = _get_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM shares WHERE id = ?", (share_id,))
-    deleted = cursor.rowcount > 0
-    conn.commit()
-    conn.close()
-    return deleted
+    shares = get_all_shares()
+    new_shares = [s for s in shares if s.get("id") != share_id]
+    if len(new_shares) == len(shares):
+        return False
+    _write_json(SHARES_FILE, new_shares)
+    return True
+
+
+# Comment helpers
+#
+# Comments are stored flat with a nullable ``parent_id``; the API assembles the
+# reply tree on read. Keeping storage flat means a vote or an edit only has to
+# touch one record.
+
+def get_all_comments() -> list:
+    return _read_json(COMMENTS_FILE)
+
+
+def get_comments_for_destination(destination_id: str) -> list:
+    return [
+        c for c in get_all_comments()
+        if c.get("destination_id") == destination_id
+    ]
+
+
+def get_comment_by_id(comment_id: str) -> dict | None:
+    for comment in get_all_comments():
+        if comment.get("id") == comment_id:
+            return comment
+    return None
+
+
+def save_comment(comment: dict) -> None:
+    with _WRITE_LOCK:
+        comments = get_all_comments()
+        comments.append(comment)
+        _write_json(COMMENTS_FILE, comments)
+
+
+def update_comment(comment_id: str, updates: dict) -> dict | None:
+    with _WRITE_LOCK:
+        comments = get_all_comments()
+        for idx, comment in enumerate(comments):
+            if comment.get("id") == comment_id:
+                updated = {**comment, **updates}
+                comments[idx] = updated
+                _write_json(COMMENTS_FILE, comments)
+                return updated
+    return None
+
+
+def delete_comment(comment_id: str) -> bool:
+    """Remove *comment_id* along with every reply beneath it."""
+    with _WRITE_LOCK:
+        comments = get_all_comments()
+        doomed = {comment_id}
+        # Replies are only one level deep in the UI, but loop until the set
+        # stops growing so deeper nesting can never orphan a record.
+        while True:
+            children = {
+                c["id"] for c in comments
+                if c.get("parent_id") in doomed and c["id"] not in doomed
+            }
+            if not children:
+                break
+            doomed |= children
+        remaining = [c for c in comments if c.get("id") not in doomed]
+        if len(remaining) == len(comments):
+            return False
+        _write_json(COMMENTS_FILE, remaining)
+        return True
+
+
+# App review helpers
+
+def get_all_reviews() -> list:
+    return _read_json(REVIEWS_FILE)
+
+
+def get_review_by_username(username: str) -> dict | None:
+    for review in get_all_reviews():
+        if review.get("username") == username:
+            return review
+    return None
+
+
+def save_or_update_review(review: dict) -> dict:
+    """Upsert a review, since each user may only leave one."""
+    with _WRITE_LOCK:
+        reviews = get_all_reviews()
+        for idx, existing in enumerate(reviews):
+            if existing.get("username") == review.get("username"):
+                merged = {**existing, **review}
+                reviews[idx] = merged
+                _write_json(REVIEWS_FILE, reviews)
+                return merged
+        reviews.append(review)
+        _write_json(REVIEWS_FILE, reviews)
+        return review
+
+
+# Notification helpers
+
+def get_notifications_for_user(username: str) -> list:
+    return [
+        n for n in _read_json(NOTIFICATIONS_FILE)
+        if n.get("username") == username
+    ]
+
+
+def save_notification(notification: dict) -> None:
+    with _WRITE_LOCK:
+        notifications = _read_json(NOTIFICATIONS_FILE)
+        notifications.append(notification)
+        # The feed is display-only, so an unbounded file would grow forever for
+        # no benefit. Keep the most recent slice.
+        if len(notifications) > 2000:
+            notifications = notifications[-2000:]
+        _write_json(NOTIFICATIONS_FILE, notifications)
+
+
+def mark_notifications_read(username: str, ids: list | None = None) -> int:
+    """Mark the user's notifications read. ``None`` marks all of them."""
+    with _WRITE_LOCK:
+        notifications = _read_json(NOTIFICATIONS_FILE)
+        changed = 0
+        for notification in notifications:
+            if notification.get("username") != username:
+                continue
+            if ids is not None and notification.get("id") not in ids:
+                continue
+            if not notification.get("read"):
+                notification["read"] = True
+                changed += 1
+        if changed:
+            _write_json(NOTIFICATIONS_FILE, notifications)
+        return changed
+
+
+# Submission helpers
+
+def get_all_submissions() -> list:
+    return _read_json(SUBMISSIONS_FILE)
+
+
+def get_submissions_for_user(username: str) -> list:
+    return [s for s in get_all_submissions() if s.get("username") == username]
+
+
+def save_submission(submission: dict) -> None:
+    with _WRITE_LOCK:
+        submissions = get_all_submissions()
+        submissions.append(submission)
+        _write_json(SUBMISSIONS_FILE, submissions)
+
+
+def update_submission(submission_id: str, updates: dict) -> dict | None:
+    with _WRITE_LOCK:
+        submissions = get_all_submissions()
+        for idx, submission in enumerate(submissions):
+            if submission.get("id") == submission_id:
+                updated = {**submission, **updates}
+                submissions[idx] = updated
+                _write_json(SUBMISSIONS_FILE, submissions)
+                return updated
+    return None
+
+
+# Chat helpers
+
+def get_all_rooms() -> list:
+    return _read_json(CHAT_ROOMS_FILE)
+
+
+def get_room_by_id(room_id: str) -> dict | None:
+    for room in get_all_rooms():
+        if room.get("id") == room_id:
+            return room
+    return None
+
+
+def save_room(room: dict) -> None:
+    with _WRITE_LOCK:
+        rooms = get_all_rooms()
+        rooms.append(room)
+        _write_json(CHAT_ROOMS_FILE, rooms)
+
+
+def update_room(room_id: str, updates: dict) -> dict | None:
+    with _WRITE_LOCK:
+        rooms = get_all_rooms()
+        for idx, room in enumerate(rooms):
+            if room.get("id") == room_id:
+                updated = {**room, **updates}
+                rooms[idx] = updated
+                _write_json(CHAT_ROOMS_FILE, rooms)
+                return updated
+    return None
+
+
+def delete_room(room_id: str) -> bool:
+    with _WRITE_LOCK:
+        rooms = get_all_rooms()
+        remaining = [r for r in rooms if r.get("id") != room_id]
+        if len(remaining) == len(rooms):
+            return False
+        _write_json(CHAT_ROOMS_FILE, remaining)
+        messages = get_all_messages()
+        _write_json(
+            CHAT_MESSAGES_FILE,
+            [m for m in messages if m.get("room_id") != room_id],
+        )
+        return True
+
+
+def get_all_messages() -> list:
+    return _read_json(CHAT_MESSAGES_FILE)
+
+
+def get_messages_for_room(room_id: str) -> list:
+    return [m for m in get_all_messages() if m.get("room_id") == room_id]
+
+
+def get_message_by_id(message_id: str) -> dict | None:
+    for message in get_all_messages():
+        if message.get("id") == message_id:
+            return message
+    return None
+
+
+def save_message(message: dict) -> None:
+    with _WRITE_LOCK:
+        messages = get_all_messages()
+        messages.append(message)
+        _write_json(CHAT_MESSAGES_FILE, messages)
+
+
+def update_message(message_id: str, updates: dict) -> dict | None:
+    with _WRITE_LOCK:
+        messages = get_all_messages()
+        for idx, message in enumerate(messages):
+            if message.get("id") == message_id:
+                updated = {**message, **updates}
+                messages[idx] = updated
+                _write_json(CHAT_MESSAGES_FILE, messages)
+                return updated
+    return None
+

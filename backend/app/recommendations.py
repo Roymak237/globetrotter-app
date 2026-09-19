@@ -36,7 +36,24 @@ def get_recommendations():
     if not user:
         return jsonify({"error": "user not found"}), 404
 
-    preferences = [p.lower() for p in user.get("preferences", [])]
+    preference_aliases = {
+        "beach": "relaxation",
+        "beaches": "relaxation",
+        "relax": "relaxation",
+        "outdoors": "nature",
+        "wild": "wildlife",
+        "families": "family",
+        "markets": "market",
+        "night life": "nightlife",
+    }
+    preferences = [
+        preference_aliases.get(p.strip().lower(), p.strip().lower())
+        for p in user.get("preferences", [])
+        if isinstance(p, str) and p.strip()
+    ]
+
+    if not preferences:
+        return jsonify([]), 200
 
     try:
         limit = int(request.args.get("limit", 5))
