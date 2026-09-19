@@ -40,6 +40,22 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // A previous build that died mid-stage can leave root-owned
+                // files behind, and git cannot delete what it does not own, so
+                // the checkout fails before a single line of this pipeline
+                // runs. Reclaiming first makes the build able to recover from
+                // its own wreckage instead of needing a hand on the server.
+                sh '''#!/usr/bin/env bash
+set -uo pipefail
+
+[ -d "${WORKSPACE}" ] || exit 0
+
+docker run --rm \
+    -v "${JENKINS_VOLUME}:/var/jenkins_home" \
+    "${PYTHON_IMAGE}" \
+    chown -R "$(id -u):$(id -g)" "${WORKSPACE}" || true
+'''
+
                 // One repository supplies the Flutter app, the backend, this
                 // Jenkinsfile and everything under frontend/deploy/.
                 checkout scm
@@ -140,7 +156,20 @@ PY
         stage('Frontend build') {
             steps {
                 sh '''#!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
+
+# The build runs as root inside the container. Flutter writes outside build/
+# too (.dart_tool, .flutter-plugins, caches), and anything left owned by root
+# blocks both publishing and the workspace cleanup. This has to happen even
+# when the build fails, otherwise the debris outlives this build and breaks
+# the next one's checkout, turning one bad commit into a stuck pipeline.
+reclaim() {
+    docker run --rm \
+        -v "${JENKINS_VOLUME}:/var/jenkins_home" \
+        "${PYTHON_IMAGE}" \
+        chown -R "$(id -u):$(id -g)" "${WORKSPACE}" || true
+}
+trap reclaim EXIT
 
 # The API base URL is compiled in, so the deployed app calls its own domain
 # instead of the localhost default used during development.
@@ -158,15 +187,7 @@ flutter pub get
 flutter analyze --no-fatal-infos
 flutter test
 flutter build web --release --base-href /app/ --dart-define=BACKEND_BASE_URL=https://${DOMAIN}
-"
-
-# The build ran as root inside the container. Flutter writes outside build/
-# too (.dart_tool, .flutter-plugins, caches), and anything left owned by root
-# blocks both publishing and the workspace cleanup, so reclaim the whole tree.
-docker run --rm \
-    -v "${JENKINS_VOLUME}:/var/jenkins_home" \
-    "${PYTHON_IMAGE}" \
-    chown -R "$(id -u):$(id -g)" "${WORKSPACE}"
+" || exit 1
 
 test -f "${WORKSPACE}/${APP_ROOT}/build/web/index.html"
 '''
@@ -180,7 +201,19 @@ test -f "${WORKSPACE}/${APP_ROOT}/build/web/index.html"
                 // deployment that is otherwise good.
                 catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                     sh '''#!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
+
+# Gradle and the Android SDK also write as root inside the container, and this
+# stage is allowed to fail. Without an unconditional reclaim, a merely
+# UNSTABLE build would still poison the next checkout, which is precisely how
+# a failed APK in one build became a failed clone in the next.
+reclaim() {
+    docker run --rm \
+        -v "${JENKINS_VOLUME}:/var/jenkins_home" \
+        "${PYTHON_IMAGE}" \
+        chown -R "$(id -u):$(id -g)" "${WORKSPACE}" || true
+}
+trap reclaim EXIT
 
 docker run --rm \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
@@ -194,13 +227,7 @@ git config --global --add safe.directory /sdks/flutter
 git config --global --add safe.directory ${WORKSPACE}
 yes | flutter doctor --android-licenses >/dev/null 2>&1 || true
 flutter build apk --release --dart-define=BACKEND_BASE_URL=https://${DOMAIN}
-"
-
-# Gradle and the Android SDK also write as root inside the container.
-docker run --rm \
-    -v "${JENKINS_VOLUME}:/var/jenkins_home" \
-    "${PYTHON_IMAGE}" \
-    chown -R "$(id -u):$(id -g)" "${WORKSPACE}"
+" || exit 1
 
 test -f "${WORKSPACE}/${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk"
 '''
@@ -333,6 +360,20 @@ cd "${APP_DIR}" && docker compose up -d --build
             // must never decide the outcome of an otherwise good deployment,
             // so a stubborn leftover file is reported rather than thrown.
             catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                // Jenkins deletes as its own user and cannot remove root-owned
+                // files. A last reclaim means the cleanup actually succeeds
+                // however the build ended, rather than silently leaving debris
+                // for the next checkout to trip over.
+                sh '''#!/usr/bin/env bash
+set -uo pipefail
+
+[ -d "${WORKSPACE}" ] || exit 0
+
+docker run --rm \
+    -v "${JENKINS_VOLUME}:/var/jenkins_home" \
+    "${PYTHON_IMAGE}" \
+    chown -R "$(id -u):$(id -g)" "${WORKSPACE}" || true
+'''
                 deleteDir()
             }
         }
