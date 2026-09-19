@@ -69,6 +69,13 @@ globetrotter-app/
 |--------|----------|------|-------------|
 | POST | `/api/auth/register` | No | Register a new user |
 | POST | `/api/auth/login` | No | Authenticate and receive a JWT token |
+| GET | `/api/auth/me` | JWT | Read the current public profile |
+| POST | `/api/auth/refresh` | JWT | Issue a replacement JWT for the current session |
+| PATCH | `/api/auth/profile` | JWT | Update profile details and preferences |
+| PATCH | `/api/auth/username` | JWT | Change username and preserve trip/share ownership |
+| PATCH | `/api/auth/password` | JWT | Change password and rotate sessions |
+| POST | `/api/auth/sessions/revoke` | JWT | Sign out all other sessions |
+| DELETE | `/api/auth/account` | JWT | Delete account and cascade owned data |
 | GET | `/api/destinations` | No | Search the destination catalogue (`?q=&tag=&region=&max_cost=`) |
 | GET | `/api/destinations/<id>` | No | Get a single destination |
 | GET | `/api/recommendations` | JWT | Get personalised recommendations based on preferences |
@@ -140,9 +147,9 @@ The API will be available at `http://localhost:5000`.
 - Flutter SDK 3.0+
 - Dart SDK
 
-```bash
+```powershell
 # 1. Install dependencies
-cd frontend
+Set-Location frontend
 flutter pub get
 
 # 2. Run the app
@@ -150,6 +157,15 @@ flutter run
 ```
 
 > **Note for Android Emulator:** The Flutter app runs on an emulator. Update `lib/utils/constants.dart` with the correct `backendBaseUrl` if needed. The default uses `http://10.0.2.2:5000` for Android emulator access to host localhost.
+
+### Map configuration
+
+The map surfaces use OpenStreetMap via `flutter_map` and `latlong2`. No API key is required for the default OpenStreetMap tile layer.
+
+**Tile providers**
+
+- Default: OpenStreetMap (`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`)
+- Windows fallback: Leaflet inside Edge WebView2 through `webview_windows`
 
 ## Configuration
 
@@ -178,7 +194,97 @@ All data is persisted in plain JSON files under `backend/data/`:
 - **JSON storage** keeps the project simple and portable for learning purposes.
 - **JWT-based authentication** with Werkzeug password hashing.
 
-## Destination Regions Covered
+## Deployment — Docker + Nginx + DuckDNS
+
+### Prerequisites
+- A VPS (e.g., Contabo) with Ubuntu 22.04+
+- Domain or DuckDNS subdomain (e.g., `globetrotter.duckdns.org`)
+- Docker and Docker Compose installed on the VPS
+
+### Quick Start
+
+```bash
+# 1. Clone the project
+git clone YOUR_REPO_URL globetrotter
+cd globetrotter
+
+# 2. Copy environment file and edit it
+cp .env.example .env
+nano .env   # Fill in your DuckDNS token and email
+
+# 3. Set up SSL certificate (first time only)
+chmod +x setup_ssl.sh
+./setup_ssl.sh
+
+# 4. Build and start the stack
+docker-compose up -d --build
+
+# 5. Check status
+docker-compose ps
+docker-compose logs -f backend
+```
+
+### What Gets Deployed
+
+| Service   | Port | Description                    |
+|-----------|------|--------------------------------|
+| backend   | 5000 | Flask REST API (internal only) |
+| nginx     | 80/443 | Reverse proxy + SSL termination |
+
+### DuckDNS Setup
+
+1. Sign up at [https://www.duckdns.org](https://www.duckdns.org)
+2. Create a domain (e.g., `globetrotter`)
+3. Get your API token from the DuckDNS dashboard
+4. Add to `.env`:
+   ```
+   DUCKDNS_TOKEN=your_token_here
+   DUCKDNS_DOMAIN=globetrotter
+   SSL_EMAIL=your_email@example.com
+   ```
+5. The `setup_ssl.sh` script obtains a free Let's Encrypt SSL certificate
+6. Certbot auto-renewal is handled by a cron job (add to crontab):
+   ```bash
+   crontab -e
+   # Add this line:
+   0 3 * * * certbot renew --quiet && docker restart globetrotter_nginx
+   ```
+
+### Updating the Deployment
+
+```bash
+# Pull latest code
+git pull
+
+# Rebuild and restart
+docker-compose up -d --build
+```
+
+### Production Environment Variables
+
+| Variable     | Required | Description                              |
+|--------------|----------|------------------------------------------|
+| `SECRET_KEY` | Yes      | Long random JWT signing key              |
+| `FLASK_DEBUG`| No       | Set to `0` in production                 |
+| `PORT`       | No       | Default `5000`                           |
+
+> **Important:** Always override `SECRET_KEY` in production:
+> ```bash
+> python -c "import secrets; print(secrets.token_hex(32))"
+> ```
+
+### Flutter Frontend (Production Build)
+
+```bash
+cd frontend
+flutter build windows
+# The built app is at build/windows/x64/runner/Release/
+```
+
+Update `lib/utils/constants.dart` to point to your DuckDNS domain:
+```dart
+static const String backendBaseUrl = "https://globetrotter.duckdns.org";
+```
 
 1. Adamawa
 2. Centre

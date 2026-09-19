@@ -35,3 +35,6 @@ Thumbs.db
 # Scratch files
 _*.txt
 _*.sh
+
+# Archived metadata from the short-lived split repos
+*.git.split-backup/
