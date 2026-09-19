@@ -128,6 +128,60 @@ class AuthService extends ChangeNotifier {
     throw Exception(body["error"] ?? "Login failed");
   }
 
+  /// Ask for a password reset code for [identifier], a username or email.
+  ///
+  /// This deployment has no mail server, so the backend returns the code
+  /// directly. That makes this a self-service reset for someone who still has
+  /// their account open, not a recovery path for a truly lost password.
+  /// The response is identical for unknown accounts, so it cannot be used to
+  /// discover who is registered.
+  Future<String?> requestPasswordReset({required String identifier}) async {
+    final uri = Uri.parse(
+      "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}"
+      "/auth/request-password-reset",
+    );
+    final response = await http
+        .post(
+          uri,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({"identifier": identifier}),
+        )
+        .timeout(AppConstants.apiTimeout);
+
+    if (response.statusCode == 200) {
+      return _decodeBody(response)["code"] as String?;
+    }
+    final body = _decodeBody(response);
+    throw Exception(body["error"] ?? "Could not start the reset");
+  }
+
+  /// Consume a reset code and set a new password.
+  Future<void> resetPassword({
+    required String identifier,
+    required String code,
+    required String newPassword,
+  }) async {
+    final uri = Uri.parse(
+      "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}"
+      "/auth/reset-password",
+    );
+    final response = await http
+        .post(
+          uri,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            "identifier": identifier,
+            "code": code,
+            "new_password": newPassword,
+          }),
+        )
+        .timeout(AppConstants.apiTimeout);
+
+    if (response.statusCode == 200) return;
+    final body = _decodeBody(response);
+    throw Exception(body["error"] ?? "Could not reset the password");
+  }
+
   Future<void> logout() async {
     _token = null;
     _currentUser = null;

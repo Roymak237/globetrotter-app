@@ -5,6 +5,7 @@ import "../models/destination.dart";
 import "../utils/destination_cost.dart";
 import "../utils/theme.dart";
 import "../widgets/comments_section.dart";
+import "../widgets/destination_extras.dart";
 import "../widgets/destination_image.dart";
 import "../widgets/destination_map.dart";
 import "../widgets/favorite_button.dart";
@@ -323,6 +324,10 @@ class DestinationDetailScreen extends StatelessWidget {
                           height: 1.4,
                         ),
                   ),
+                  const SizedBox(height: 28),
+                  const Divider(color: AppTheme.border),
+                  const SizedBox(height: 20),
+                  DestinationExtras(destination: destination),
                   const SizedBox(height: 28),
                   const Divider(color: AppTheme.border),
                   const SizedBox(height: 20),

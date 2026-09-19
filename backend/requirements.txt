@@ -4,3 +4,9 @@ PyJWT==2.8.0
 Werkzeug==2.3.7
 python-dotenv==1.0.0
 gunicorn==21.2.0
+# Call signalling. flask-sock needs a worker that can hold many idle
+# connections at once, which is what gevent provides; the default synchronous
+# worker would dedicate a whole process to each open call socket.
+flask-sock==0.7.0
+gevent==24.2.1
+gevent-websocket==0.10.1

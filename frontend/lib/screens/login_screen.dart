@@ -68,17 +68,17 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               localizations.loginTopline,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontFamily: AppTheme.displayFontFamily,
-                    height: 1.25,
-                    shadows: const [
-                      Shadow(
-                        color: Colors.black45,
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
+                color: Colors.white,
+                fontFamily: AppTheme.displayFontFamily,
+                height: 1.25,
+                shadows: const [
+                  Shadow(
+                    color: Colors.black45,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
                   ),
+                ],
+              ),
             ),
           ),
           AuthFormCard(
@@ -168,7 +168,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 6),
+                  TextButton(
+                    onPressed: _loading
+                        ? null
+                        : () =>
+                            Navigator.pushNamed(context, "/forgot_password"),
+                    child: const Text("Forgot your password?"),
+                  ),
+                  const SizedBox(height: 14),
                   AuthDivider(label: localizations.newToGlobetrotter),
                   const SizedBox(height: 12),
                   TextButton(

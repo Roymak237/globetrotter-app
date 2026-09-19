@@ -28,6 +28,12 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>GlobeTrotter uses your location to recenter the travel map.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Kamer-Go uses your microphone for voice messages and calls.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Kamer-Go uses your camera for video calls and photo attachments.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Kamer-Go needs your photo library to attach pictures to messages.</string>
 	<key>GOOGLE_MAPS_API_KEY</key>
 	<string>AIzaSyAazDTq6VPP5yrJLiTUDOcbWaIKOWzB_2Q</string>
 	<key>UIApplicationSceneManifest</key>

@@ -14,13 +14,21 @@ All persistent data is stored in JSON files under the /data directory.
   - data/submissions.json   – community-submitted destinations awaiting review
   - data/chat_rooms.json    – community room, groups and direct conversations
   - data/chat_messages.json – messages belonging to those rooms
+  - data/ratings.json       – per-user star ratings for individual destinations
+  - data/password_resets.json – short-lived reset codes
+  - data/calls.json         – call history for the chat call log
+  - data/media/             – uploaded attachments and avatars (binary)
 """
 import json
 import os
 import threading
 
 _BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(_BASE_DIR, "data")
+# DATA_DIR is overridable so the smoke tests can run against a throwaway
+# directory instead of the developer's real accounts and trips. In Docker the
+# same variable is already set by docker-entrypoint.sh, which keeps the two
+# halves of the deployment reading from one agreed location.
+DATA_DIR = os.environ.get("DATA_DIR") or os.path.join(_BASE_DIR, "data")
 
 USERS_FILE = os.path.join(DATA_DIR, "users.json")
 ITINERARIES_FILE = os.path.join(DATA_DIR, "itineraries.json")
@@ -32,6 +40,13 @@ NOTIFICATIONS_FILE = os.path.join(DATA_DIR, "notifications.json")
 SUBMISSIONS_FILE = os.path.join(DATA_DIR, "submissions.json")
 CHAT_ROOMS_FILE = os.path.join(DATA_DIR, "chat_rooms.json")
 CHAT_MESSAGES_FILE = os.path.join(DATA_DIR, "chat_messages.json")
+RATINGS_FILE = os.path.join(DATA_DIR, "ratings.json")
+PASSWORD_RESETS_FILE = os.path.join(DATA_DIR, "password_resets.json")
+CALLS_FILE = os.path.join(DATA_DIR, "calls.json")
+
+# Uploaded binaries live beside the JSON stores so a single Docker volume keeps
+# the whole of a deployment's user data together.
+MEDIA_DIR = os.path.join(DATA_DIR, "media")
 
 # Chat writes are far more frequent than anything else in the app and several
 # gunicorn threads can service the same room at once. A process-wide lock keeps
@@ -482,4 +497,173 @@ def update_message(message_id: str, updates: dict) -> dict | None:
                 _write_json(CHAT_MESSAGES_FILE, messages)
                 return updated
     return None
+
+
+def get_room_by_invite_code(code: str) -> dict | None:
+    """Look up a group by the share code printed on its invite link."""
+    if not code:
+        return None
+    wanted = code.strip().upper()
+    for room in get_all_rooms():
+        if (room.get("invite_code") or "").upper() == wanted:
+            return room
+    return None
+
+
+def get_rooms_for_user(username: str) -> list:
+    """Rooms the user belongs to, excluding the always-visible community room."""
+    return [
+        room for room in get_all_rooms()
+        if username in (room.get("members", []) or [])
+    ]
+
+
+# Destination rating helpers
+#
+# Ratings are kept apart from comments: a traveller may rate a place without
+# writing anything, and the aggregate is read far more often than it is written.
+
+def get_all_ratings() -> list:
+    return _read_json(RATINGS_FILE)
+
+
+def get_ratings_for_destination(destination_id: str) -> list:
+    return [
+        r for r in get_all_ratings()
+        if r.get("destination_id") == destination_id
+    ]
+
+
+def get_rating(destination_id: str, username: str) -> dict | None:
+    for rating in get_all_ratings():
+        if (
+            rating.get("destination_id") == destination_id
+            and rating.get("username") == username
+        ):
+            return rating
+    return None
+
+
+def save_or_update_rating(rating: dict) -> dict:
+    """Upsert a rating, since each user rates a destination at most once."""
+    with _WRITE_LOCK:
+        ratings = get_all_ratings()
+        for idx, existing in enumerate(ratings):
+            if (
+                existing.get("destination_id") == rating.get("destination_id")
+                and existing.get("username") == rating.get("username")
+            ):
+                merged = {**existing, **rating}
+                ratings[idx] = merged
+                _write_json(RATINGS_FILE, ratings)
+                return merged
+        ratings.append(rating)
+        _write_json(RATINGS_FILE, ratings)
+        return rating
+
+
+def delete_rating(destination_id: str, username: str) -> bool:
+    with _WRITE_LOCK:
+        ratings = get_all_ratings()
+        remaining = [
+            r for r in ratings
+            if not (
+                r.get("destination_id") == destination_id
+                and r.get("username") == username
+            )
+        ]
+        if len(remaining) == len(ratings):
+            return False
+        _write_json(RATINGS_FILE, remaining)
+        return True
+
+
+def rating_summary(destination_id: str) -> dict:
+    """Average and count for a destination, rounded for display."""
+    values = [
+        r.get("stars", 0) for r in get_ratings_for_destination(destination_id)
+        if isinstance(r.get("stars"), int)
+    ]
+    if not values:
+        return {"average": 0.0, "count": 0}
+    return {"average": round(sum(values) / len(values), 1), "count": len(values)}
+
+
+# Password reset helpers
+#
+# Codes are single-use and short-lived. Expired rows are cleared opportunistically
+# on each write so the file cannot accumulate stale secrets.
+
+def get_all_password_resets() -> list:
+    return _read_json(PASSWORD_RESETS_FILE)
+
+
+def save_password_reset(entry: dict) -> None:
+    with _WRITE_LOCK:
+        entries = get_all_password_resets()
+        # Only the newest code for a given account stays valid.
+        entries = [
+            e for e in entries if e.get("username") != entry.get("username")
+        ]
+        entries.append(entry)
+        _write_json(PASSWORD_RESETS_FILE, entries)
+
+
+def pop_password_reset(username: str) -> dict | None:
+    """Return and consume the pending reset for *username*, if any."""
+    with _WRITE_LOCK:
+        entries = get_all_password_resets()
+        found = None
+        remaining = []
+        for entry in entries:
+            if found is None and entry.get("username") == username:
+                found = entry
+            else:
+                remaining.append(entry)
+        if found is not None:
+            _write_json(PASSWORD_RESETS_FILE, remaining)
+        return found
+
+
+def peek_password_reset(username: str) -> dict | None:
+    for entry in get_all_password_resets():
+        if entry.get("username") == username:
+            return entry
+    return None
+
+
+# Call history helpers
+
+def get_all_calls() -> list:
+    return _read_json(CALLS_FILE)
+
+
+def get_calls_for_user(username: str) -> list:
+    return [
+        c for c in get_all_calls()
+        if username in (c.get("participants", []) or [])
+    ]
+
+
+def save_call(call: dict) -> None:
+    with _WRITE_LOCK:
+        calls = get_all_calls()
+        calls.append(call)
+        # The log is informational; keeping it bounded avoids unbounded growth.
+        if len(calls) > 2000:
+            calls = calls[-2000:]
+        _write_json(CALLS_FILE, calls)
+
+
+def update_call(call_id: str, updates: dict) -> dict | None:
+    with _WRITE_LOCK:
+        calls = get_all_calls()
+        for idx, call in enumerate(calls):
+            if call.get("id") == call_id:
+                updated = {**call, **updates}
+                calls[idx] = updated
+                _write_json(CALLS_FILE, calls)
+                return updated
+    return None
+
 

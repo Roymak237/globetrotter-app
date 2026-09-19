@@ -6,6 +6,7 @@ import "package:provider/provider.dart";
 import "../localization/app_localizations.dart";
 import "../models/chat.dart";
 import "../providers/auth_provider.dart";
+import "../services/call_service.dart";
 import "../services/chat_service.dart";
 import "../utils/theme.dart";
 
@@ -234,6 +235,52 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     );
   }
 
+  /// Call buttons, shown only where a call makes sense.
+  ///
+  /// The community room is excluded because ringing every registered traveller
+  /// is never the intent, and a room with nobody else has no one to ring.
+  List<Widget> _callActions() {
+    if (widget.room.type == ChatRoomType.community) return const [];
+
+    final me = context.read<AuthProvider>().currentUser?.username;
+    final peer = widget.room.otherUsername ??
+        widget.room.members.firstWhere(
+          (member) => member != me,
+          orElse: () => "",
+        );
+    if (peer.isEmpty) return const [];
+
+    return [
+      IconButton(
+        tooltip: "Voice call",
+        icon: const Icon(Icons.call_rounded),
+        onPressed: () => _startCall(peer, video: false),
+      ),
+      IconButton(
+        tooltip: "Video call",
+        icon: const Icon(Icons.videocam_rounded),
+        onPressed: () => _startCall(peer, video: true),
+      ),
+    ];
+  }
+
+  Future<void> _startCall(String peer, {required bool video}) async {
+    final auth = context.read<AuthProvider>();
+    final token = auth.token;
+    if (token == null) return;
+
+    final calls = context.read<CallService>();
+    await calls.connect(token, auth.currentUser?.username ?? "");
+    await calls.startCall(
+      roomId: widget.room.id,
+      peer: peer,
+      peerDisplayName: widget.room.name,
+      video: video,
+    );
+    if (!mounted) return;
+    Navigator.pushNamed(context, "/call");
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
@@ -247,6 +294,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         flexibleSpace: AppTheme.appBarBackground,
         foregroundColor: Colors.white,
         backgroundColor: Colors.transparent,
+        actions: _callActions(),
       ),
       body: Column(
         children: [

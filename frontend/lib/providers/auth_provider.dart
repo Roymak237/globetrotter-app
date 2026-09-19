@@ -49,6 +49,22 @@ class AuthProvider extends ChangeNotifier {
     await _service.logout();
   }
 
+  Future<String?> requestPasswordReset({required String identifier}) {
+    return _service.requestPasswordReset(identifier: identifier);
+  }
+
+  Future<void> resetPassword({
+    required String identifier,
+    required String code,
+    required String newPassword,
+  }) {
+    return _service.resetPassword(
+      identifier: identifier,
+      code: code,
+      newPassword: newPassword,
+    );
+  }
+
   Future<User> fetchProfile() async {
     return _service.fetchProfile();
   }

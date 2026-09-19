@@ -5,15 +5,22 @@ User registration, profile editing, credential changes, and JWT handling.
 """
 import datetime
 import re
+import secrets
 import uuid
+import os
 
 import jwt
 from flask import Blueprint, current_app, jsonify, request
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.models import (
+    _WRITE_LOCK,
     delete_user_account,
+    get_all_users,
     get_user_by_username,
+    peek_password_reset,
+    pop_password_reset,
+    save_password_reset,
     save_user,
     update_user,
     update_username_references,
@@ -23,6 +30,34 @@ auth_bp = Blueprint("auth", __name__)
 
 _USERNAME_PATTERN = re.compile(r"^[a-z0-9_]{3,30}$")
 _EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+# A reset code is a short-lived second factor, not a password. Six digits is
+# enough given the short window and the single-use rule below.
+RESET_CODE_TTL_MINUTES = 15
+RESET_MAX_ATTEMPTS = 5
+
+
+@auth_bp.before_request
+def _check_json_object():
+    if request.endpoint in {
+        "auth.register", "auth.login", "auth.update_profile", "auth.update_username",
+        "auth.update_password", "auth.delete_account",
+    } and not isinstance(request.get_json(silent=True), dict):
+        return jsonify({"error": "JSON object required"}), 400
+
+
+def _validate_avatar(value) -> str | None:
+    """Only local image identifiers, never tracking URLs or path traversal."""
+    if not isinstance(value, str):
+        return "avatar_url must be text"
+    if not value:
+        return None
+    if not re.fullmatch(r"/api/media/[0-9a-f]{32}\.(jpg|jpeg|png|gif|webp)", value):
+        return "avatar must be an uploaded image"
+    from app import models
+    if not os.path.isfile(os.path.join(models.MEDIA_DIR, value.rsplit("/", 1)[-1])):
+        return "uploaded image not found"
+    return None
 
 
 def _session_version(user: dict) -> int:
@@ -40,6 +75,8 @@ def _public_user(user: dict) -> dict:
         "email": user.get("email", ""),
         "home_region": user.get("home_region", ""),
         "avatar_url": user.get("avatar_url", ""),
+        "bio": user.get("bio", ""),
+        "joined_at": user.get("created_at", ""),
         "preferences": user.get("preferences", []),
     }
 
@@ -157,6 +194,8 @@ def register():
         "email": "",
         "home_region": "",
         "avatar_url": "",
+        "bio": "",
+        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "session_version": 0,
     }
     save_user(user)
@@ -219,6 +258,15 @@ def update_profile():
                 return jsonify({"error": f"{field} is too long"}), 400
             updates[field] = data[field].strip()
 
+    if "avatar_url" in updates:
+        error = _validate_avatar(updates["avatar_url"])
+        if error:
+            return jsonify({"error": error}), 400
+    if "bio" in data:
+        if not isinstance(data["bio"], str) or len(data["bio"].strip()) > 280:
+            return jsonify({"error": "bio must be text of at most 280 characters"}), 400
+        updates["bio"] = data["bio"].strip()
+
     if "email" in data:
         if not isinstance(data["email"], str):
             return jsonify({"error": "email must be text"}), 400
@@ -237,7 +285,8 @@ def update_profile():
     if not updates:
         return jsonify({"error": "no profile changes supplied"}), 400
 
-    user = update_user(username, updates)
+    with _WRITE_LOCK:
+        user = update_user(username, updates)
     if user is None:
         return jsonify({"error": "user not found"}), 404
     return jsonify(_public_user(user)), 200
@@ -345,3 +394,117 @@ def delete_account():
     if not delete_user_account(username):
         return jsonify({"error": "account not found"}), 404
     return "", 204
+
+
+def _find_by_identifier(identifier: str) -> dict | None:
+    """Resolve a username or an email address to a user."""
+    identifier = identifier.strip().lower()
+    if not identifier:
+        return None
+    user = get_user_by_username(identifier)
+    if user is not None:
+        return user
+    for candidate in get_all_users():
+        if (candidate.get("email", "") or "").strip().lower() == identifier:
+            return candidate
+    return None
+
+
+@auth_bp.route("/api/auth/request-password-reset", methods=["POST"])
+def request_password_reset():
+    """Issue a single-use reset code for an account.
+
+    The response is identical whether or not the account exists. Saying "no
+    such user" would turn this endpoint into a way to enumerate who has an
+    account, which is worth more to an attacker than the convenience is worth
+    to a legitimate user.
+
+    There is no mail server on this deployment, so the code is returned in the
+    response body. That is honest about what the feature currently is: a
+    self-service reset for a user who still has their session, not a recovery
+    path for a locked-out one. Wiring an SMTP provider in later changes only
+    this function.
+    """
+    data = request.get_json(silent=True) or {}
+    identifier = str(data.get("identifier", "") or "")
+    user = _find_by_identifier(identifier)
+
+    generic = {
+        "message": "If that account exists, a reset code has been issued.",
+    }
+
+    if user is None:
+        return jsonify(generic), 200
+
+    code = f"{secrets.randbelow(1_000_000):06d}"
+    expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        minutes=RESET_CODE_TTL_MINUTES
+    )
+    save_password_reset({
+        "username": user.get("username"),
+        # Stored hashed: a leaked data file should not hand over live codes.
+        "code_hash": generate_password_hash(code),
+        "expires_at": expires.isoformat(),
+        "attempts": 0,
+    })
+
+    return jsonify({**generic, "code": code, "delivery": "in-response"}), 200
+
+
+@auth_bp.route("/api/auth/reset-password", methods=["POST"])
+def reset_password():
+    """Consume a reset code and set a new password."""
+    data = request.get_json(silent=True) or {}
+    identifier = str(data.get("identifier", "") or "")
+    code = str(data.get("code", "") or "").strip()
+    new_password = data.get("new_password", "")
+
+    invalid = jsonify({"error": "that code is not valid or has expired"}), 400
+
+    user = _find_by_identifier(identifier)
+    if user is None or not code:
+        return invalid
+
+    username = user.get("username", "")
+    entry = peek_password_reset(username)
+    if entry is None:
+        return invalid
+
+    expires_at = entry.get("expires_at", "")
+    try:
+        expired = datetime.datetime.fromisoformat(expires_at) < datetime.datetime.now(
+            datetime.timezone.utc
+        )
+    except (TypeError, ValueError):
+        expired = True
+    if expired:
+        pop_password_reset(username)
+        return invalid
+
+    # Guessing a six-digit code is only infeasible if the attempts are capped.
+    attempts = int(entry.get("attempts", 0) or 0)
+    if attempts >= RESET_MAX_ATTEMPTS:
+        pop_password_reset(username)
+        return invalid
+
+    if not check_password_hash(entry.get("code_hash", ""), code):
+        save_password_reset({**entry, "attempts": attempts + 1})
+        return invalid
+
+    password_error = _validate_password(new_password)
+    if password_error:
+        return jsonify({"error": password_error}), 400
+
+    pop_password_reset(username)
+    with _WRITE_LOCK:
+        current = get_user_by_username(username)
+        if current is None:
+            return invalid
+        update_user(username, {
+            "password_hash": generate_password_hash(new_password),
+            # Invalidate every existing session: if the account was taken over,
+            # a reset has to evict the intruder, not just add a second holder.
+            "session_version": _session_version(current) + 1,
+        })
+
+    return jsonify({"message": "Password updated. You can now sign in."}), 200
