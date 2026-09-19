@@ -1,10 +1,22 @@
 import "package:flutter/material.dart";
+
 import "../models/itinerary.dart";
 import "../models/user.dart";
 import "../services/auth_service.dart";
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _service = AuthService();
+
+  AuthProvider() {
+    _service.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    _service.removeListener(notifyListeners);
+    _service.dispose();
+    super.dispose();
+  }
 
   String? get token => _service.token;
   User? get currentUser => _service.currentUser;
@@ -19,7 +31,7 @@ class AuthProvider extends ChangeNotifier {
     required String password,
     List<String>? preferences,
   }) async {
-    return await _service.register(
+    return _service.register(
       username: username,
       password: password,
       preferences: preferences,
@@ -30,15 +42,71 @@ class AuthProvider extends ChangeNotifier {
     required String username,
     required String password,
   }) async {
-    return await _service.login(username: username, password: password);
+    return _service.login(username: username, password: password);
   }
 
   Future<void> logout() async {
     await _service.logout();
   }
 
-  Future<List<Itinerary>> fetchItineraries() async {
-    return await _service.fetchItineraries();
+  Future<User> fetchProfile() async {
+    return _service.fetchProfile();
+  }
+
+  Future<User> refreshToken() {
+    return _service.refreshToken();
+  }
+
+  Future<User> updateProfile({
+    String? displayName,
+    String? email,
+    String? homeRegion,
+    String? avatarUrl,
+    List<String>? preferences,
+  }) {
+    return _service.updateProfile(
+      displayName: displayName,
+      email: email,
+      homeRegion: homeRegion,
+      avatarUrl: avatarUrl,
+      preferences: preferences,
+    );
+  }
+
+  Future<User> updatePreferences({required List<String> preferences}) {
+    return _service.updatePreferences(preferences: preferences);
+  }
+
+  Future<User> updateUsername({
+    required String username,
+    required String currentPassword,
+  }) {
+    return _service.updateUsername(
+      username: username,
+      currentPassword: currentPassword,
+    );
+  }
+
+  Future<User> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) {
+    return _service.updatePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+  }
+
+  Future<User> revokeOtherSessions() {
+    return _service.revokeOtherSessions();
+  }
+
+  Future<void> deleteAccount({required String currentPassword}) {
+    return _service.deleteAccount(currentPassword: currentPassword);
+  }
+
+  Future<List<Itinerary>> fetchItineraries() {
+    return _service.fetchItineraries();
   }
 
   Future<void> createItinerary({
@@ -47,8 +115,8 @@ class AuthProvider extends ChangeNotifier {
     String? startDate,
     String? endDate,
     String? notes,
-  }) async {
-    return await _service.createItinerary(
+  }) {
+    return _service.createItinerary(
       title: title,
       destinations: destinations,
       startDate: startDate,
@@ -64,8 +132,8 @@ class AuthProvider extends ChangeNotifier {
     String? startDate,
     String? endDate,
     String? notes,
-  }) async {
-    return await _service.updateItinerary(
+  }) {
+    return _service.updateItinerary(
       itineraryId: itineraryId,
       title: title,
       destinations: destinations,
@@ -75,21 +143,21 @@ class AuthProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> deleteItinerary(String itineraryId) async {
-    return await _service.deleteItinerary(itineraryId);
+  Future<void> deleteItinerary(String itineraryId) {
+    return _service.deleteItinerary(itineraryId);
   }
 
   Future<void> shareItinerary({
     required String itineraryId,
     required String sharedWith,
-  }) async {
-    return await _service.shareItinerary(
+  }) {
+    return _service.shareItinerary(
       itineraryId: itineraryId,
       sharedWith: sharedWith,
     );
   }
 
-  Future<void> revokeShare(String shareId) async {
-    return await _service.revokeShare(shareId);
+  Future<void> revokeShare(String shareId) {
+    return _service.revokeShare(shareId);
   }
 }

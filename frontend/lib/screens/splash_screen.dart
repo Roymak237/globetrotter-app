@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:provider/provider.dart";
-import "../providers/auth_provider.dart";
-import "login_screen.dart";
+
+import "../utils/theme.dart";
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,11 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _bootstrap() async {
     await Future.delayed(const Duration(milliseconds: 1600));
     if (!mounted) return;
-    final auth = context.read<AuthProvider>();
-    await auth.loadToken();
-    if (!mounted) return;
-    final target = auth.isAuthenticated ? "/home" : "/login";
-    Navigator.pushReplacementNamed(context, target);
+    Navigator.pushReplacementNamed(context, "/login");
   }
 
   @override
@@ -50,13 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF007A4D), Color(0xFF005C3A)],
-            ),
-          ),
+          decoration: const BoxDecoration(gradient: AppTheme.brandGradient),
           child: Center(
             child: FadeTransition(
               opacity: _fade,
@@ -67,18 +56,18 @@ class _SplashScreenState extends State<SplashScreen>
                     width: 120,
                     height: 120,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
+                      color: Colors.white.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.public,
                       size: 64,
-                      color: Color(0xFFFCD116),
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 24),
                   const Text(
-                    "GlobeTrotter",
+                    "Kamer-Go",
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.w700,
@@ -91,14 +80,14 @@ class _SplashScreenState extends State<SplashScreen>
                     "Cameroon",
                     style: TextStyle(
                       fontSize: 16,
-                      color: const Color(0xFFFCD116).withOpacity(0.95),
+                      color: Colors.white.withValues(alpha: 0.9),
                       letterSpacing: 2,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const SizedBox(height: 32),
                   const CircularProgressIndicator(
-                    color: Color(0xFFFCD116),
+                    color: Colors.white,
                     strokeWidth: 2.5,
                   )
                 ],
