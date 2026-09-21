@@ -3,6 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    # Tagged explicitly rather than left to Compose's derived name, so a
+    # release can be identified, smoke tested before it goes live, and rolled
+    # back to by tag. Without this, reverting means rebuilding from restored
+    # source, which is slow and can fail for the same reason the deploy did.
+    image: kamergo-backend:${IMAGE_TAG:-latest}
     container_name: globetrotter_backend
     restart: unless-stopped
     environment:
@@ -12,6 +17,14 @@ services:
       - PORT=${PORT:-5000}
     volumes:
       - backend_data:/app/data
+    # This server is shared with unrelated services, so an unbounded container
+    # lets the kernel choose the out-of-memory victim by score, which need not
+    # be the process at fault. The call registry also lives in process memory,
+    # so a leak there would grow without limit. This ceiling is roughly fifteen
+    # times normal usage: high enough never to fire in ordinary operation, low
+    # enough that a runaway restarts this container instead of destabilising
+    # the host.
+    mem_limit: 768m
     healthcheck:
       test:
         [
@@ -41,6 +54,9 @@ services:
       # compiled Flutter app under app/, and release artefacts under
       # downloads/. The CI publish stage builds this tree.
       - ./site:/usr/share/nginx/html:ro
+    # Serving static files and proxying needs very little; this only exists to
+    # stop a pathological case from competing with the rest of the host.
+    mem_limit: 128m
     depends_on:
       backend:
         condition: service_started

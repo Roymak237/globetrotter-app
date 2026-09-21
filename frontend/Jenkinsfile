@@ -35,6 +35,25 @@ pipeline {
         PYTHON_IMAGE   = 'python:3.11-slim'
         // Path to the Flutter app, relative to the workspace root.
         APP_ROOT       = 'frontend'
+
+        // Build containers are capped, and capped without swap.
+        //
+        // This host is shared with a database, several unrelated sites and
+        // Jenkins itself, and it has about 5.8 GB free against a 2 GB swapfile
+        // that is already half consumed by long-idle processes. An unbounded
+        // build does not simply fail when it overreaches: the kernel picks a
+        // victim by badness score, and the largest resident process on the box
+        // need not be the build. Capping confines the damage to the thing at
+        // fault.
+        //
+        // Setting the swap ceiling equal to the memory ceiling denies these
+        // containers swap entirely. A build that overruns then dies at once
+        // with status 137 rather than thrashing a swapfile the live services
+        // depend on. A fast, legible failure is worth more here than a slow
+        // one that degrades everything else on the way down.
+        MEM_ANDROID    = '4g'
+        MEM_FLUTTER    = '3g'
+        MEM_PYTHON     = '1g'
     }
 
     stages {
@@ -75,6 +94,7 @@ set -euo pipefail
 # Runs against a throwaway data directory so neither the checkout nor the live
 # volume is touched by test writes.
 docker run --rm \
+    --memory "${MEM_PYTHON}" --memory-swap "${MEM_PYTHON}" \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
     -w "${WORKSPACE}" \
     -e PIP_DISABLE_PIP_VERSION_CHECK=1 \
@@ -174,6 +194,7 @@ trap reclaim EXIT
 # The API base URL is compiled in, so the deployed app calls its own domain
 # instead of the localhost default used during development.
 docker run --rm \
+    --memory "${MEM_FLUTTER}" --memory-swap "${MEM_FLUTTER}" \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
     -w "${WORKSPACE}/${APP_ROOT}" \
     -e PUB_CACHE=/var/jenkins_home/.pub-cache \
@@ -216,6 +237,7 @@ reclaim() {
 trap reclaim EXIT
 
 docker run --rm \
+    --memory "${MEM_ANDROID}" --memory-swap "${MEM_ANDROID}" \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
     -w "${WORKSPACE}/${APP_ROOT}" \
     -e PUB_CACHE=/var/jenkins_home/.pub-cache \
@@ -227,7 +249,17 @@ git config --global --add safe.directory /sdks/flutter
 git config --global --add safe.directory ${WORKSPACE}
 yes | flutter doctor --android-licenses >/dev/null 2>&1 || true
 flutter build apk --release --dart-define=BACKEND_BASE_URL=https://${DOMAIN}
-" || exit 1
+"
+status=$?
+
+# 137 is the cgroup limit, not a compilation fault. Saying so plainly saves
+# the next person searching Gradle's "daemon disappeared" message, which is
+# what this looked like before the ceiling existed.
+if [ "${status}" -eq 137 ]; then
+    echo "ERROR: the Android build exceeded its ${MEM_ANDROID} ceiling and was killed." >&2
+    echo "       Lower the heaps in android/gradle.properties or raise MEM_ANDROID." >&2
+fi
+[ "${status}" -eq 0 ] || exit "${status}"
 
 test -f "${WORKSPACE}/${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk"
 '''
@@ -235,14 +267,23 @@ test -f "${WORKSPACE}/${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk"
             }
         }
 
-        stage('Publish release') {
+        stage('Build release image') {
             steps {
+                // The frontend and backend are versioned together, which is
+                // the whole reason they share a repository. Publishing the web
+                // app before the backend image is known to build would break
+                // exactly that guarantee: a failed backend left the new
+                // frontend calling the old API. So the image is built and
+                // proven first, and nothing user-visible moves until it is.
                 sh '''#!/usr/bin/env bash
 set -euo pipefail
 
 # The signing key lives only on the server. Losing it would invalidate every
 # issued token, so its absence is a hard failure rather than a regeneration.
 test -f "${APP_DIR}/.env" || { echo "ERROR: ${APP_DIR}/.env is missing." >&2; exit 1; }
+
+IMAGE_TAG="$(git rev-parse --short HEAD)"
+export IMAGE_TAG
 
 backup="${APP_DIR}/.rollback"
 rm -rf "${backup}"
@@ -256,11 +297,71 @@ if [ -d "${APP_DIR}/backend" ]; then
     cp -a "${APP_DIR}/backend" "${backup}/backend"
 fi
 
-mkdir -p "${APP_DIR}/backend/data" "${APP_DIR}/nginx/conf.d" \
-         "${APP_DIR}/site/app" "${APP_DIR}/site/downloads" "${APP_DIR}/site/media"
+# Recording the running image means a revert can re-point to a tag that is
+# already built, instead of rebuilding from restored source. Rebuilding during
+# a rollback asks the failing path to work twice, which is a poor bet when the
+# deployment has just demonstrated it might not.
+docker inspect -f '{{.Config.Image}}' globetrotter_backend 2>/dev/null \
+    > "${backup}/image" || true
 
-# --delete stops files removed upstream from lingering in the release.
+mkdir -p "${APP_DIR}/backend/data" "${APP_DIR}/nginx/conf.d"
+
+# Staging the build context is safe at this point: the running container holds
+# its own copy of the code from the image it was built from, so nothing here
+# reaches production until the container is replaced further down.
 rsync -a --delete --exclude '__pycache__' backend/app/ "${APP_DIR}/backend/app/"
+
+install -m 0644 backend/requirements.txt "${APP_DIR}/backend/requirements.txt"
+install -m 0755 backend/docker-entrypoint.sh "${APP_DIR}/backend/docker-entrypoint.sh"
+install -m 0644 backend/data/destinations.json "${APP_DIR}/backend/data/destinations.json"
+
+install -m 0644 "${APP_ROOT}/deploy/Dockerfile" "${APP_DIR}/Dockerfile"
+install -m 0644 "${APP_ROOT}/deploy/docker-compose.yml" "${APP_DIR}/docker-compose.yml"
+install -m 0644 "${APP_ROOT}/deploy/nginx/conf.d/globetrotter.conf" "${APP_DIR}/nginx/conf.d/globetrotter.conf"
+
+cd "${APP_DIR}"
+docker compose build
+echo "${IMAGE_TAG}" > "${APP_DIR}/.image-tag"
+
+# Prove the image serves before it is allowed anywhere near live traffic. This
+# runs detached from the compose project on a throwaway data directory, so a
+# broken build is found here rather than by the first person to load the site.
+docker rm -f kamergo_imagecheck >/dev/null 2>&1 || true
+docker run -d --name kamergo_imagecheck \
+    --memory 512m --memory-swap 512m \
+    -e SECRET_KEY=image-smoke-test \
+    "kamergo-backend:${IMAGE_TAG}" >/dev/null
+
+ok=0
+for _ in $(seq 1 30); do
+    if docker exec kamergo_imagecheck python -c \
+        "import urllib.request;urllib.request.urlopen('http://127.0.0.1:5000/healthz').read()" \
+        >/dev/null 2>&1; then
+        ok=1
+        break
+    fi
+    sleep 2
+done
+
+if [ "${ok}" != "1" ]; then
+    echo "ERROR: the newly built image never served /healthz." >&2
+    docker logs --tail 50 kamergo_imagecheck >&2 || true
+    docker rm -f kamergo_imagecheck >/dev/null 2>&1 || true
+    exit 1
+fi
+
+docker rm -f kamergo_imagecheck >/dev/null 2>&1 || true
+echo "Image kamergo-backend:${IMAGE_TAG} built and verified."
+'''
+            }
+        }
+
+        stage('Publish release') {
+            steps {
+                sh '''#!/usr/bin/env bash
+set -euo pipefail
+
+mkdir -p "${APP_DIR}/site/app" "${APP_DIR}/site/downloads" "${APP_DIR}/site/media"
 
 # The document root is assembled here: landing page at the top level, the
 # Flutter app under app/, release artefacts under downloads/. app/ and
@@ -280,14 +381,6 @@ if [ -f "${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk" ]; then
     install -m 0644 "${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk" \
         "${APP_DIR}/site/downloads/kamer-go.apk"
 fi
-
-install -m 0644 backend/requirements.txt "${APP_DIR}/backend/requirements.txt"
-install -m 0755 backend/docker-entrypoint.sh "${APP_DIR}/backend/docker-entrypoint.sh"
-install -m 0644 backend/data/destinations.json "${APP_DIR}/backend/data/destinations.json"
-
-install -m 0644 "${APP_ROOT}/deploy/Dockerfile" "${APP_DIR}/Dockerfile"
-install -m 0644 "${APP_ROOT}/deploy/docker-compose.yml" "${APP_DIR}/docker-compose.yml"
-install -m 0644 "${APP_ROOT}/deploy/nginx/conf.d/globetrotter.conf" "${APP_DIR}/nginx/conf.d/globetrotter.conf"
 '''
             }
         }
@@ -297,8 +390,13 @@ install -m 0644 "${APP_ROOT}/deploy/nginx/conf.d/globetrotter.conf" "${APP_DIR}/
                 sh '''#!/usr/bin/env bash
 set -euo pipefail
 
+# The image was built and proven in an earlier stage, so this starts a known
+# good artefact rather than rebuilding and hoping. Compose reads IMAGE_TAG when
+# resolving the service image.
+IMAGE_TAG="$(cat "${APP_DIR}/.image-tag")"
+export IMAGE_TAG
+
 cd "${APP_DIR}"
-docker compose build
 docker compose up -d
 
 # Jenkins runs in its own network namespace, so the host loopback that
@@ -343,11 +441,45 @@ echo "Deployment failed; restoring the previous release."
 [ -d "${backup}/site" ] && rsync -a --delete "${backup}/site/" "${APP_DIR}/site/"
 [ -d "${backup}/backend" ] && rsync -a --delete "${backup}/backend/" "${APP_DIR}/backend/"
 
-cd "${APP_DIR}" && docker compose up -d --build
+cd "${APP_DIR}"
+
+# Restart from the image that was running before this build, which is already
+# on disk. The previous version of this step rebuilt from restored source,
+# which asked the very path that had just failed to succeed on the second
+# attempt. Re-pointing at a known good tag has no such dependency.
+#
+# The recorded reference is re-tagged rather than parsed, so this works whether
+# the prior release used the current naming scheme or the older Compose-derived
+# name it replaced.
+prev="$(cat "${backup}/image" 2>/dev/null || true)"
+if [ -n "${prev}" ] && docker image inspect "${prev}" >/dev/null 2>&1; then
+    echo "Reverting to ${prev}."
+    docker tag "${prev}" kamergo-backend:rollback
+    IMAGE_TAG=rollback docker compose up -d
+else
+    # No recorded image, or it has since been pruned. Rebuilding is the only
+    # option left, and is reported plainly because it is the slower, less
+    # certain path rather than the intended one.
+    echo "No previous image available; rebuilding from the restored source." >&2
+    IMAGE_TAG=rollback docker compose up -d --build
+fi
 '''
         }
         success {
-            sh 'rm -rf "${APP_DIR}/.rollback"'
+            sh '''#!/usr/bin/env bash
+set -uo pipefail
+
+rm -rf "${APP_DIR}/.rollback"
+
+# A deploy leaves its predecessor behind, and the host was already carrying
+# well over ten gigabytes of reclaimable images. Keeping the three most recent
+# preserves a rollback target or two without letting the disk fill silently.
+docker images --format '{{.Repository}}:{{.Tag}} {{.ID}}' kamergo-backend \
+    | tail -n +4 \
+    | while read -r ref _; do
+        docker rmi "${ref}" >/dev/null 2>&1 || true
+    done
+'''
         }
         unstable {
             // An unstable run still deployed and verified; only an optional
