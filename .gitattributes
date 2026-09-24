@@ -1,0 +1,41 @@
+# Shell scripts in this repository are executed on Linux, by Docker and by the
+# CI server. A CRLF line ending makes the kernel look for an interpreter named
+# "bash\r", which fails with the famously unhelpful "no such file or
+# directory" even though the file plainly exists.
+#
+# The repository is currently clean: every script is stored with LF. This file
+# exists so it stays that way. Without it, correctness depends on each
+# contributor's core.autocrlf setting, which is invisible in review and only
+# announces itself once a deployment breaks.
+#
+# The backend Dockerfile carries a sed that strips carriage returns from its
+# entrypoint, which suggests this has been a live concern before even if the
+# committed content is sound today.
+*.sh text eol=lf
+docker-entrypoint.sh text eol=lf
+gradlew text eol=lf
+
+# Read by tools on the server, where CRLF is equally unwelcome.
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Jenkinsfile text eol=lf
+*.conf text eol=lf
+
+# Windows-only scripts, which genuinely do want CRLF.
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets, so git never attempts line-ending translation on them.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.apk binary
+*.jar binary
+*.keystore binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
