@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         showScaffold: false,
         onExplore: () => setState(() => _currentIndex = 0),
       ),
-      MapScreen(isActive: _currentIndex == 3),
+      MapScreen(isActive: _currentIndex == 3, showScaffold: false),
       const ItinerariesScreen(),
       const ChatScreen(showScaffold: false),
       const ProfileScreen(showScaffold: false),

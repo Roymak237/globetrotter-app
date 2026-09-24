@@ -21,9 +21,20 @@ import "../widgets/state_views.dart";
 class MapScreen extends StatefulWidget {
   final bool isActive;
 
+  /// Whether this instance has to supply its own page chrome.
+  ///
+  /// The screen is used two ways: as a tab inside the home shell, which
+  /// already provides the Scaffold and app bar, and as the "/map" route pushed
+  /// from the destinations shortcut, which provides nothing. Without this the
+  /// pushed copy rendered as a bare Column with no back button and no Material
+  /// ancestor, so there was no way out of it and any text relying on the
+  /// inherited style came out unstyled.
+  final bool showScaffold;
+
   const MapScreen({
     super.key,
     this.isActive = true,
+    this.showScaffold = true,
   });
 
   @override
@@ -385,60 +396,94 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
-    if (!widget.isActive) return const SizedBox.expand();
+    if (!widget.isActive) return _wrap(context, const SizedBox.expand());
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 16, 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      localizations.brand,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: AppTheme.secondary,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.1,
-                          ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      localizations.mapHeading,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+    return _wrap(
+      context,
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // The app bar already carries the title on the standalone route, so
+          // the in-page header would only repeat it.
+          if (!widget.showScaffold)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 16, 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localizations.brand,
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: AppTheme.secondary,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.1,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          localizations.mapHeading,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
                                 fontFamily: AppTheme.displayFontFamily,
                                 height: 1,
                               ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, "/itineraries"),
+                    icon: const Icon(Icons.route_rounded, size: 18),
+                    label: Text(localizations.myTrips),
+                  ),
+                ],
               ),
-              TextButton.icon(
-                onPressed: () => Navigator.pushNamed(context, "/itineraries"),
-                icon: const Icon(Icons.route_rounded, size: 18),
-                label: Text(localizations.myTrips),
-              ),
-            ],
+            ),
+          Expanded(
+            child: _loading
+                ? AppLoadingView(message: localizations.mapLoading)
+                : _error != null
+                    ? ErrorStateView(
+                        title: localizations.mapErrorTitle,
+                        message: _error!,
+                        onRetry: _loadDestinations,
+                      )
+                    : _buildMap(context),
           ),
-        ),
-        Expanded(
-          child: _loading
-              ? AppLoadingView(message: localizations.mapLoading)
-              : _error != null
-                  ? ErrorStateView(
-                      title: localizations.mapErrorTitle,
-                      message: _error!,
-                      onRetry: _loadDestinations,
-                    )
-                  : _buildMap(context),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  /// Adds the page chrome the pushed route needs, and nothing when embedded.
+  Widget _wrap(BuildContext context, Widget content) {
+    if (!widget.showScaffold) return content;
+    final localizations = AppLocalizations.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: AppTheme.appBarBackground,
+        title: Text(localizations.mapHeading),
+        actions: [
+          IconButton(
+            tooltip: localizations.myTrips,
+            onPressed: () => Navigator.pushNamed(context, "/itineraries"),
+            icon: const Icon(Icons.route_rounded),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: content,
+      ),
     );
   }
 
@@ -474,36 +519,46 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ),
+        // The pill and the buttons share one row rather than sitting in two
+        // independent Positioned corners. Left- and right-anchored overlays
+        // have no idea how wide the other one is, so on a narrow screen the
+        // pill simply slid underneath the buttons.
         Positioned(
           top: 14,
           left: 28,
-          child: interceptMapOverlay(
-              _MapCountPill(count: mappedDestinations.length)),
-        ),
-        Positioned(
-          top: 14,
           right: 28,
-          child: interceptMapOverlay(
-            Column(
-              children: [
-                MapActionButton(
-                  locating: _locating,
-                  hasCurrentLocation: _currentLocation != null,
-                  following: _following,
-                  semanticLabel: _following
-                      ? localizations.trackerStopFollowing
-                      : localizations.trackerFollowMe,
-                  onPressed: _toggleFollow,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: interceptMapOverlay(
+                  _MapCountPill(count: mappedDestinations.length),
                 ),
-                const SizedBox(height: 10),
-                _TrackerButton(
-                  sharing: _sharing,
-                  companionCount: _companions.length,
-                  semanticLabel: localizations.trackerOptions,
-                  onPressed: _openTrackerSheet,
+              ),
+              const SizedBox(width: 12),
+              interceptMapOverlay(
+                Column(
+                  children: [
+                    MapActionButton(
+                      locating: _locating,
+                      hasCurrentLocation: _currentLocation != null,
+                      following: _following,
+                      semanticLabel: _following
+                          ? localizations.trackerStopFollowing
+                          : localizations.trackerFollowMe,
+                      onPressed: _toggleFollow,
+                    ),
+                    const SizedBox(height: 10),
+                    _TrackerButton(
+                      sharing: _sharing,
+                      companionCount: _companions.length,
+                      semanticLabel: localizations.trackerOptions,
+                      onPressed: _openTrackerSheet,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         if (_selectedDestination != null)
@@ -531,30 +586,34 @@ class _MapCountPill extends StatelessWidget {
   final int count;
 
   const _MapCountPill({required this.count});
+
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
-        decoration: BoxDecoration(
-          color: AppTheme.surface.withValues(alpha: 0.95),
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: AppTheme.border),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x22000000),
-              blurRadius: 12,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Text(
-          "$count mapped place${count == 1 ? "" : "s"}",
-          style: const TextStyle(
-            color: AppTheme.primaryDark,
-            fontWeight: FontWeight.w800,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
+      decoration: BoxDecoration(
+        color: AppTheme.surface.withValues(alpha: 0.95),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppTheme.border),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
           ),
+        ],
+      ),
+      child: Text(
+        AppLocalizations.of(context).mappedPlaces(count),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        // The size is stated rather than inherited. This pill floats over the
+        // map and had been rendering with whatever DefaultTextStyle happened
+        // to be in scope, which on the pushed route was none at all.
+        style: const TextStyle(
+          fontSize: 13,
+          color: AppTheme.primaryDark,
+          fontWeight: FontWeight.w800,
         ),
       ),
     );

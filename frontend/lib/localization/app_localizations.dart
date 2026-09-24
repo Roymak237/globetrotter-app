@@ -184,6 +184,12 @@ class AppLocalizations {
   String get noMappedPlaces => _text("noMappedPlaces");
   String get noMappedPlacesMessage => _text("noMappedPlacesMessage");
 
+  String mappedPlaces(int count) => _replace(
+        count == 1 ? "mappedPlaceOne" : "mappedPlaceMany",
+        "count",
+        "$count",
+      );
+
   String get trackerTitle => _text("trackerTitle");
   String get trackerFollowMe => _text("trackerFollowMe");
   String get trackerStopFollowing => _text("trackerStopFollowing");
@@ -375,6 +381,8 @@ class AppLocalizations {
       "noMappedPlaces": "No mapped places yet.",
       "noMappedPlacesMessage":
           "Add coordinates to destinations to bring them onto the map.",
+      "mappedPlaceOne": "{count} mapped place",
+      "mappedPlaceMany": "{count} mapped places",
       "trackerTitle": "Live location",
       "trackerFollowMe": "Follow my position",
       "trackerStopFollowing": "Stop following my position",
@@ -600,6 +608,8 @@ class AppLocalizations {
       "noMappedPlaces": "Aucun lieu cartographié pour le moment.",
       "noMappedPlacesMessage":
           "Ajoutez des coordonnées aux destinations pour les afficher sur la carte.",
+      "mappedPlaceOne": "{count} lieu cartographié",
+      "mappedPlaceMany": "{count} lieux cartographiés",
       "trackerTitle": "Position en direct",
       "trackerFollowMe": "Suivre ma position",
       "trackerStopFollowing": "Arrêter de suivre ma position",
@@ -824,6 +834,8 @@ class AppLocalizations {
       "mapErrorTitle": "The map lose its trail.",
       "noMappedPlaces": "No mapped place yet.",
       "noMappedPlacesMessage": "Add coordinates make places show for the map.",
+      "mappedPlaceOne": "{count} place for map",
+      "mappedPlaceMany": "{count} places for map",
       "trackerTitle": "Live location",
       "trackerFollowMe": "Follow my position",
       "trackerStopFollowing": "Stop follow my position",
