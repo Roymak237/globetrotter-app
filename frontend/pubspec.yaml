@@ -41,6 +41,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  # Generates the platform launcher icons from a single source image. A build
+  # time tool only: it writes into android/, ios/ and web/ and is never part of
+  # the shipped app.
+  flutter_launcher_icons: ^0.14.4
 
 # record 5.2.1 asks for record_linux ^0.7.1, but 0.7.2 was written against an
 # older record_platform_interface than the 1.6.0 the rest of the record family
@@ -55,6 +59,8 @@ flutter:
   uses-material-design: true
   assets:
     - web/
+    - assets/developer.jpg
+    - assets/icons/icon.png
     - assets/images/
     - assets/images/dining/
     - assets/images/gaming/
@@ -63,3 +69,35 @@ flutter:
     - assets/images/Schools/
     - assets/images/shopping/
     - assets/images/tourist/
+
+# Launcher icons, generated from one source image by `dart run
+# flutter_launcher_icons`. The generated files are committed, so a clean
+# checkout builds a correctly branded app without anyone remembering to run
+# this first.
+flutter_launcher_icons:
+  image_path: "assets/icons/icon.png"
+
+  android: "ic_launcher"
+  min_sdk_android: 21
+
+  # Android 8 and later mask the icon to whatever shape the launcher prefers,
+  # and only the centre 66% of the foreground is guaranteed to survive that
+  # crop. This artwork fills 94% of its canvas, so handing it over untouched
+  # would slice the edges off on most devices. The inset scales it into the
+  # safe zone, and the background matches the near-black the artwork already
+  # sits on so the two read as one image rather than a square on a field.
+  adaptive_icon_foreground: "assets/icons/icon.png"
+  adaptive_icon_foreground_inset: 20
+  adaptive_icon_background: "#000000"
+
+  # iOS forbids transparency in app icons and will reject a build that has it.
+  # The source is opaque already, but removing alpha is declared rather than
+  # assumed, since a later edit to the artwork could reintroduce it.
+  ios: true
+  remove_alpha_ios: true
+
+  web:
+    generate: true
+    image_path: "assets/icons/icon.png"
+    background_color: "#000000"
+    theme_color: "#B4462A"

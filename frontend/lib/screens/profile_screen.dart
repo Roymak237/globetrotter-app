@@ -9,6 +9,7 @@ import "../utils/theme.dart";
 import "../widgets/account_dialogs.dart";
 import "../widgets/preference_editor_dialog.dart";
 import "../widgets/rate_app_dialog.dart";
+import "about_developer_screen.dart";
 import "interests_screen.dart";
 import "suggest_place_screen.dart";
 
@@ -386,6 +387,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: AppLocalizations.of(context).rateAppTitle,
                 subtitle: AppLocalizations.of(context).rateAppPrompt,
                 onTap: () => RateAppDialog.show(context),
+              ),
+              const Divider(height: 1),
+              _SettingsRow(
+                icon: Icons.info_outline_rounded,
+                title: AppLocalizations.of(context).aboutDeveloperTitle,
+                subtitle: AppLocalizations.of(context).aboutDeveloperSubtitle,
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const AboutDeveloperScreen(),
+                  ),
+                ),
               ),
             ],
           ),

@@ -1,4 +1,6 @@
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
+import "package:flutter_localizations/flutter_localizations.dart";
 
 class AppLocalizations {
   final Locale locale;
@@ -13,6 +15,25 @@ class AppLocalizations {
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
+
+  /// The full delegate list the app runs on.
+  ///
+  /// Flutter ships no Material or Cupertino translations for Cameroonian
+  /// Pidgin, and the stock delegates throw rather than degrade when asked for
+  /// a locale they do not know — which takes out any screen with an `AppBar`.
+  /// The wrappers below fall back to English for the framework's own strings
+  /// while the app's copy stays in Pidgin.
+  ///
+  /// Exposed here, rather than built inline in `MaterialApp`, so that tests
+  /// mount screens through the same stack the app uses. Otherwise a test can
+  /// only cover the two locales the framework happens to support, and Pidgin
+  /// would go unverified precisely where it is most likely to break.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [
+    delegate,
+    _FallbackMaterialLocalizationsDelegate(),
+    _FallbackWidgetsLocalizationsDelegate(),
+    _FallbackCupertinoLocalizationsDelegate(),
+  ];
 
   static AppLocalizations of(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations) ??
@@ -183,6 +204,31 @@ class AppLocalizations {
   String get fieldNotes => _text("fieldNotes");
   String get savePlaceMessage => _text("savePlaceMessage");
 
+  String get aboutDeveloperTitle => _text("aboutDeveloperTitle");
+  String get aboutDeveloperSubtitle => _text("aboutDeveloperSubtitle");
+  String get aboutDeveloperName => _text("aboutDeveloperName");
+  String get aboutDeveloperRole => _text("aboutDeveloperRole");
+  String get aboutDeveloperLocation => _text("aboutDeveloperLocation");
+  String get aboutDeveloperWhoTitle => _text("aboutDeveloperWhoTitle");
+  String get aboutDeveloperWhoBody => _text("aboutDeveloperWhoBody");
+  String get aboutDeveloperEducationTitle =>
+      _text("aboutDeveloperEducationTitle");
+  String get aboutDeveloperSchoolLabel => _text("aboutDeveloperSchoolLabel");
+  String get aboutDeveloperSchoolValue => _text("aboutDeveloperSchoolValue");
+  String get aboutDeveloperProgrammeLabel =>
+      _text("aboutDeveloperProgrammeLabel");
+  String get aboutDeveloperProgrammeValue =>
+      _text("aboutDeveloperProgrammeValue");
+  String get aboutDeveloperStatusLabel => _text("aboutDeveloperStatusLabel");
+  String get aboutDeveloperStatusValue => _text("aboutDeveloperStatusValue");
+  String get aboutDeveloperOngoing => _text("aboutDeveloperOngoing");
+  String get aboutDeveloperAppTitle => _text("aboutDeveloperAppTitle");
+  String get aboutDeveloperAppBody => _text("aboutDeveloperAppBody");
+  String get aboutDeveloperStackTitle => _text("aboutDeveloperStackTitle");
+  String get aboutDeveloperStackBody => _text("aboutDeveloperStackBody");
+  String get aboutDeveloperThanks => _text("aboutDeveloperThanks");
+  String get aboutDeveloperVersion => _text("aboutDeveloperVersion");
+
   static const _catalog = <String, Map<String, String>>{
     "en": {
       "appTitle": "GlobeTrotter Cameroon",
@@ -339,6 +385,57 @@ class AppLocalizations {
       "fieldNotes": "Field notes",
       "savePlaceMessage":
           "Save this place to keep it close while you shape your next trip.",
+
+      // About the developer. The proper noun and the version string are
+      // deliberately defined only here: `_text` falls back to English per key,
+      // so the other locales inherit them and cannot drift out of step.
+      "aboutDeveloperName": "Fru Chi Ehud Neba",
+      "aboutDeveloperVersion": "Kamer-Go · version 1.0.0 (build 1)",
+      "aboutDeveloperTitle": "About the developer",
+      "aboutDeveloperSubtitle": "The person who built Kamer-Go",
+      "aboutDeveloperRole":
+          "Software developer, and the one pair of hands behind Kamer-Go — "
+              "the app, the service it talks to, and the pipeline that ships it.",
+      "aboutDeveloperLocation": "Cameroon",
+      "aboutDeveloperWhoTitle": "Who I am",
+      "aboutDeveloperWhoBody":
+          "I am a software developer from Cameroon, and I build for mobile and "
+              "the web. Kamer-Go began with something that kept bothering me: this "
+              "country is full of places worth the journey, yet almost none of them "
+              "are easy to find, compare, or plan a day around. The information is "
+              "scattered across word of mouth and half-finished pages. So I set out "
+              "to gather it into one place a traveller can actually use — and to "
+              "make it speak the languages people here already speak.",
+      "aboutDeveloperEducationTitle": "Education",
+      "aboutDeveloperSchoolLabel": "Institution",
+      "aboutDeveloperSchoolValue":
+          "ICT University (ICT-U)\nInformation and Communication Technology "
+              "University",
+      "aboutDeveloperProgrammeLabel": "Programme",
+      "aboutDeveloperProgrammeValue": "Bachelor's degree",
+      "aboutDeveloperStatusLabel": "Status",
+      "aboutDeveloperStatusValue": "Currently studying",
+      "aboutDeveloperOngoing": "In progress",
+      "aboutDeveloperAppTitle": "About Kamer-Go",
+      "aboutDeveloperAppBody":
+          "Kamer-Go is a travel companion for Cameroon. It puts destinations, "
+              "recommendations and a day-by-day itinerary planner in one place, then "
+              "adds the things a trip is really made of: saved places, shared plans, "
+              "and a chat where travellers can compare notes or call one another "
+              "outright. It speaks English, French and Cameroonian Pidgin, because a "
+              "travel app that only speaks one of them is only half useful here.",
+      "aboutDeveloperStackTitle": "How it is built",
+      "aboutDeveloperStackBody":
+          "The app is written in Flutter, so one codebase runs on Android, iOS "
+              "and the web. Behind it sits a Python service that handles accounts, "
+              "destinations, itineraries and sharing, with WebRTC carrying the voice "
+              "and video calls. Every push is built, tested and deployed "
+              "automatically, and each release is packaged as its own container "
+              "image — which means a bad release can be rolled back rather than "
+              "rushed through a fix.",
+      "aboutDeveloperThanks":
+          "Thank you for travelling with Kamer-Go. Every place you save and "
+              "every trip you plan helps shape where this goes next.",
     },
     "fr": {
       "appTitle": "GlobeTrotter Cameroun",
@@ -498,6 +595,56 @@ class AppLocalizations {
       "fieldNotes": "Notes de terrain",
       "savePlaceMessage":
           "Enregistrez ce lieu pour le garder près de vous pendant votre prochain voyage.",
+
+      // About the developer. The name and version are inherited from English.
+      "aboutDeveloperTitle": "À propos du développeur",
+      "aboutDeveloperSubtitle": "La personne qui a créé Kamer-Go",
+      "aboutDeveloperRole":
+          "Développeur logiciel, et la seule paire de mains derrière Kamer-Go — "
+              "l’application, le service qu’elle interroge et la chaîne qui la "
+              "déploie.",
+      "aboutDeveloperLocation": "Cameroun",
+      "aboutDeveloperWhoTitle": "Qui je suis",
+      "aboutDeveloperWhoBody":
+          "Je suis développeur logiciel camerounais et je conçois pour le mobile "
+              "et le web. Kamer-Go est né d’une chose qui me dérangeait : ce pays "
+              "regorge de lieux qui valent le déplacement, et pourtant presque aucun "
+              "n’est facile à trouver, à comparer ou à intégrer dans une journée. "
+              "L’information est dispersée entre le bouche-à-oreille et des pages "
+              "laissées à moitié faites. J’ai donc voulu la rassembler en un seul "
+              "endroit réellement utilisable par un voyageur — et lui faire parler "
+              "les langues qu’on parle déjà ici.",
+      "aboutDeveloperEducationTitle": "Formation",
+      "aboutDeveloperSchoolLabel": "Établissement",
+      "aboutDeveloperSchoolValue":
+          "ICT University (ICT-U)\nInformation and Communication Technology "
+              "University",
+      "aboutDeveloperProgrammeLabel": "Cursus",
+      "aboutDeveloperProgrammeValue": "Licence",
+      "aboutDeveloperStatusLabel": "Statut",
+      "aboutDeveloperStatusValue": "Études en cours",
+      "aboutDeveloperOngoing": "En cours",
+      "aboutDeveloperAppTitle": "À propos de Kamer-Go",
+      "aboutDeveloperAppBody":
+          "Kamer-Go est un compagnon de voyage pour le Cameroun. Il réunit les "
+              "destinations, les recommandations et un planificateur d’itinéraire "
+              "jour par jour, puis y ajoute ce qui fait vraiment un voyage : les "
+              "lieux enregistrés, les plans partagés, et une discussion où les "
+              "voyageurs comparent leurs notes ou s’appellent directement. Il parle "
+              "français, anglais et pidgin camerounais, car ici, une application de "
+              "voyage qui n’en parle qu’une seule n’est utile qu’à moitié.",
+      "aboutDeveloperStackTitle": "Comment c’est construit",
+      "aboutDeveloperStackBody":
+          "L’application est écrite en Flutter : un seul code source tourne sur "
+              "Android, iOS et le web. Derrière, un service Python gère les comptes, "
+              "les destinations, les itinéraires et le partage, tandis que WebRTC "
+              "transporte les appels audio et vidéo. Chaque mise à jour est "
+              "construite, testée et déployée automatiquement, et chaque version est "
+              "empaquetée dans sa propre image conteneur — ce qui permet de revenir "
+              "en arrière au lieu de corriger dans l’urgence.",
+      "aboutDeveloperThanks":
+          "Merci de voyager avec Kamer-Go. Chaque lieu enregistré et chaque "
+              "voyage planifié contribue à décider de la suite.",
     },
     "cpe": {
       "appTitle": "GlobeTrotter Cameroon",
@@ -652,6 +799,52 @@ class AppLocalizations {
       "fieldNotes": "Field notes",
       "savePlaceMessage":
           "Save this place make e stay close as you plan your next trip.",
+
+      // About the developer. The name and version are inherited from English.
+      "aboutDeveloperTitle": "About the developer",
+      "aboutDeveloperSubtitle": "The person wey build Kamer-Go",
+      "aboutDeveloperRole":
+          "Software developer, and na him one build Kamer-Go — the app, the "
+              "service wey e dey talk to, and the pipeline wey dey ship am.",
+      "aboutDeveloperLocation": "Cameroon",
+      "aboutDeveloperWhoTitle": "Who I be",
+      "aboutDeveloperWhoBody":
+          "I be software developer from Cameroon, and I dey build for mobile and "
+              "for web. Kamer-Go start from one thing wey bin dey worry me: this "
+              "country full with place wey fit make you travel, but hardly any of dem "
+              "easy for find, compare, or put inside one day plan. The information "
+              "scatter for mouth-to-mouth and for page wey person no finish. So I "
+              "decide say make I gather am for one place wey traveller fit really "
+              "use — and make e talk the language wey people here don dey talk.",
+      "aboutDeveloperEducationTitle": "School",
+      "aboutDeveloperSchoolLabel": "School",
+      "aboutDeveloperSchoolValue":
+          "ICT University (ICT-U)\nInformation and Communication Technology "
+              "University",
+      "aboutDeveloperProgrammeLabel": "Programme",
+      "aboutDeveloperProgrammeValue": "Bachelor's degree",
+      "aboutDeveloperStatusLabel": "Status",
+      "aboutDeveloperStatusValue": "I still dey study am",
+      "aboutDeveloperOngoing": "E dey go on",
+      "aboutDeveloperAppTitle": "About Kamer-Go",
+      "aboutDeveloperAppBody":
+          "Kamer-Go na travel companion for Cameroon. E put destinations, "
+              "recommendations and day-by-day trip planner for one place, then e add "
+              "the things wey really make trip: place wey you save, plan wey you "
+              "share, and chat where travellers fit compare note or call demselves "
+              "direct. E dey talk English, French and Cameroon Pidgin, because for "
+              "here, travel app wey dey talk only one na half work.",
+      "aboutDeveloperStackTitle": "How dem build am",
+      "aboutDeveloperStackBody":
+          "The app na Flutter, so one code dey run for Android, iOS and web. "
+              "Behind am, one Python service dey handle account, destination, "
+              "itinerary and sharing, while WebRTC dey carry the voice and video "
+              "call. Every push dey build, test and deploy by himself, and every "
+              "release dey packaged for im own container image — so if release bad, "
+              "dem fit roll am back instead of rush fix.",
+      "aboutDeveloperThanks":
+          "Thank you say you dey travel with Kamer-Go. Every place wey you save "
+              "and every trip wey you plan dey help decide wetin go come next.",
     },
   };
 }
@@ -675,5 +868,68 @@ class _AppLocalizationsDelegate
 
   @override
   bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) =>
+      false;
+}
+
+class _FallbackMaterialLocalizationsDelegate
+    extends LocalizationsDelegate<MaterialLocalizations> {
+  const _FallbackMaterialLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future<MaterialLocalizations> load(Locale locale) async {
+    const delegate = GlobalMaterialLocalizations.delegate;
+    return delegate.isSupported(locale)
+        ? delegate.load(locale)
+        : delegate.load(const Locale("en"));
+  }
+
+  @override
+  bool shouldReload(
+          covariant LocalizationsDelegate<MaterialLocalizations> old) =>
+      false;
+}
+
+class _FallbackWidgetsLocalizationsDelegate
+    extends LocalizationsDelegate<WidgetsLocalizations> {
+  const _FallbackWidgetsLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future<WidgetsLocalizations> load(Locale locale) async {
+    const delegate = GlobalWidgetsLocalizations.delegate;
+    return delegate.isSupported(locale)
+        ? delegate.load(locale)
+        : delegate.load(const Locale("en"));
+  }
+
+  @override
+  bool shouldReload(
+          covariant LocalizationsDelegate<WidgetsLocalizations> old) =>
+      false;
+}
+
+class _FallbackCupertinoLocalizationsDelegate
+    extends LocalizationsDelegate<CupertinoLocalizations> {
+  const _FallbackCupertinoLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future<CupertinoLocalizations> load(Locale locale) async {
+    const delegate = GlobalCupertinoLocalizations.delegate;
+    return delegate.isSupported(locale)
+        ? delegate.load(locale)
+        : delegate.load(const Locale("en"));
+  }
+
+  @override
+  bool shouldReload(
+          covariant LocalizationsDelegate<CupertinoLocalizations> old) =>
       false;
 }
