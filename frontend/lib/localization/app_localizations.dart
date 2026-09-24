@@ -183,6 +183,23 @@ class AppLocalizations {
   String get mapErrorTitle => _text("mapErrorTitle");
   String get noMappedPlaces => _text("noMappedPlaces");
   String get noMappedPlacesMessage => _text("noMappedPlacesMessage");
+
+  String get trackerTitle => _text("trackerTitle");
+  String get trackerFollowMe => _text("trackerFollowMe");
+  String get trackerStopFollowing => _text("trackerStopFollowing");
+  String get trackerOptions => _text("trackerOptions");
+  String get trackerSharingTitle => _text("trackerSharingTitle");
+  String get trackerSharingExplainer => _text("trackerSharingExplainer");
+  String get trackerSharingOn => _text("trackerSharingOn");
+  String get trackerSharingOff => _text("trackerSharingOff");
+  String get trackerErase => _text("trackerErase");
+  String get trackerErased => _text("trackerErased");
+  String get trackerCompanionsHeading => _text("trackerCompanionsHeading");
+  String get trackerCompanionsEmpty => _text("trackerCompanionsEmpty");
+  String get trackerSignInRequired => _text("trackerSignInRequired");
+  String get trackerServiceOff => _text("trackerServiceOff");
+  String get trackerPermissionDenied => _text("trackerPermissionDenied");
+  String get trackerPermissionBlocked => _text("trackerPermissionBlocked");
   String get myTrips => _text("myTrips");
   String get itineraryHeading => _text("itineraryHeading");
   String get itinerarySubtitle => _text("itinerarySubtitle");
@@ -197,9 +214,6 @@ class AppLocalizations {
   String get useAtLeastEightCharacters => _text("useAtLeastEightCharacters");
   String get onTheMap => _text("onTheMap");
   String get mapStartingPoint => _text("mapStartingPoint");
-  String get mapsConfigurationTitle => _text("mapsConfigurationTitle");
-  String get mapsConfigurationMessage => _text("mapsConfigurationMessage");
-  String get mapsConfigurationHint => _text("mapsConfigurationHint");
   String get whyGo => _text("whyGo");
   String get fieldNotes => _text("fieldNotes");
   String get savePlaceMessage => _text("savePlaceMessage");
@@ -361,6 +375,26 @@ class AppLocalizations {
       "noMappedPlaces": "No mapped places yet.",
       "noMappedPlacesMessage":
           "Add coordinates to destinations to bring them onto the map.",
+      "trackerTitle": "Live location",
+      "trackerFollowMe": "Follow my position",
+      "trackerStopFollowing": "Stop following my position",
+      "trackerOptions": "Live location options",
+      "trackerSharingTitle": "Share my live location",
+      "trackerSharingExplainer":
+          "Only members of your groups can see it. Your last position replaces "
+              "the previous one, no trail is kept, and it disappears about 30 "
+              "minutes after your final update.",
+      "trackerSharingOn": "Sharing with your groups",
+      "trackerSharingOff": "Not sharing",
+      "trackerErase": "Erase my stored location",
+      "trackerErased": "Your stored location was erased.",
+      "trackerCompanionsHeading": "Group members sharing",
+      "trackerCompanionsEmpty": "Nobody in your groups is sharing right now.",
+      "trackerSignInRequired": "Sign in to share your location with a group.",
+      "trackerServiceOff": "Turn on location services to find your position.",
+      "trackerPermissionDenied": "Location permission was denied.",
+      "trackerPermissionBlocked":
+          "Location permission is blocked. Enable it in your device settings.",
       "myTrips": "My trips",
       "itineraryHeading": "Your journeys",
       "itinerarySubtitle": "Keep the good ideas in one place.",
@@ -376,11 +410,6 @@ class AppLocalizations {
       "useAtLeastEightCharacters": "Use at least 8 characters",
       "onTheMap": "On the map",
       "mapStartingPoint": "A starting point for your field notes.",
-      "mapsConfigurationTitle": "Google Maps is not configured",
-      "mapsConfigurationMessage":
-          "Add a local Google Maps API key, then rebuild the app to see the live map.",
-      "mapsConfigurationHint":
-          "The destination data and route are ready; only the map key is missing.",
       "whyGo": "Why go",
       "fieldNotes": "Field notes",
       "savePlaceMessage":
@@ -571,6 +600,31 @@ class AppLocalizations {
       "noMappedPlaces": "Aucun lieu cartographié pour le moment.",
       "noMappedPlacesMessage":
           "Ajoutez des coordonnées aux destinations pour les afficher sur la carte.",
+      "trackerTitle": "Position en direct",
+      "trackerFollowMe": "Suivre ma position",
+      "trackerStopFollowing": "Arrêter de suivre ma position",
+      "trackerOptions": "Options de position en direct",
+      "trackerSharingTitle": "Partager ma position en direct",
+      "trackerSharingExplainer":
+          "Seuls les membres de vos groupes peuvent la voir. Votre dernière "
+              "position remplace la précédente, aucun historique n'est "
+              "conservé, et elle disparaît environ 30 minutes après votre "
+              "dernière mise à jour.",
+      "trackerSharingOn": "Partagée avec vos groupes",
+      "trackerSharingOff": "Non partagée",
+      "trackerErase": "Effacer ma position enregistrée",
+      "trackerErased": "Votre position enregistrée a été effacée.",
+      "trackerCompanionsHeading": "Membres du groupe qui partagent",
+      "trackerCompanionsEmpty":
+          "Personne dans vos groupes ne partage sa position pour l'instant.",
+      "trackerSignInRequired":
+          "Connectez-vous pour partager votre position avec un groupe.",
+      "trackerServiceOff":
+          "Activez la localisation pour trouver votre position.",
+      "trackerPermissionDenied":
+          "L'autorisation de localisation a été refusée.",
+      "trackerPermissionBlocked":
+          "L'autorisation de localisation est bloquée. Activez-la dans les réglages de votre appareil.",
       "myTrips": "Mes voyages",
       "itineraryHeading": "Vos voyages",
       "itinerarySubtitle": "Gardez vos bonnes idées au même endroit.",
@@ -586,11 +640,6 @@ class AppLocalizations {
       "useAtLeastEightCharacters": "Utilisez au moins 8 caractères",
       "onTheMap": "Sur la carte",
       "mapStartingPoint": "Un point de départ pour vos notes.",
-      "mapsConfigurationTitle": "Google Maps n’est pas configuré",
-      "mapsConfigurationMessage":
-          "Ajoutez une clé Google Maps locale, puis reconstruisez l’application pour voir la carte.",
-      "mapsConfigurationHint":
-          "Les destinations et l’itinéraire sont prêts ; il manque seulement la clé.",
       "whyGo": "Pourquoi y aller",
       "fieldNotes": "Notes de terrain",
       "savePlaceMessage":
@@ -775,6 +824,28 @@ class AppLocalizations {
       "mapErrorTitle": "The map lose its trail.",
       "noMappedPlaces": "No mapped place yet.",
       "noMappedPlacesMessage": "Add coordinates make places show for the map.",
+      "trackerTitle": "Live location",
+      "trackerFollowMe": "Follow my position",
+      "trackerStopFollowing": "Stop follow my position",
+      "trackerOptions": "Live location settings",
+      "trackerSharingTitle": "Share my live location",
+      "trackerSharingExplainer":
+          "Na only your group members fit see am. Your last position dey "
+              "replace the one before am, we no dey keep any trail, and e dey "
+              "comot about 30 minutes after your last update.",
+      "trackerSharingOn": "You dey share with your groups",
+      "trackerSharingOff": "You no dey share",
+      "trackerErase": "Comot my saved location",
+      "trackerErased": "We don comot your saved location.",
+      "trackerCompanionsHeading": "Group members wey dey share",
+      "trackerCompanionsEmpty": "Nobody for your groups dey share now.",
+      "trackerSignInRequired":
+          "Sign in make you share your location with group.",
+      "trackerServiceOff":
+          "Put on location service make we find your position.",
+      "trackerPermissionDenied": "Dem deny the location permission.",
+      "trackerPermissionBlocked":
+          "Location permission dey blocked. Open am for your device settings.",
       "myTrips": "My trips",
       "itineraryHeading": "Your journeys",
       "itinerarySubtitle": "Keep the good ideas for one place.",
@@ -790,11 +861,6 @@ class AppLocalizations {
       "useAtLeastEightCharacters": "Use at least 8 characters",
       "onTheMap": "For the map",
       "mapStartingPoint": "Starting point for your field notes.",
-      "mapsConfigurationTitle": "Google Maps never set up",
-      "mapsConfigurationMessage":
-          "Add local Google Maps key, then rebuild make the live map show.",
-      "mapsConfigurationHint":
-          "The places and route ready; na only the map key remain.",
       "whyGo": "Why you go",
       "fieldNotes": "Field notes",
       "savePlaceMessage":

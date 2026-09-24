@@ -7,20 +7,33 @@ class MapActionButton extends StatelessWidget {
   final bool hasCurrentLocation;
   final VoidCallback onPressed;
 
+  /// Whether the camera is currently chasing the traveller.
+  ///
+  /// Following is a mode rather than a one-off action, so the button has to
+  /// show which state it is in; otherwise a map that keeps sliding back looks
+  /// broken rather than deliberate.
+  final bool following;
+
+  final String? semanticLabel;
+
   const MapActionButton({
     super.key,
     required this.locating,
     required this.hasCurrentLocation,
     required this.onPressed,
+    this.following = false,
+    this.semanticLabel,
   });
 
   @override
   Widget build(BuildContext context) {
+    final active = following && hasCurrentLocation;
     return Semantics(
       button: true,
-      label: "Center map on my current location",
+      toggled: active,
+      label: semanticLabel ?? "Center map on my current location",
       child: Material(
-        color: AppTheme.surface,
+        color: active ? AppTheme.primary : AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
         elevation: 4,
         shadowColor: AppTheme.primaryDark.withValues(alpha: 0.2),
@@ -36,10 +49,14 @@ class MapActionButton extends StatelessWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : Icon(
-                    Icons.my_location_rounded,
-                    color: hasCurrentLocation
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
+                    active
+                        ? Icons.navigation_rounded
+                        : Icons.my_location_rounded,
+                    color: active
+                        ? Colors.white
+                        : hasCurrentLocation
+                            ? AppTheme.primary
+                            : AppTheme.textSecondary,
                     size: 22,
                   ),
           ),

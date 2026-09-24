@@ -8,6 +8,7 @@ import "package:pointer_interceptor/pointer_interceptor.dart";
 
 import "../localization/app_localizations.dart";
 import "../models/destination.dart";
+import "../models/shared_location.dart";
 import "../utils/theme.dart";
 import "windows_google_map.dart";
 
@@ -22,6 +23,17 @@ class DestinationMap extends StatefulWidget {
   final double? zoom;
   final bool compact;
 
+  /// Positions of group members to draw alongside the destinations.
+  final List<SharedLocation> companions;
+
+  /// Whether the camera should chase [currentLocation] as it changes.
+  ///
+  /// With a live position stream the location updates every few seconds, and
+  /// re-centring on each one would snatch the map back the moment anyone tried
+  /// to pan away from it. Following is therefore something the traveller turns
+  /// on, not the default.
+  final bool followLocation;
+
   const DestinationMap({
     super.key,
     required this.destinations,
@@ -33,6 +45,8 @@ class DestinationMap extends StatefulWidget {
     this.height = double.infinity,
     this.zoom,
     this.compact = false,
+    this.companions = const [],
+    this.followLocation = true,
   });
 
   @override
@@ -85,15 +99,15 @@ class _DestinationMapState extends State<DestinationMap> {
     _useFlutterMap = kIsWeb ||
         defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS;
-    _useWindowsMap =
-        !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
+    _useWindowsMap = !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
     _mapController = MapController();
   }
 
   @override
   void didUpdateWidget(covariant DestinationMap oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.currentLocation != oldWidget.currentLocation &&
+    if (widget.followLocation &&
+        widget.currentLocation != oldWidget.currentLocation &&
         widget.currentLocation != null) {
       if (_useFlutterMap) {
         _mapController.move(widget.currentLocation!, 15);
@@ -136,7 +150,8 @@ class _DestinationMapState extends State<DestinationMap> {
                       widget.selectedDestination!.longitude!,
                     )
                   : _center),
-          initialZoom: widget.currentLocation != null || widget.selectedDestination != null
+          initialZoom: widget.currentLocation != null ||
+                  widget.selectedDestination != null
               ? (widget.zoom ?? 14.5)
               : _initialZoom,
           minZoom: 3,
@@ -197,11 +212,17 @@ class _DestinationMapState extends State<DestinationMap> {
           point: widget.currentLocation!,
           width: 24,
           height: 24,
-          child: const Icon(
-            Icons.my_location_rounded,
-            color: Colors.blue,
-            size: 24,
-          ),
+          child: const _LiveDot(color: Colors.blue),
+        ),
+      );
+    }
+    for (final companion in widget.companions) {
+      markers.add(
+        Marker(
+          point: companion.point,
+          width: 86,
+          height: 46,
+          child: _CompanionMarker(companion: companion),
         ),
       );
     }
@@ -555,7 +576,8 @@ class _CameroonMapPainter extends CustomPainter {
 
       for (final point in routePoints) {
         final normalizedX = (point.longitude - minLng) / (maxLng - minLng);
-        final normalizedY = 1.0 - ((point.latitude - minLat) / (maxLat - minLat));
+        final normalizedY =
+            1.0 - ((point.latitude - minLat) / (maxLat - minLat));
 
         final centerX = size.width / 2 + panOffset.dx;
         final centerY = size.height / 2 + panOffset.dy;
@@ -627,6 +649,77 @@ class _MapMessage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// The familiar ringed dot used for a position that is being updated live.
+///
+/// A plain pin would read as a saved place. The ring reads as "someone is
+/// standing here right now", which is what these markers actually mean.
+class _LiveDot extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _LiveDot({required this.color, this.size = 18});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 3),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.45),
+              blurRadius: 8,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A group member's live position, captioned with their name.
+class _CompanionMarker extends StatelessWidget {
+  final SharedLocation companion;
+
+  const _CompanionMarker({required this.companion});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _LiveDot(color: AppTheme.indigo, size: 16),
+        const SizedBox(height: 3),
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppTheme.surface.withValues(alpha: 0.94),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppTheme.border),
+            ),
+            child: Text(
+              companion.displayName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: AppTheme.indigo,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

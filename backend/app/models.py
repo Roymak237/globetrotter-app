@@ -17,8 +17,10 @@ All persistent data is stored in JSON files under the /data directory.
   - data/ratings.json       – per-user star ratings for individual destinations
   - data/password_resets.json – short-lived reset codes
   - data/calls.json         – call history for the chat call log
+  - data/locations.json     – last shared position per user, expiring
   - data/media/             – uploaded attachments and avatars (binary)
 """
+import datetime
 import json
 import os
 import threading
@@ -43,6 +45,7 @@ CHAT_MESSAGES_FILE = os.path.join(DATA_DIR, "chat_messages.json")
 RATINGS_FILE = os.path.join(DATA_DIR, "ratings.json")
 PASSWORD_RESETS_FILE = os.path.join(DATA_DIR, "password_resets.json")
 CALLS_FILE = os.path.join(DATA_DIR, "calls.json")
+LOCATIONS_FILE = os.path.join(DATA_DIR, "locations.json")
 
 # Uploaded binaries live beside the JSON stores so a single Docker volume keeps
 # the whole of a deployment's user data together.
@@ -665,5 +668,90 @@ def update_call(call_id: str, updates: dict) -> dict | None:
                 _write_json(CALLS_FILE, calls)
                 return updated
     return None
+
+
+# Shared location helpers
+#
+# This is the only store here that holds a physical fact about where a person
+# actually is, so it is deliberately the most restrictive one in the file.
+#
+# Two rules do most of the privacy work, and both are enforced here rather than
+# left to callers:
+#
+#   1. One record per user, replaced on every write. No history accumulates, so
+#      there is no trail to reconstruct, leak or subpoena — not even by someone
+#      with the data file in hand.
+#   2. Records expire. A position is a claim about *now*, and a stale one is
+#      worse than none: it sends people to where someone used to be. Anything
+#      past the window is treated as absent and dropped on the next write.
+#
+# The window is short on purpose. Closing the app stops the updates, so a user
+# disappears shortly afterwards without having to remember to switch anything
+# off.
+LOCATION_TTL_SECONDS = 30 * 60
+
+
+def _location_is_live(record: dict, now: datetime.datetime) -> bool:
+    """True when *record* is recent enough to still describe where someone is."""
+    stamp = record.get("updated_at")
+    if not isinstance(stamp, str):
+        return False
+    try:
+        seen = datetime.datetime.fromisoformat(stamp)
+    except ValueError:
+        # An unparseable timestamp cannot be shown to be recent, and the safe
+        # reading of "unknown age" is "too old".
+        return False
+    if seen.tzinfo is None:
+        seen = seen.replace(tzinfo=datetime.timezone.utc)
+    return (now - seen).total_seconds() < LOCATION_TTL_SECONDS
+
+
+def get_live_locations() -> list:
+    """Every position still inside the expiry window."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    return [r for r in _read_json(LOCATIONS_FILE) if _location_is_live(r, now)]
+
+
+def get_location_for_user(username: str) -> dict | None:
+    for record in get_live_locations():
+        if record.get("username") == username:
+            return record
+    return None
+
+
+def save_location(record: dict) -> dict:
+    """Store *record* as the user's only position, pruning expired ones.
+
+    Writing is when the file is already being rewritten, so it is also the
+    cheapest moment to drop everything stale. That means expired positions
+    leave the disk as a matter of course, instead of lingering until someone
+    remembers to run a cleanup.
+    """
+    username = record.get("username")
+    now = datetime.datetime.now(datetime.timezone.utc)
+    with _WRITE_LOCK:
+        kept = [
+            r for r in _read_json(LOCATIONS_FILE)
+            if r.get("username") != username and _location_is_live(r, now)
+        ]
+        kept.append(record)
+        _write_json(LOCATIONS_FILE, kept)
+    return record
+
+
+def delete_location(username: str) -> bool:
+    """Erase the user's position. Returns True when there was one to erase."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    with _WRITE_LOCK:
+        records = _read_json(LOCATIONS_FILE)
+        kept = [
+            r for r in records
+            if r.get("username") != username and _location_is_live(r, now)
+        ]
+        removed = any(r.get("username") == username for r in records)
+        if len(kept) != len(records):
+            _write_json(LOCATIONS_FILE, kept)
+    return removed
 
 

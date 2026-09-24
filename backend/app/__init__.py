@@ -23,6 +23,7 @@ def create_app():
     from app.chat import chat_bp
     from app.destinations import destinations_bp
     from app.groups import groups_bp
+    from app.location import location_bp
     from app.media import media_bp
     from app.places import places_bp
     from app.profile import profile_bp
@@ -43,6 +44,7 @@ def create_app():
     app.register_blueprint(media_bp)
     app.register_blueprint(places_bp)
     app.register_blueprint(calls_bp)
+    app.register_blueprint(location_bp)
 
     # Call signalling needs a websocket. If flask_sock is unavailable the rest
     # of the API still has to work, so this is attached opportunistically
