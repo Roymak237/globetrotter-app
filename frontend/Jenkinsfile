@@ -453,6 +453,26 @@ export IMAGE_TAG
 cd "${APP_DIR}"
 docker compose up -d
 
+# The nginx config is bind-mounted, so editing it changes the file inside the
+# container but nothing tells the running process. nginx parses its config at
+# start or on SIGHUP and not otherwise, and compose will not recreate a
+# container merely because a mounted file changed. Without this, a config fix
+# can sit on disk for days while nginx keeps serving the rules it read when it
+# last started — which is exactly how a stale cache policy survived several
+# deployments.
+#
+# The config is tested before it is applied: a reload on a broken config leaves
+# the old one running, but failing here makes the cause obvious rather than
+# leaving a silently ignored change.
+if docker exec globetrotter_nginx nginx -t 2>/dev/null; then
+    docker exec globetrotter_nginx nginx -s reload
+    echo "nginx configuration reloaded."
+else
+    echo "ERROR: the nginx configuration is invalid; not reloading." >&2
+    docker exec globetrotter_nginx nginx -t >&2 || true
+    exit 1
+fi
+
 # Jenkins runs in its own network namespace, so the host loopback that
 # publishes ${APP_PORT} is unreachable from here. The container healthcheck
 # is authoritative and is readable through the shared Docker socket.
@@ -477,6 +497,26 @@ curl -fsS -o /dev/null "https://${DOMAIN}/app/"
 curl -fsS "https://${DOMAIN}/healthz" | grep -q '"status"'
 count=$(curl -fsS "https://${DOMAIN}/api/destinations" | grep -o '"id"' | wc -l)
 [ "${count}" -gt 0 ] || { echo "ERROR: the destination catalogue came back empty." >&2; exit 1; }
+
+# Flutter's web output is not content-hashed, so a long max-age on it pins
+# returning visitors to whichever build they loaded first and disables the
+# service worker that would otherwise rescue them. That failure is invisible
+# from the server — the correct file is on disk and served to anyone asking
+# for the first time — so the policy is asserted here rather than assumed.
+cache=$(curl -fsS -o /dev/null -D - "https://${DOMAIN}/app/main.dart.js" \
+    | tr -d '\\r' | grep -i '^cache-control:' | head -1)
+case "${cache}" in
+    *max-age=0*|*no-cache*|*no-store*)
+        echo "Cache policy verified on the app bundle: ${cache}"
+        ;;
+    *)
+        echo "ERROR: /app/main.dart.js is cacheable without revalidation." >&2
+        echo "  got: ${cache:-<none>}" >&2
+        echo "  Returning visitors would keep running the previous build." >&2
+        exit 1
+        ;;
+esac
+
 echo "Deployed successfully: ${count} destinations live at https://${DOMAIN}"
 '''
             }
