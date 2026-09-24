@@ -48,10 +48,22 @@ pipeline {
         //
         // Setting the swap ceiling equal to the memory ceiling denies these
         // containers swap entirely. A build that overruns then dies at once
-        // with status 137 rather than thrashing a swapfile the live services
-        // depend on. A fast, legible failure is worth more here than a slow
-        // one that degrades everything else on the way down.
-        MEM_ANDROID    = '4g'
+        // rather than thrashing a swapfile the live services depend on. A
+        // fast, legible failure is worth more here than a slow one that
+        // degrades everything else on the way down.
+        //
+        // MEM_ANDROID is paired with the heaps in android/gradle.properties.
+        // An earlier 4 GB proved too tight, and measuring a live build showed
+        // why: the Gradle daemon held 2213 MB against an -Xmx of 1536m, and
+        // Kotlin had forked two compiler JVMs of 775 MB and 661 MB rather than
+        // the one assumed. Heaps were budgeted; native overhead and process
+        // count were not.
+        //
+        // With Kotlin compiling in-process the two extra JVMs disappear, which
+        // is worth more than the larger Gradle heap that replaces them. The
+        // ceiling below sits roughly a gigabyte above measured demand, so an
+        // ordinary build never approaches it while a runaway still stops.
+        MEM_ANDROID    = '4608m'
         MEM_FLUTTER    = '3g'
         MEM_PYTHON     = '1g'
     }
@@ -236,6 +248,8 @@ reclaim() {
 }
 trap reclaim EXIT
 
+log="${WORKSPACE}/android-build.log"
+
 docker run --rm \
     --memory "${MEM_ANDROID}" --memory-swap "${MEM_ANDROID}" \
     -v "${JENKINS_VOLUME}:/var/jenkins_home" \
@@ -249,16 +263,29 @@ git config --global --add safe.directory /sdks/flutter
 git config --global --add safe.directory ${WORKSPACE}
 yes | flutter doctor --android-licenses >/dev/null 2>&1 || true
 flutter build apk --release --dart-define=BACKEND_BASE_URL=https://${DOMAIN}
-"
-status=$?
+" 2>&1 | tee "${log}"
+status="${PIPESTATUS[0]}"
 
-# 137 is the cgroup limit, not a compilation fault. Saying so plainly saves
-# the next person searching Gradle's "daemon disappeared" message, which is
-# what this looked like before the ceiling existed.
-if [ "${status}" -eq 137 ]; then
-    echo "ERROR: the Android build exceeded its ${MEM_ANDROID} ceiling and was killed." >&2
-    echo "       Lower the heaps in android/gradle.properties or raise MEM_ANDROID." >&2
+# Diagnosing this by exit code does not work. When the cgroup killer takes the
+# Gradle daemon, Gradle reports a build failure and the Flutter wrapper exits
+# 1, so the 137 that actually occurred never reaches this script. The daemon's
+# own message is the only reliable signal, and it says nothing about memory,
+# which is what made this fault expensive to identify the first time.
+if [ "${status}" -ne 0 ] && grep -q 'daemon disappeared' "${log}" 2>/dev/null; then
+    echo "" >&2
+    echo "ERROR: the Gradle daemon was killed, almost certainly for exceeding" >&2
+    echo "       the container ceiling of ${MEM_ANDROID}." >&2
+    echo "" >&2
+    echo "       This is a kill, not an OutOfMemoryError, so there is no heap" >&2
+    echo "       dump and nothing in the daemon log explains it." >&2
+    echo "" >&2
+    echo "       The heaps in android/gradle.properties and MEM_ANDROID here" >&2
+    echo "       are a matched pair. Remember that each JVM also costs several" >&2
+    echo "       hundred megabytes of native overhead that -Xmx does not cover." >&2
+    echo "" >&2
 fi
+
+rm -f "${log}"
 [ "${status}" -eq 0 ] || exit "${status}"
 
 test -f "${WORKSPACE}/${APP_ROOT}/build/app/outputs/flutter-apk/app-release.apk"
