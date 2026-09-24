@@ -346,6 +346,11 @@ install -m 0644 "${APP_ROOT}/deploy/Dockerfile" "${APP_DIR}/Dockerfile"
 install -m 0644 "${APP_ROOT}/deploy/docker-compose.yml" "${APP_DIR}/docker-compose.yml"
 install -m 0644 "${APP_ROOT}/deploy/nginx/conf.d/globetrotter.conf" "${APP_DIR}/nginx/conf.d/globetrotter.conf"
 
+# Housekeeping the post actions call. Installed here so it is present before
+# any post block can run, including on a build that fails later on.
+mkdir -p "${APP_DIR}/scripts"
+install -m 0755 "${APP_ROOT}/deploy/scripts/retain-images.sh" "${APP_DIR}/scripts/retain-images.sh"
+
 cd "${APP_DIR}"
 docker compose build
 echo "${IMAGE_TAG}" > "${APP_DIR}/.image-tag"
@@ -496,22 +501,23 @@ fi
             sh '''#!/usr/bin/env bash
 set -uo pipefail
 
+# Guarded because a build can reach here having failed before the publish
+# stage installed this script. Housekeeping must never be the thing that
+# decides a deployment's outcome.
 rm -rf "${APP_DIR}/.rollback"
-
-# A deploy leaves its predecessor behind, and the host was already carrying
-# well over ten gigabytes of reclaimable images. Keeping the three most recent
-# preserves a rollback target or two without letting the disk fill silently.
-docker images --format '{{.Repository}}:{{.Tag}} {{.ID}}' kamergo-backend \
-    | tail -n +4 \
-    | while read -r ref _; do
-        docker rmi "${ref}" >/dev/null 2>&1 || true
-    done
+[ -x "${APP_DIR}/scripts/retain-images.sh" ] && "${APP_DIR}/scripts/retain-images.sh" || true
 '''
         }
         unstable {
             // An unstable run still deployed and verified; only an optional
-            // artefact was missing, so the snapshot has served its purpose.
-            sh 'rm -rf "${APP_DIR}/.rollback"'
+            // artefact was missing, so the snapshot has served its purpose and
+            // the release image it produced needs retiring like any other.
+            sh '''#!/usr/bin/env bash
+set -uo pipefail
+
+rm -rf "${APP_DIR}/.rollback"
+[ -x "${APP_DIR}/scripts/retain-images.sh" ] && "${APP_DIR}/scripts/retain-images.sh" || true
+'''
         }
         always {
             // deleteDir is a core step, so the workspace is still cleaned even
