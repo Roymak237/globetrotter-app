@@ -45,6 +45,21 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
-  <script src="flutter_bootstrap.js" async></script>
+  <!--
+    Flutter does not content-hash its web output: flutter_bootstrap.js and
+    main.dart.js carry the same names in every build. index.html is served
+    no-store so it always arrives fresh, but a browser holding a cached
+    bootstrap will not re-request it, and that stale copy names the previous
+    service worker version — so the browser never discovers that a newer app
+    exists.
+
+    The deploy replaces RELEASE_ID with the commit being shipped, making this
+    a URL no browser has seen before and stepping around any cached copy. The
+    fresh bootstrap then advertises the current service worker, which refetches
+    the app with cache: 'reload' and pulls main.dart.js past the HTTP cache.
+
+    Left unreplaced during local development, where the constant is harmless.
+  -->
+  <script src="flutter_bootstrap.js?v=RELEASE_ID" async></script>
 </body>
 </html>

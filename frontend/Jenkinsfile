@@ -402,6 +402,28 @@ rsync -a --delete --exclude 'app/' --exclude 'downloads/' --exclude 'media/' \
     "${APP_ROOT}/landing/" "${APP_DIR}/site/"
 rsync -a --delete "${APP_ROOT}/build/web/" "${APP_DIR}/site/app/"
 
+# Stamp the shipped commit onto the app shell's bootstrap URL. See the comment
+# in web/index.html for why this is necessary: without it a browser that has
+# cached flutter_bootstrap.js keeps reading the previous service worker version
+# and never learns a newer build exists.
+RELEASE_ID="$(git rev-parse --short HEAD)"
+sed -i "s|flutter_bootstrap.js?v=RELEASE_ID|flutter_bootstrap.js?v=${RELEASE_ID}|g" \
+    "${APP_DIR}/site/app/index.html"
+
+# A silent miss here would look like a successful deploy while every returning
+# visitor stayed on the old app, so the token must be confirmed gone.
+if grep -q 'flutter_bootstrap.js?v=RELEASE_ID' "${APP_DIR}/site/app/index.html"; then
+    echo "Release stamp was not applied to the app shell." >&2
+    grep -n 'flutter_bootstrap' "${APP_DIR}/site/app/index.html" >&2 || true
+    exit 1
+fi
+
+if ! grep -q "flutter_bootstrap.js?v=${RELEASE_ID}" "${APP_DIR}/site/app/index.html"; then
+    echo "App shell does not reference the bootstrap for ${RELEASE_ID}." >&2
+    grep -n 'flutter_bootstrap' "${APP_DIR}/site/app/index.html" >&2 || true
+    exit 1
+fi
+
 # The Flutter web build writes asset filenames percent-encoded on disk, which
 # makes them unusable from plain HTML. The landing page therefore reads the
 # photo library from media/, synced straight from source with names intact.
