@@ -125,178 +125,249 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
     }
   }
 
+  /// The effective text scale, clamped.
+  ///
+  /// A sliver header has to state its height up front, so the filter bar
+  /// cannot simply size itself to its contents. Deriving the height from the
+  /// text scale keeps the chips from being clipped for anyone browsing at a
+  /// larger accessibility font size.
+  double _barScale(BuildContext context) =>
+      (MediaQuery.textScalerOf(context).scale(14) / 14).clamp(1.0, 1.6);
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
+
+    return RefreshIndicator(
+      onRefresh: _loadDestinations,
+      color: AppTheme.primary,
+      child: CustomScrollView(
+        // Keeps pull-to-refresh reachable even when the results are too few to
+        // fill the screen.
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(child: _buildIntro(context, localizations)),
+          SliverPersistentHeader(
+            // Floating rather than pinned. Scrolling down clears the filters
+            // away so the photographs get the full screen, and the smallest
+            // upward swipe brings them straight back — so changing a filter
+            // never means scrolling to the top of 57 results first.
+            floating: true,
+            delegate: _FilterBarDelegate(
+              extent: 96 * _barScale(context),
+              builder: (context, overlapsContent) =>
+                  _buildFilterBar(context, localizations, overlapsContent),
+            ),
+          ),
+          _buildResults(context, localizations),
+        ],
+      ),
+    );
+  }
+
+  /// The title, shortcuts and search field. Scrolls away with the list.
+  Widget _buildIntro(BuildContext context, AppLocalizations localizations) {
     final hasAdvancedFilters = _selectedRegion != null || _maxCost != null;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
-          child: Column(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          localizations.destinationsHeading,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.destinationsHeading,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontFamily: AppTheme.displayFontFamily,
                               ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          localizations.destinationsSubtitle,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppTheme.textSecondary,
-                                    height: 1.35,
-                                  ),
-                        ),
-                      ],
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      localizations.destinationsSubtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppTheme.textSecondary,
+                            height: 1.35,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: localizations.mapShortcut,
+                    onPressed: () => Navigator.pushNamed(context, "/map"),
+                    icon: const Icon(Icons.map_outlined),
+                    color: AppTheme.primary,
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        tooltip: localizations.mapShortcut,
-                        onPressed: () => Navigator.pushNamed(context, "/map"),
-                        icon: const Icon(Icons.map_outlined),
-                        color: AppTheme.primary,
-                      ),
-                      IconButton(
-                        tooltip: localizations.savedShortcut,
-                        onPressed: () => Navigator.pushNamed(context, "/saved"),
-                        icon: const Icon(Icons.favorite_border_rounded),
-                        color: AppTheme.secondary,
-                      ),
-                    ],
+                  IconButton(
+                    tooltip: localizations.savedShortcut,
+                    onPressed: () => Navigator.pushNamed(context, "/saved"),
+                    icon: const Icon(Icons.favorite_border_rounded),
+                    color: AppTheme.secondary,
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _controller,
-                textInputAction: TextInputAction.search,
-                onSubmitted: (_) => _loadDestinations(),
-                decoration: InputDecoration(
-                  hintText: localizations.searchPlacesHint,
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  suffixIcon: IconButton(
-                    tooltip: localizations.filterTooltip,
-                    icon: Icon(
-                      hasAdvancedFilters
-                          ? Icons.filter_alt_rounded
-                          : Icons.tune_rounded,
-                    ),
-                    onPressed: _showFilterSheet,
+            ],
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _controller,
+            textInputAction: TextInputAction.search,
+            onSubmitted: (_) => _loadDestinations(),
+            decoration: InputDecoration(
+              hintText: localizations.searchPlacesHint,
+              prefixIcon: const Icon(Icons.search_rounded),
+              suffixIcon: IconButton(
+                tooltip: localizations.filterTooltip,
+                icon: Icon(
+                  hasAdvancedFilters
+                      ? Icons.filter_alt_rounded
+                      : Icons.tune_rounded,
+                ),
+                onPressed: _showFilterSheet,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// The activity chips, result count and sort control.
+  Widget _buildFilterBar(
+    BuildContext context,
+    AppLocalizations localizations,
+    bool overlapsContent,
+  ) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        // Transparent while it sits in the normal flow, so the backdrop still
+        // shows through exactly as before. Once it floats over the cards it
+        // has to be opaque, or photographs slide past underneath the chips.
+        color: overlapsContent ? AppTheme.background : Colors.transparent,
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 44 * _barScale(context),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: _typeFilters.map((filter) {
+                final tag = filter["tag"] as String;
+                final isSelected = (_selectedType ?? "") == tag;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: FilterChip(
+                    label: Text(tag == "education" &&
+                            localizations.locale.languageCode == "fr"
+                        ? "Écoles"
+                        : filter["label"] as String),
+                    selected: isSelected,
+                    onSelected: (_) {
+                      setState(() {
+                        _selectedType = tag.isEmpty || isSelected ? null : tag;
+                      });
+                      _loadDestinations();
+                    },
                   ),
-                ),
-              ),
-            ],
+                );
+              }).toList(),
+            ),
           ),
-        ),
-        SizedBox(
-          height: 44,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            physics: const AlwaysScrollableScrollPhysics(),
-            children: _typeFilters.map((filter) {
-              final tag = filter["tag"] as String;
-              final isSelected = (_selectedType ?? "") == tag;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: Text(tag == "education" &&
-                          localizations.locale.languageCode == "fr"
-                      ? "Écoles"
-                      : filter["label"] as String),
-                  selected: isSelected,
-                  onSelected: (_) {
-                    setState(() {
-                      _selectedType = tag.isEmpty || isSelected ? null : tag;
-                    });
-                    _loadDestinations();
-                  },
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 12, 2),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  _loading
-                      ? localizations.placesReading
-                      : localizations.placesFound(_destinations.length),
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppTheme.textSecondary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                ),
-              ),
-              TextButton.icon(
-                onPressed: _showSortSheet,
-                icon: const Icon(Icons.swap_vert_rounded, size: 18),
-                label: Text(_sortLabel),
-              ),
-            ],
-          ),
-        ),
-        const Divider(),
-        Expanded(
-          child: _loading
-              ? const AppLoadingView(
-                  message: "Mapping places worth the detour…",
-                )
-              : _error != null
-                  ? ErrorStateView(
-                      title: localizations.destinationsErrorTitle,
-                      message: _error!,
-                      onRetry: _loadDestinations,
-                    )
-                  : _destinations.isEmpty
-                      ? EmptyStateView(
-                          icon: Icons.explore_off_rounded,
-                          title: localizations.destinationsEmptyTitle,
-                          message: localizations.destinationsEmptyMessage,
-                        )
-                      : RefreshIndicator(
-                          onRefresh: _loadDestinations,
-                          color: AppTheme.primary,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.only(top: 4, bottom: 24),
-                            itemCount: _destinations.length,
-                            itemBuilder: (context, index) {
-                              final destination = _destinations[index];
-                              return DestinationCard(
-                                destination: destination,
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  "/destination_detail",
-                                  arguments: destination,
-                                ),
-                              );
-                            },
+          // Expanded rather than a fixed height: the bar's total extent is
+          // already decided, so this absorbs whatever is left instead of
+          // overflowing it.
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 12, 2),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _loading
+                          ? localizations.placesReading
+                          : localizations.placesFound(_destinations.length),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: AppTheme.textSecondary,
+                            fontWeight: FontWeight.w700,
                           ),
-                        ),
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: _showSortSheet,
+                    icon: const Icon(Icons.swap_vert_rounded, size: 18),
+                    label: Text(_sortLabel),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Divider(height: 1),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResults(
+    BuildContext context,
+    AppLocalizations localizations,
+  ) {
+    if (_loading) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: AppLoadingView(message: localizations.placesReading),
+      );
+    }
+    if (_error != null) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: ErrorStateView(
+          title: localizations.destinationsErrorTitle,
+          message: _error!,
+          onRetry: _loadDestinations,
         ),
-      ],
+      );
+    }
+    if (_destinations.isEmpty) {
+      return SliverFillRemaining(
+        hasScrollBody: false,
+        child: EmptyStateView(
+          icon: Icons.explore_off_rounded,
+          title: localizations.destinationsEmptyTitle,
+          message: localizations.destinationsEmptyMessage,
+        ),
+      );
+    }
+
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 4, bottom: 24),
+      sliver: SliverList.builder(
+        itemCount: _destinations.length,
+        itemBuilder: (context, index) {
+          final destination = _destinations[index];
+          return DestinationCard(
+            destination: destination,
+            onTap: () => Navigator.pushNamed(
+              context,
+              "/destination_detail",
+              arguments: destination,
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -479,4 +550,40 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
       });
     }
   }
+}
+
+/// Carries the filter bar as a sliver so it can scroll out of the way.
+///
+/// The height is fixed — min and max extent are the same — because the bar
+/// does not shrink as it leaves; it slides off whole and slides back whole.
+class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
+  final double extent;
+  final Widget Function(BuildContext context, bool overlapsContent) builder;
+
+  const _FilterBarDelegate({
+    required this.extent,
+    required this.builder,
+  });
+
+  @override
+  double get minExtent => extent;
+
+  @override
+  double get maxExtent => extent;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) =>
+      SizedBox.expand(child: builder(context, overlapsContent));
+
+  @override
+  bool shouldRebuild(_FilterBarDelegate oldDelegate) =>
+      // The builder closes over the screen's state — the selected chip, the
+      // result count, the sort label — so every rebuild of the screen has to
+      // reach the header too. Comparing extents alone would freeze the count
+      // at whatever it was when the bar was first laid out.
+      true;
 }
