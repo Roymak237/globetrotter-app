@@ -12,7 +12,10 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kamer-go.duckdns.org/">
 
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- The tab icon is the launcher icon, so the browser tab, the home-screen
+     shortcut and the installed app all show the same mark. -->
+<link rel="icon" href="app-icon-192.jpg" sizes="192x192">
+<link rel="apple-touch-icon" href="app-icon-192.jpg">
 <!-- No webfont request: the page now uses the same system font stacks as the
      app (Georgia and Trebuchet MS), so there is nothing to download. -->
 <link rel="stylesheet" href="styles.css">
@@ -29,17 +32,11 @@
 
 <header class="nav" id="nav">
   <a class="nav__brand" href="#top">
-    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
-      <defs>
-        <linearGradient id="brandRamp" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#B4462A"/>
-          <stop offset="55%" stop-color="#C9703A"/>
-          <stop offset="100%" stop-color="#D98E2B"/>
-        </linearGradient>
-      </defs>
-      <rect width="40" height="40" rx="12" fill="url(#brandRamp)"/>
-      <path d="M20 9c-4.4 0-8 3.5-8 7.9 0 5.9 8 14.1 8 14.1s8-8.2 8-14.1C28 12.5 24.4 9 20 9Zm0 10.8a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8Z" fill="#fff"/>
-    </svg>
+    <!-- The real launcher icon, not a stand-in. The 384 variant is offered for
+         2x screens; at 40 px the 192 is already more than enough at 1x. -->
+    <img class="brand-mark" src="app-icon-192.jpg"
+         srcset="app-icon-192.jpg 192w, app-icon-384.jpg 384w"
+         sizes="40px" width="40" height="40" alt="" decoding="async">
     <span>Kamer-Go</span>
   </a>
 
@@ -57,6 +54,17 @@
 
   <!-- ─────────────────────────  HERO  ───────────────────────── -->
   <section class="hero">
+    <!-- The halo is drawn by CSS rather than by blurring a copy of the icon:
+         the artwork averages #29245C, which is far darker than the cream
+         page, so a blurred duplicate would read as a shadow instead of a
+         glow. See styles.css for the sampled colours. -->
+    <div class="app-icon">
+      <img class="app-icon__face" src="app-icon-192.jpg"
+           srcset="app-icon-192.jpg 192w, app-icon-384.jpg 384w"
+           sizes="(max-width: 560px) 18vw, 136px"
+           width="136" height="136" alt="The Kamer-Go app icon" fetchpriority="high">
+    </div>
+
     <p class="eyebrow">Built for Cameroon</p>
     <h1 class="hero__title">
       Plan faster.<br>
@@ -181,10 +189,8 @@
 
 <footer class="footer">
   <div class="footer__brand">
-    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
-      <rect width="40" height="40" rx="12" fill="url(#brandRamp)"/>
-      <path d="M20 9c-4.4 0-8 3.5-8 7.9 0 5.9 8 14.1 8 14.1s8-8.2 8-14.1C28 12.5 24.4 9 20 9Zm0 10.8a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8Z" fill="#fff"/>
-    </svg>
+    <img class="brand-mark" src="app-icon-192.jpg" width="40" height="40"
+         alt="" loading="lazy" decoding="async">
     <div>
       <strong>Kamer-Go</strong>
       <span>Built for Cameroon.</span>
