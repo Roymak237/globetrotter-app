@@ -122,6 +122,12 @@ class ChatRoom {
   final bool muted;
   final bool blocked;
   final bool requested;
+
+  /// Whether anyone else in the room holds an open call socket right now.
+  ///
+  /// Supplied by the room list so the conversation list can show a presence
+  /// badge without a request per room.
+  final bool online;
   final String? otherUsername;
   final String? inviteCode;
   final int memberCount;
@@ -151,6 +157,7 @@ class ChatRoom {
     this.muted = false,
     this.blocked = false,
     this.requested = false,
+    this.online = false,
     this.otherUsername,
     this.inviteCode,
     this.memberCount = 0,
@@ -183,6 +190,7 @@ class ChatRoom {
       muted: json["muted"] == true,
       blocked: json["blocked"] == true,
       requested: json["requested"] == true,
+      online: json["online"] == true,
       otherUsername: json["other_username"]?.toString(),
       inviteCode: json["invite_code"]?.toString(),
       memberCount: (json["member_count"] as num?)?.toInt() ??

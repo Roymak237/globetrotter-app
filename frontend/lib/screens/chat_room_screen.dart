@@ -8,7 +8,10 @@ import "../models/chat.dart";
 import "../providers/auth_provider.dart";
 import "../services/call_service.dart";
 import "../services/chat_service.dart";
+import "../utils/chat_wallpaper.dart";
+import "../utils/chat_wallpaper_store.dart";
 import "../utils/theme.dart";
+import "../widgets/online_badge.dart";
 
 /// A single conversation. Polls for new messages with a `since` cursor so the
 /// thread stays current without holding a socket open.
@@ -42,20 +45,54 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   bool _sending = false;
   String? _error;
   Timer? _poll;
+  Timer? _presencePoll;
+
+  /// Members of this room holding an open call socket right now.
+  Set<String> _online = const {};
+
+  ChatWallpaper _wallpaper = ChatWallpaper.sand;
 
   @override
   void initState() {
     super.initState();
     _load();
+    _restoreWallpaper();
     _poll = Timer.periodic(const Duration(seconds: 5), (_) => _pollNew());
+    // Presence changes far less often than messages and only drives a badge,
+    // so it is polled at a fifth of the rate rather than riding along with
+    // every message fetch.
+    _refreshPresence();
+    _presencePoll =
+        Timer.periodic(const Duration(seconds: 25), (_) => _refreshPresence());
   }
 
   @override
   void dispose() {
     _poll?.cancel();
+    _presencePoll?.cancel();
     _input.dispose();
     _scroll.dispose();
     super.dispose();
+  }
+
+  Future<void> _restoreWallpaper() async {
+    final stored = await ChatWallpaperStore.load(widget.room.id);
+    if (!mounted || stored == null) return;
+    setState(() => _wallpaper = ChatWallpaper.byId(stored));
+  }
+
+  /// Refresh the online set.
+  ///
+  /// The community room has no presence endpoint of its own — asking would
+  /// mean publishing the activity of every registered user — so it is skipped
+  /// rather than left to 403 on a timer.
+  Future<void> _refreshPresence() async {
+    if (widget.room.type == ChatRoomType.community) return;
+    final token = _token;
+    if (token == null) return;
+    final online = await _service.presence(token, widget.room.id);
+    if (!mounted) return;
+    setState(() => _online = online);
   }
 
   String? get _token => context.read<AuthProvider>().token;
@@ -341,20 +378,86 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: _buildTitle(title),
         flexibleSpace: AppTheme.appBarBackground,
         foregroundColor: Colors.white,
         backgroundColor: Colors.transparent,
-        actions: _callActions(),
+        actions: [..._callActions(), _wallpaperMenu()],
       ),
       body: Column(
         children: [
-          Expanded(child: _buildMessages(localizations)),
+          // The wallpaper sits behind the thread only. Running it behind the
+          // composer too would put a tinted gradient under a text field and
+          // make the caret and hint harder to read for no gain.
+          Expanded(
+            child: DecoratedBox(
+              decoration: _wallpaper.decoration,
+              child: _buildMessages(localizations),
+            ),
+          ),
           if (_replyTarget != null) _buildReplyBanner(localizations),
           _buildComposer(localizations),
         ],
       ),
     );
+  }
+
+  /// Room name, plus a live "Online" line when someone is actually reachable.
+  Widget _buildTitle(String title) {
+    final anyoneOnline = _online.isNotEmpty;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: Text(title, overflow: TextOverflow.ellipsis),
+        ),
+        if (anyoneOnline) ...[
+          const SizedBox(width: 8),
+          // Bordered in the app bar's own tone rather than white, so the ring
+          // reads as separation from the gradient behind it.
+          const OnlineDot(online: true, borderColor: Color(0x33FFFFFF)),
+        ],
+      ],
+    );
+  }
+
+  Widget _wallpaperMenu() {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.wallpaper_rounded),
+      tooltip: "Wallpaper",
+      onSelected: _applyWallpaper,
+      itemBuilder: (context) => [
+        for (final wallpaper in ChatWallpaper.presets)
+          PopupMenuItem<String>(
+            value: wallpaper.id,
+            child: Row(
+              children: [
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    gradient: wallpaper.decoration.gradient,
+                    border: Border.all(color: AppTheme.border),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(wallpaper.label),
+                if (wallpaper.id == _wallpaper.id) ...[
+                  const Spacer(),
+                  const Icon(Icons.check_rounded,
+                      size: 17, color: AppTheme.primary),
+                ],
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _applyWallpaper(String id) async {
+    setState(() => _wallpaper = ChatWallpaper.byId(id));
+    await ChatWallpaperStore.save(widget.room.id, id);
   }
 
   Widget _buildMessages(AppLocalizations localizations) {
@@ -615,13 +718,23 @@ class _MessageBubble extends StatelessWidget {
             children: [
               if (showAuthor)
                 Padding(
-                  padding: const EdgeInsets.only(left: 12, bottom: 3),
+                  padding: const EdgeInsets.only(left: 12, bottom: 4),
                   child: Text(
-                    message.displayName,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textSecondary,
+                    // Falling back to the username matters: display_name is
+                    // optional on the backend, and an account without one used
+                    // to render an empty string here — a name that was not
+                    // merely faint but genuinely absent.
+                    message.displayName.trim().isEmpty
+                        ? message.username
+                        : message.displayName,
+                    style: TextStyle(
+                      // Was 11px in the muted secondary brown, which put the
+                      // speaker's name at the same visual weight as a
+                      // timestamp and let it disappear into the background.
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.1,
+                      color: ChatWallpaper.authorColor(message.username),
                     ),
                   ),
                 ),

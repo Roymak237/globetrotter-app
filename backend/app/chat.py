@@ -297,6 +297,7 @@ def _serialize_room(room: dict, viewer: str) -> dict:
         "admins": sorted(admins),
         "is_admin": _is_admin(room, viewer),
         "other_username": other_username,
+        "online": _room_online(room, viewer, other_username),
         "blocked": bool(other_username and _is_blocked_between(viewer, other_username)),
         "muted": viewer in (room.get("muted_by", []) or []),
         "invite_code": room.get("invite_code") if _is_admin(room, viewer) else None,
@@ -307,6 +308,37 @@ def _serialize_room(room: dict, viewer: str) -> dict:
         "last_message": _serialize_message(last, viewer) if last else None,
         "last_activity": last.get("created_at") if last else room.get("created_at"),
     }
+
+
+def _room_online(room: dict, viewer: str, other_username: str | None) -> bool:
+    """Whether anyone else in this room is reachable right now.
+
+    Carried on the room list so the conversation list can show an online badge
+    from the request it already makes. Asking per room would turn one fetch
+    into one-per-conversation on a timer, which is a lot of traffic for a dot.
+
+    "Reachable" is the call-signalling registry, not a last-seen heuristic, so
+    a green dot here means a call would actually ring rather than merely that
+    the person was around recently.
+
+    The community room is excluded: it contains every registered user, so a
+    badge there would report on strangers and be green permanently.
+    """
+    if room.get("type") == "community":
+        return False
+
+    # Imported here rather than at module scope. Presence lives with call
+    # signalling, and a top-level import would tie the chat API's importability
+    # to it for what is ultimately one boolean.
+    from app.calls import is_online
+
+    if other_username:
+        return is_online(other_username)
+    return any(
+        is_online(member)
+        for member in (room.get("members", []) or [])
+        if member != viewer
+    )
 
 
 @chat_bp.route("/api/chat/rooms", methods=["GET"])

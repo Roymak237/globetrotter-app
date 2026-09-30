@@ -9,6 +9,7 @@ import "../providers/auth_provider.dart";
 import "../services/chat_service.dart";
 import "../utils/media_url.dart";
 import "../utils/theme.dart";
+import "../widgets/online_badge.dart";
 import "../widgets/state_views.dart";
 import "chat_room_screen.dart";
 
@@ -210,19 +211,26 @@ class _RoomTile extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: room.type == ChatRoomType.community
-                    ? AppTheme.primarySoft
-                    : AppTheme.indigoSoft,
-                foregroundImage: resolveMediaUrl(room.avatarUrl).isEmpty
-                    ? null
-                    : NetworkImage(resolveMediaUrl(room.avatarUrl)),
-                child: Icon(
-                  _icon,
-                  color: room.type == ChatRoomType.community
-                      ? AppTheme.primary
-                      : AppTheme.indigo,
+              OnlineBadge(
+                online: room.online,
+                dotSize: 14,
+                // The ring separates the dot from the tile behind it, so it
+                // matches the tile rather than the page.
+                borderColor: AppTheme.surface,
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: room.type == ChatRoomType.community
+                      ? AppTheme.primarySoft
+                      : AppTheme.indigoSoft,
+                  foregroundImage: resolveMediaUrl(room.avatarUrl).isEmpty
+                      ? null
+                      : NetworkImage(resolveMediaUrl(room.avatarUrl)),
+                  child: Icon(
+                    _icon,
+                    color: room.type == ChatRoomType.community
+                        ? AppTheme.primary
+                        : AppTheme.indigo,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

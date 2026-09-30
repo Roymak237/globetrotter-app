@@ -285,6 +285,26 @@ class ChatService {
     await _request(token, "POST", "rooms/${_id(roomId)}/typing");
   }
 
+  /// Which members of a room currently hold an open signalling socket.
+  ///
+  /// This is the same registry that decides whether a call can ring at all,
+  /// so it is the honest source for an online badge: a green dot drawn from
+  /// anything else could promise someone is reachable when a call to them
+  /// would ring nowhere.
+  ///
+  /// Returns an empty set rather than throwing. Presence is decoration; a
+  /// failed lookup should leave the badge off, not break the conversation.
+  Future<Set<String>> presence(String token, String roomId) async {
+    try {
+      final data =
+          await _request(token, "GET", "presence", query: {"room_id": roomId});
+      final online = (data as Map<String, dynamic>)["online"] as List<dynamic>?;
+      return (online ?? const []).map((e) => e.toString()).toSet();
+    } catch (_) {
+      return const <String>{};
+    }
+  }
+
   Future<ChatRoom> mute(String token, String roomId, bool muted) async =>
       ChatRoom.fromJson(await _request(
           token, "POST", "rooms/${_id(roomId)}/mute",
