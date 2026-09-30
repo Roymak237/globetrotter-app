@@ -5,6 +5,7 @@ import "../localization/app_localizations.dart";
 import "../models/comment.dart";
 import "../providers/auth_provider.dart";
 import "../services/social_service.dart";
+import "../utils/media_url.dart";
 import "../utils/theme.dart";
 
 /// Threaded traveller notes for a destination, with voting.
@@ -289,9 +290,9 @@ class _CommentTile extends StatelessWidget {
               CircleAvatar(
                 radius: isReply ? 13 : 16,
                 backgroundColor: AppTheme.primarySoft,
-                foregroundImage: comment.avatarUrl.isEmpty
+                foregroundImage: resolveMediaUrl(comment.avatarUrl).isEmpty
                     ? null
-                    : NetworkImage(comment.avatarUrl),
+                    : NetworkImage(resolveMediaUrl(comment.avatarUrl)),
                 child: Text(
                   comment.username.isEmpty
                       ? "?"

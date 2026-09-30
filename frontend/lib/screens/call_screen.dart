@@ -3,6 +3,7 @@ import "package:flutter_webrtc/flutter_webrtc.dart";
 import "package:provider/provider.dart";
 
 import "../services/call_service.dart";
+import "../utils/media_url.dart";
 import "../utils/theme.dart";
 
 /// The in-call screen, covering every stage from dialling to hang-up.
@@ -89,10 +90,10 @@ class CallScreen extends StatelessWidget {
           CircleAvatar(
             radius: 58,
             backgroundColor: AppTheme.primaryDark,
-            backgroundImage: session.peerAvatarUrl.isNotEmpty
-                ? NetworkImage(session.peerAvatarUrl)
+            backgroundImage: resolveMediaUrl(session.peerAvatarUrl).isNotEmpty
+                ? NetworkImage(resolveMediaUrl(session.peerAvatarUrl))
                 : null,
-            child: session.peerAvatarUrl.isEmpty
+            child: resolveMediaUrl(session.peerAvatarUrl).isEmpty
                 ? Text(
                     session.title.isNotEmpty
                         ? session.title[0].toUpperCase()

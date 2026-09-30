@@ -7,6 +7,7 @@ import "../localization/app_localizations.dart";
 import "../models/chat.dart";
 import "../providers/auth_provider.dart";
 import "../services/chat_service.dart";
+import "../utils/media_url.dart";
 import "../utils/theme.dart";
 import "../widgets/state_views.dart";
 import "chat_room_screen.dart";
@@ -214,9 +215,9 @@ class _RoomTile extends StatelessWidget {
                 backgroundColor: room.type == ChatRoomType.community
                     ? AppTheme.primarySoft
                     : AppTheme.indigoSoft,
-                foregroundImage: room.avatarUrl.isEmpty
+                foregroundImage: resolveMediaUrl(room.avatarUrl).isEmpty
                     ? null
-                    : NetworkImage(room.avatarUrl),
+                    : NetworkImage(resolveMediaUrl(room.avatarUrl)),
                 child: Icon(
                   _icon,
                   color: room.type == ChatRoomType.community
@@ -380,9 +381,10 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundColor: AppTheme.primarySoft,
-                        foregroundImage: user.avatarUrl.isEmpty
-                            ? null
-                            : NetworkImage(user.avatarUrl),
+                        foregroundImage:
+                            resolveMediaUrl(user.avatarUrl).isEmpty
+                                ? null
+                                : NetworkImage(resolveMediaUrl(user.avatarUrl)),
                         child: Text(
                           user.displayName.isEmpty
                               ? "?"

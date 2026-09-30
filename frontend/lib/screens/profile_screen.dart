@@ -4,11 +4,13 @@ import "package:provider/provider.dart";
 import "../localization/app_localizations.dart";
 import "../models/user.dart";
 import "../providers/auth_provider.dart";
+import "../services/media_service.dart";
 import "../utils/preferences.dart";
 import "../utils/theme.dart";
 import "../widgets/account_dialogs.dart";
 import "../widgets/preference_editor_dialog.dart";
 import "../widgets/rate_app_dialog.dart";
+import "../widgets/user_avatar.dart";
 import "about_developer_screen.dart";
 import "interests_screen.dart";
 import "suggest_place_screen.dart";
@@ -25,11 +27,20 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _loading = true;
   bool _accountActionLoading = false;
+  final MediaService _media = MediaService();
 
   @override
   void initState() {
     super.initState();
     _loadProfile();
+  }
+
+  @override
+  void dispose() {
+    // Owns its HTTP client, so an upload in flight when the screen closes is
+    // cancelled rather than left holding a socket.
+    _media.dispose();
+    super.dispose();
   }
 
   Future<void> _loadProfile() async {
@@ -70,6 +81,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final changed = await showAccountDetailsEditor(
       context,
       user: user,
+      onPickAvatar: () async {
+        final token = auth.token;
+        if (token == null) {
+          throw Exception("Sign in again to change your photo.");
+        }
+        // imageOnly because the avatar endpoint accepts only the image
+        // extensions; letting someone pick a PDF here would upload fine and
+        // then fail at the point of saving, which reads as a random error.
+        final picked = await _media.pickAndUpload(token, imageOnly: true);
+        return picked?.url;
+      },
       onSave: (displayName, email, homeRegion, avatarUrl) async {
         await auth.updateProfile(
           displayName: displayName,
@@ -175,47 +197,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildAvatar(User user) {
-    final initials =
-        user.username.isNotEmpty ? user.username[0].toUpperCase() : "?";
-    if (user.avatarUrl.isEmpty) {
-      return CircleAvatar(
+  Widget _buildAvatar(User user) => UserAvatar(
+        avatarUrl: user.avatarUrl,
+        name: user.username,
         radius: 34,
-        backgroundColor: AppTheme.accent,
-        child: Text(
-          initials,
-          style: const TextStyle(
-            fontFamily: AppTheme.displayFontFamily,
-            fontSize: 28,
-            color: AppTheme.textPrimary,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       );
-    }
-
-    return CircleAvatar(
-      radius: 34,
-      backgroundColor: AppTheme.accent,
-      child: ClipOval(
-        child: Image.network(
-          user.avatarUrl,
-          width: 68,
-          height: 68,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => Text(
-            initials,
-            style: const TextStyle(
-              fontFamily: AppTheme.displayFontFamily,
-              fontSize: 28,
-              color: AppTheme.textPrimary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildContent(BuildContext context) {
     final auth = context.watch<AuthProvider>();
