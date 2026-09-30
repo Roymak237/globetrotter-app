@@ -4,6 +4,7 @@ import "../localization/app_localizations.dart";
 import "../models/destination.dart";
 import "../services/api_service.dart";
 import "../utils/destination_cost.dart";
+import "../utils/layout.dart";
 import "../utils/theme.dart";
 import "../widgets/destination_card.dart";
 import "../widgets/state_views.dart";
@@ -352,21 +353,48 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
       );
     }
 
+    // One column on a phone, a grid on anything wider. Without this the card
+    // art, which is pinned to a fixed aspect ratio, scales with the window and
+    // a desktop window shows one enormous photo per row.
     return SliverPadding(
       padding: const EdgeInsets.only(top: 4, bottom: 24),
-      sliver: SliverList.builder(
-        itemCount: _destinations.length,
-        itemBuilder: (context, index) {
-          final destination = _destinations[index];
-          return DestinationCard(
-            destination: destination,
-            onTap: () => Navigator.pushNamed(
-              context,
-              "/destination_detail",
-              arguments: destination,
+      sliver: SliverLayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.crossAxisExtent;
+          final columns = AppLayout.columnsFor(width);
+
+          if (columns == 1) {
+            return SliverList.builder(
+              itemCount: _destinations.length,
+              itemBuilder: (context, index) => _resultCard(index),
+            );
+          }
+
+          final tileWidth = width / columns;
+          return SliverGrid.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columns,
+              crossAxisSpacing: AppLayout.gridSpacing,
+              mainAxisSpacing: AppLayout.gridSpacing,
+              mainAxisExtent:
+                  AppLayout.destinationTileHeight(context, tileWidth),
             ),
+            itemCount: _destinations.length,
+            itemBuilder: (context, index) => _resultCard(index),
           );
         },
+      ),
+    );
+  }
+
+  Widget _resultCard(int index) {
+    final destination = _destinations[index];
+    return DestinationCard(
+      destination: destination,
+      onTap: () => Navigator.pushNamed(
+        context,
+        "/destination_detail",
+        arguments: destination,
       ),
     );
   }
