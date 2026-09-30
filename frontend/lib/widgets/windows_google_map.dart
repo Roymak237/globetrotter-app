@@ -104,8 +104,8 @@ class _WindowsGoogleMapState extends State<WindowsGoogleMap> {
       return;
     }
     if (type == "map-error" && mounted) {
-      setState(
-          () => _error = message["message"]?.toString() ?? "The map could not load.");
+      setState(() =>
+          _error = message["message"]?.toString() ?? "The map could not load.");
     }
   }
 

@@ -34,6 +34,7 @@ Future<bool> showAccountDetailsEditor(
     String homeRegion,
     String avatarUrl,
   ) onSave,
+
   /// Picks an image, uploads it and returns the stored path
   /// (`/api/media/<id>.jpg`), or null if the user cancelled.
   ///
@@ -282,10 +283,9 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
                             runSpacing: 4,
                             children: [
                               OutlinedButton.icon(
-                                onPressed:
-                                    busy || widget.onPickAvatar == null
-                                        ? null
-                                        : _pickAvatar,
+                                onPressed: busy || widget.onPickAvatar == null
+                                    ? null
+                                    : _pickAvatar,
                                 icon: _uploading
                                     ? const SizedBox(
                                         width: 14,

@@ -108,7 +108,8 @@ void main() {
           reason: "a relative src throws on Android and iOS");
     });
 
-    testWidgets("shows a placeholder rather than an empty disc for a blank name",
+    testWidgets(
+        "shows a placeholder rather than an empty disc for a blank name",
         (tester) async {
       await tester.pumpWidget(const MaterialApp(
         home: Scaffold(body: UserAvatar(avatarUrl: "", name: "   ")),
@@ -212,7 +213,8 @@ void main() {
       await _openEditor(
         tester,
         user: _user(),
-        onPickAvatar: () async => throw Exception("File must be 10 MB or smaller."),
+        onPickAvatar: () async =>
+            throw Exception("File must be 10 MB or smaller."),
         onSaved: (_) {},
       );
 

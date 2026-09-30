@@ -381,10 +381,9 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
                     return ListTile(
                       leading: CircleAvatar(
                         backgroundColor: AppTheme.primarySoft,
-                        foregroundImage:
-                            resolveMediaUrl(user.avatarUrl).isEmpty
-                                ? null
-                                : NetworkImage(resolveMediaUrl(user.avatarUrl)),
+                        foregroundImage: resolveMediaUrl(user.avatarUrl).isEmpty
+                            ? null
+                            : NetworkImage(resolveMediaUrl(user.avatarUrl)),
                         child: Text(
                           user.displayName.isEmpty
                               ? "?"

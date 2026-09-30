@@ -7,6 +7,7 @@ import "../providers/favorites_provider.dart";
 import "../services/api_service.dart";
 import "../utils/theme.dart";
 import "../widgets/destination_card.dart";
+import "../widgets/destination_grid.dart";
 import "../widgets/state_views.dart";
 
 class SavedDestinationsScreen extends StatefulWidget {
@@ -91,23 +92,33 @@ class _SavedDestinationsScreenState extends State<SavedDestinationsScreen> {
                 : RefreshIndicator(
                     color: AppTheme.primary,
                     onRefresh: _loadSaved,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.only(top: 8, bottom: 24),
-                      itemCount: _destinations.length,
-                      itemBuilder: (context, index) {
-                        final destination = _destinations[index];
-                        return DestinationCard(
-                          destination: destination,
-                          onTap: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              "/destination_detail",
-                              arguments: destination,
+                    child: CustomScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        const SliverPadding(padding: EdgeInsets.only(top: 8)),
+                        // Same grid as the destinations list, so a desktop
+                        // window shows a row of cards rather than one
+                        // full-width photo.
+                        DestinationCardsSliver(
+                          itemCount: _destinations.length,
+                          itemBuilder: (context, index) {
+                            final destination = _destinations[index];
+                            return DestinationCard(
+                              destination: destination,
+                              onTap: () async {
+                                await Navigator.pushNamed(
+                                  context,
+                                  "/destination_detail",
+                                  arguments: destination,
+                                );
+                                _loadSaved();
+                              },
                             );
-                            _loadSaved();
                           },
-                        );
-                      },
+                        ),
+                        const SliverPadding(
+                            padding: EdgeInsets.only(bottom: 24)),
+                      ],
                     ),
                   );
   }

@@ -8,6 +8,7 @@ import "../services/api_service.dart";
 import "../utils/preferences.dart";
 import "../utils/theme.dart";
 import "../widgets/destination_card.dart";
+import "../widgets/destination_grid.dart";
 import "../widgets/preference_editor_dialog.dart";
 import "../widgets/state_views.dart";
 
@@ -148,35 +149,52 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
     return RefreshIndicator(
       color: AppTheme.primary,
       onRefresh: _loadRecommendations,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(0, 8, 0, 24),
-        children: [
-          _RecommendationsHeader(
-            preferences: preferences,
-            onEdit: _editPreferences,
+      child: CustomScrollView(
+        // Without this the list stops being draggable once the content is
+        // shorter than the viewport, which is exactly the empty state where
+        // someone is most likely to pull for a refresh.
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 8),
+            sliver: SliverToBoxAdapter(
+              child: _RecommendationsHeader(
+                preferences: preferences,
+                onEdit: _editPreferences,
+              ),
+            ),
           ),
           if (_recommendations.isEmpty)
-            EmptyStateView(
-              icon: Icons.auto_awesome_outlined,
-              title: localizations.journeyAwaits,
-              message: localizations.recommendationsEmptyMessage,
-              action: OutlinedButton.icon(
-                onPressed: _editPreferences,
-                icon: const Icon(Icons.tune_rounded),
-                label: Text(localizations.tunePreferences),
+            SliverToBoxAdapter(
+              child: EmptyStateView(
+                icon: Icons.auto_awesome_outlined,
+                title: localizations.journeyAwaits,
+                message: localizations.recommendationsEmptyMessage,
+                action: OutlinedButton.icon(
+                  onPressed: _editPreferences,
+                  icon: const Icon(Icons.tune_rounded),
+                  label: Text(localizations.tunePreferences),
+                ),
               ),
             )
           else
-            ..._recommendations.map(
-              (destination) => DestinationCard(
-                destination: destination,
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  "/destination_detail",
-                  arguments: destination,
-                ),
-              ),
+            // A grid past phone width, so a wide window shows more cards
+            // rather than one enormous photo per row.
+            DestinationCardsSliver(
+              itemCount: _recommendations.length,
+              itemBuilder: (context, index) {
+                final destination = _recommendations[index];
+                return DestinationCard(
+                  destination: destination,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    "/destination_detail",
+                    arguments: destination,
+                  ),
+                );
+              },
             ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
         ],
       ),
     );

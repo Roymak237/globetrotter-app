@@ -4,9 +4,9 @@ import "../localization/app_localizations.dart";
 import "../models/destination.dart";
 import "../services/api_service.dart";
 import "../utils/destination_cost.dart";
-import "../utils/layout.dart";
 import "../utils/theme.dart";
 import "../widgets/destination_card.dart";
+import "../widgets/destination_grid.dart";
 import "../widgets/state_views.dart";
 
 class DestinationsScreen extends StatefulWidget {
@@ -358,31 +358,9 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
     // a desktop window shows one enormous photo per row.
     return SliverPadding(
       padding: const EdgeInsets.only(top: 4, bottom: 24),
-      sliver: SliverLayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.crossAxisExtent;
-          final columns = AppLayout.columnsFor(width);
-
-          if (columns == 1) {
-            return SliverList.builder(
-              itemCount: _destinations.length,
-              itemBuilder: (context, index) => _resultCard(index),
-            );
-          }
-
-          final tileWidth = width / columns;
-          return SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columns,
-              crossAxisSpacing: AppLayout.gridSpacing,
-              mainAxisSpacing: AppLayout.gridSpacing,
-              mainAxisExtent:
-                  AppLayout.destinationTileHeight(context, tileWidth),
-            ),
-            itemCount: _destinations.length,
-            itemBuilder: (context, index) => _resultCard(index),
-          );
-        },
+      sliver: DestinationCardsSliver(
+        itemCount: _destinations.length,
+        itemBuilder: (context, index) => _resultCard(index),
       ),
     );
   }
