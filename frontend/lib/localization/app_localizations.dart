@@ -79,6 +79,8 @@ class AppLocalizations {
   String get chatFindPeople => _text("chatFindPeople");
   String get chatNoMessages => _text("chatNoMessages");
   String get chatStartConversation => _text("chatStartConversation");
+  String get chatVoiceCall => _text("chatVoiceCall");
+  String get chatVideoCall => _text("chatVideoCall");
 
   // Notifications
   String get notificationsTitle => _text("notificationsTitle");
@@ -280,6 +282,8 @@ class AppLocalizations {
       "chatFindPeople": "Find people",
       "chatNoMessages": "No messages yet",
       "chatStartConversation": "Say something to get things started.",
+      "chatVoiceCall": "Voice call",
+      "chatVideoCall": "Video call",
       "notificationsTitle": "Notifications",
       "notificationsEmpty": "Nothing new right now.",
       "notificationsMarkAllRead": "Mark all read",
@@ -504,6 +508,8 @@ class AppLocalizations {
       "chatFindPeople": "Trouver des personnes",
       "chatNoMessages": "Aucun message",
       "chatStartConversation": "Lancez la conversation.",
+      "chatVoiceCall": "Appel vocal",
+      "chatVideoCall": "Appel vidéo",
       "notificationsTitle": "Notifications",
       "notificationsEmpty": "Rien de nouveau pour le moment.",
       "notificationsMarkAllRead": "Tout marquer comme lu",
@@ -735,6 +741,8 @@ class AppLocalizations {
       "chatFindPeople": "Find people",
       "chatNoMessages": "No message dey yet",
       "chatStartConversation": "Talk something make e start.",
+      "chatVoiceCall": "Voice call",
+      "chatVideoCall": "Video call",
       "notificationsTitle": "Notifications",
       "notificationsEmpty": "Nothing new for now.",
       "notificationsMarkAllRead": "Mark all as read",

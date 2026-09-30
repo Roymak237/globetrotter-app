@@ -15,7 +15,15 @@ import "../utils/theme.dart";
 class ChatRoomScreen extends StatefulWidget {
   final ChatRoom room;
 
-  const ChatRoomScreen({super.key, required this.room});
+  /// Transport override, for tests only.
+  ///
+  /// [ChatService] reaches for the top-level `http` functions rather than an
+  /// injected client, so there is no other seam to fake the network through.
+  /// Production always leaves this null and gets the real service.
+  @visibleForTesting
+  final ChatService? service;
+
+  const ChatRoomScreen({super.key, required this.room, this.service});
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomScreenState();
@@ -24,7 +32,7 @@ class ChatRoomScreen extends StatefulWidget {
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   static const List<String> _quickReactions = ["👍", "❤️", "😂", "🔥", "🙏"];
 
-  final ChatService _service = ChatService();
+  late final ChatService _service = widget.service ?? ChatService();
   final TextEditingController _input = TextEditingController();
   final ScrollController _scroll = ScrollController();
 
@@ -52,6 +60,24 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   String? get _token => context.read<AuthProvider>().token;
 
+  /// Cursor for an incremental fetch, or null when we hold nothing yet.
+  ///
+  /// Messages are kept oldest-first, so the newest `created_at` is the last
+  /// one. Returning null asks the backend for the tail instead, which is
+  /// exactly what an empty room needs.
+  String? get _cursor => _messages.isEmpty ? null : _messages.last.createdAt;
+
+  /// True when the view is already parked at the newest message.
+  ///
+  /// A background refresh should not yank the list away from someone reading
+  /// back through history, so only auto-scroll when they were at the bottom
+  /// to begin with.
+  bool get _isAtBottom {
+    if (!_scroll.hasClients) return true;
+    final position = _scroll.position;
+    return position.maxScrollExtent - position.pixels < 120;
+  }
+
   Future<void> _load() async {
     final token = _token;
     if (token == null) return;
@@ -75,23 +101,46 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     }
   }
 
-  /// Fetch only what arrived after the newest message we already hold.
+  /// Pull in whatever arrived since our newest message.
+  ///
+  /// This deliberately does *not* bail out when the thread is empty. It used
+  /// to, and that early return left an empty room permanently stale: with no
+  /// message to build a cursor from, every later tick stopped at the same
+  /// guard, so a conversation opened before the first reply landed never
+  /// updated again. Closing and reopening the screen was the only way to see
+  /// anything, which is why it looked as though you had to sign out and back
+  /// in to read new messages. With no cursor we ask for the tail instead.
   Future<void> _pollNew() async {
     final token = _token;
-    if (token == null || _messages.isEmpty) return;
+    if (token == null) return;
     try {
       final fresh = await _service.fetchMessages(
         token: token,
         roomId: widget.room.id,
-        since: _messages.last.createdAt,
+        since: _cursor,
       );
       if (!mounted || fresh.isEmpty) return;
-      setState(() => _messages = [..._messages, ...fresh]);
-      _scrollToBottom();
+      final wasAtBottom = _isAtBottom;
+      setState(() => _messages = _merge(_messages, fresh));
+      if (wasAtBottom) _scrollToBottom();
       unawaited(_service.markRead(token: token, roomId: widget.room.id));
     } catch (_) {
       // Transient failures are ignored; the next tick retries.
     }
+  }
+
+  /// Append [fresh] to [current], skipping ids we already hold.
+  ///
+  /// The `since` filter is exclusive, so an incremental fetch cannot normally
+  /// overlap what we have. A cursorless fetch can, though, and so can a send
+  /// that lands between reading the cursor and applying the response, so
+  /// dedupe rather than assume.
+  static List<ChatMessage> _merge(
+    List<ChatMessage> current,
+    List<ChatMessage> fresh,
+  ) {
+    final seen = current.map((message) => message.id).toSet();
+    return [...current, ...fresh.where((message) => seen.add(message.id))];
   }
 
   void _scrollToBottom() {
@@ -250,17 +299,19 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         );
     if (peer.isEmpty) return const [];
 
+    final localizations = AppLocalizations.of(context);
     return [
-      IconButton(
-        tooltip: "Voice call",
-        icon: const Icon(Icons.call_rounded),
+      _CallAction(
+        tooltip: localizations.chatVoiceCall,
+        icon: Icons.call_rounded,
         onPressed: () => _startCall(peer, video: false),
       ),
-      IconButton(
-        tooltip: "Video call",
-        icon: const Icon(Icons.videocam_rounded),
+      _CallAction(
+        tooltip: localizations.chatVideoCall,
+        icon: Icons.videocam_rounded,
         onPressed: () => _startCall(peer, video: true),
       ),
+      const SizedBox(width: 4),
     ];
   }
 
@@ -311,61 +362,85 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       return const Center(
           child: CircularProgressIndicator(color: AppTheme.primary));
     }
-    if (_error != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(_error!, textAlign: TextAlign.center),
-        ),
-      );
-    }
-    if (_messages.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.chat_bubble_outline_rounded,
-                  size: 48, color: AppTheme.textSecondary),
-              const SizedBox(height: 12),
-              Text(
-                localizations.chatNoMessages,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                localizations.chatStartConversation,
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: AppTheme.textSecondary),
-              ),
-            ],
+
+    // Pull to refresh sits on top of the five-second poll. The poll handles
+    // the common case, but an explicit gesture is what people reach for when
+    // they suspect they are looking at something stale, and it costs one
+    // request.
+    return RefreshIndicator(
+      onRefresh: _refresh,
+      color: AppTheme.primary,
+      child: _error != null || _messages.isEmpty
+          ? _buildPlaceholder(localizations)
+          : ListView.builder(
+              controller: _scroll,
+              padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                // Only label the first message in a run from the same person.
+                final previous = index == 0 ? null : _messages[index - 1];
+                final showAuthor =
+                    previous == null || previous.username != message.username;
+                return _MessageBubble(
+                  message: message,
+                  showAuthor: showAuthor && !message.mine,
+                  onLongPress: message.deleted
+                      ? null
+                      : () => _showMessageActions(message),
+                  onReactionTap: (emoji) => _react(message, emoji),
+                );
+              },
+            ),
+    );
+  }
+
+  /// Reload the tail and clear any stale error.
+  Future<void> _refresh() async {
+    if (mounted) setState(() => _error = null);
+    await _load();
+  }
+
+  /// The empty and error states, made scrollable so the pull gesture still
+  /// works. A bare `Center` cannot be dragged, which would withhold refresh in
+  /// exactly the two states where someone is most likely to want it.
+  Widget _buildPlaceholder(AppLocalizations localizations) {
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: _error != null
+                  ? Text(_error!, textAlign: TextAlign.center)
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.chat_bubble_outline_rounded,
+                            size: 48, color: AppTheme.textSecondary),
+                        const SizedBox(height: 12),
+                        Text(
+                          localizations.chatNoMessages,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          localizations.chatStartConversation,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: AppTheme.textSecondary),
+                        ),
+                      ],
+                    ),
+            ),
           ),
         ),
-      );
-    }
-
-    return ListView.builder(
-      controller: _scroll,
-      padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
-      itemCount: _messages.length,
-      itemBuilder: (context, index) {
-        final message = _messages[index];
-        // Only label the first message in a run from the same person.
-        final previous = index == 0 ? null : _messages[index - 1];
-        final showAuthor =
-            previous == null || previous.username != message.username;
-        return _MessageBubble(
-          message: message,
-          showAuthor: showAuthor && !message.mine,
-          onLongPress:
-              message.deleted ? null : () => _showMessageActions(message),
-          onReactionTap: (emoji) => _react(message, emoji),
-        );
-      },
+      ),
     );
   }
 
@@ -458,6 +533,50 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A call button that carries its own dark backing.
+///
+/// The app bar gradient runs `primaryDark → primary → clay → secondary` from
+/// left to right, and `AppBar.actions` render at the right-hand end. White
+/// icons on that amber `secondary` measure roughly 2.67:1, under the 3:1 that
+/// WCAG asks for on interface icons. That is why these two buttons were
+/// reported as hard to make out while the title, sitting over the dark left
+/// end at about 9:1, read perfectly well. Painting a solid `primaryDark` disc
+/// behind each icon pins the contrast near 9.4:1 wherever the gradient
+/// happens to fall, and reads as a deliberate action chip rather than an
+/// accident of the background.
+class _CallAction extends StatelessWidget {
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _CallAction({
+    required this.tooltip,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+      child: Material(
+        color: AppTheme.primaryDark,
+        shape: const CircleBorder(),
+        clipBehavior: Clip.antiAlias,
+        child: IconButton(
+          tooltip: tooltip,
+          iconSize: 20,
+          padding: EdgeInsets.zero,
+          color: Colors.white,
+          constraints: const BoxConstraints.tightFor(width: 40, height: 40),
+          icon: Icon(icon),
+          onPressed: onPressed,
         ),
       ),
     );
