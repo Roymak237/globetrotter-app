@@ -34,8 +34,6 @@
 	<string>Kamer-Go uses your camera for video calls and photo attachments.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Kamer-Go needs your photo library to attach pictures to messages.</string>
-	<key>GOOGLE_MAPS_API_KEY</key>
-	<string>AIzaSyAazDTq6VPP5yrJLiTUDOcbWaIKOWzB_2Q</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

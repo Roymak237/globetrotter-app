@@ -93,5 +93,50 @@ void main() {
         contains("NSLocationWhenInUseUsageDescription"),
       );
     });
+
+    test("has no Google Maps scaffolding left", () {
+      // There is no Podfile and no google_maps_flutter dependency, so the
+      // GoogleMaps SDK is not available to link against. An `import
+      // GoogleMaps` in AppDelegate would not compile, and the key it read
+      // from Info.plist was dead config either way.
+      final appDelegate =
+          File("ios/Runner/AppDelegate.swift").readAsStringSync();
+      expect(appDelegate, isNot(contains("import GoogleMaps")));
+      expect(appDelegate, isNot(contains("GMSServices")));
+    });
+  });
+
+  // This sweep is deliberately broad. An earlier version of this file checked
+  // only the two Android files for a hardcoded key, which is why a copy of the
+  // same key sat undetected in ios/Runner/Info.plist: the assertion was right
+  // but its scope was too narrow. Anything Google-issued starts with "AIza",
+  // so every platform config file is scanned rather than an enumerated few.
+  group("No committed credentials", () {
+    final configFiles = [
+      "android/app/src/main/AndroidManifest.xml",
+      "android/app/build.gradle.kts",
+      "android/build.gradle.kts",
+      "ios/Runner/Info.plist",
+      "ios/Runner/AppDelegate.swift",
+      "ios/Flutter/Debug.xcconfig",
+      "ios/Flutter/Release.xcconfig",
+      "web/index.html",
+      "web/manifest.json",
+      "pubspec.yaml",
+    ];
+
+    for (final path in configFiles) {
+      test("$path holds no API key", () {
+        final file = File(path);
+        if (!file.existsSync()) return;
+        expect(
+          file.readAsStringSync(),
+          isNot(contains("AIza")),
+          reason: "$path appears to contain a Google API key. Remove it, and "
+              "revoke the key: deleting it here does not remove it from git "
+              "history.",
+        );
+      });
+    }
   });
 }
