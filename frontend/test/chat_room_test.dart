@@ -101,8 +101,9 @@ void main() {
       expect(find.text("Bonjour"), findsNothing);
 
       // The first message lands while the screen is open and still empty.
-      service.responder = (since) =>
-          since == null ? [_message("m1", "2024-01-01T10:00:00", "Bonjour")] : [];
+      service.responder = (since) => since == null
+          ? [_message("m1", "2024-01-01T10:00:00", "Bonjour")]
+          : [];
 
       await tester.pump(const Duration(seconds: 5));
       await tester.pump();
@@ -124,8 +125,9 @@ void main() {
       await tester.pump();
       expect(service.cursors, [null, null]);
 
-      service.responder = (since) =>
-          since == null ? [_message("m1", "2024-01-01T10:00:00", "Bonjour")] : [];
+      service.responder = (since) => since == null
+          ? [_message("m1", "2024-01-01T10:00:00", "Bonjour")]
+          : [];
       await tester.pump(const Duration(seconds: 5));
       await tester.pump();
 
@@ -158,8 +160,8 @@ void main() {
       final service = await _open(tester);
       expect(find.text("Bonjour"), findsNothing);
 
-      service.responder = (since) =>
-          [_message("m1", "2024-01-01T10:00:00", "Bonjour")];
+      service.responder =
+          (since) => [_message("m1", "2024-01-01T10:00:00", "Bonjour")];
 
       // The empty state has to be draggable, otherwise refresh is unavailable
       // in exactly the state where someone most wants it.

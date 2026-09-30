@@ -18,7 +18,8 @@ void main() {
       File("android/app/src/main/AndroidManifest.xml").readAsStringSync();
 
   group("Android main manifest", () {
-    test("declares INTERNET, without which the release APK cannot reach the API",
+    test(
+        "declares INTERNET, without which the release APK cannot reach the API",
         () {
       // Android refuses DNS resolution when this is absent and surfaces it as
       // "Failed host lookup ... errno = 7", which looks like a dead domain
@@ -55,8 +56,7 @@ void main() {
       // A placeholder with no matching entry in build.gradle.kts fails the
       // Android build rather than the Dart one, so it would not show up in
       // flutter analyze.
-      final gradle =
-          File("android/app/build.gradle.kts").readAsStringSync();
+      final gradle = File("android/app/build.gradle.kts").readAsStringSync();
       final placeholders = RegExp(r"\$\{([A-Z_]+)\}")
           .allMatches(androidManifest)
           .map((match) => match.group(1)!)
@@ -75,7 +75,8 @@ void main() {
       // The app renders OpenStreetMap tiles on every platform and has no
       // google_maps_flutter dependency. A key here would be dead config, and
       // a committed credential.
-      expect(androidManifest, isNot(contains("com.google.android.geo.API_KEY")));
+      expect(
+          androidManifest, isNot(contains("com.google.android.geo.API_KEY")));
       expect(
         File("android/app/build.gradle.kts").readAsStringSync(),
         isNot(contains("AIza")),
