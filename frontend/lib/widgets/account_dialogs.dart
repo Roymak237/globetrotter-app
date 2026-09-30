@@ -1,4 +1,4 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 
 import "../models/user.dart";
 import "../utils/regions.dart";
@@ -64,9 +64,6 @@ Future<bool> showAccountDetailsEditor(
 /// TextEditingController was used after being disposed" every time the dialog
 /// closes. Owning them here ties disposal to the element's own lifetime, which
 /// is the point at which nothing can still be painting them.
-///
-/// The other dialogs in this file share the original pattern and the same
-/// latent fault.
 class _AccountDetailsDialog extends StatefulWidget {
   final User user;
   final Future<void> Function(
@@ -297,7 +294,7 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
                                         size: 18),
                                 label: Text(
                                   _uploading
-                                      ? "Uploadingâ€¦"
+                                      ? "Uploading..."
                                       : _avatarUrl.isEmpty
                                           ? "Upload photo"
                                           : "Change photo",
@@ -351,7 +348,7 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
                   ),
                 )
               : const Icon(Icons.check_rounded, size: 18),
-          label: Text(_saving ? "Savingâ€¦" : "Save profile"),
+          label: Text(_saving ? "Saving..." : "Save profile"),
         ),
       ],
     );
@@ -363,73 +360,264 @@ Future<bool> showUsernameChangeDialog(
   required String currentUsername,
   required Future<void> Function(UsernameChangeInput input) onSave,
 }) async {
-  final formKey = GlobalKey<FormState>();
-  final usernameController = TextEditingController(text: currentUsername);
-  final passwordController = TextEditingController();
-  var obscurePassword = true;
-  var saving = false;
-  String? error;
-
   final result = await showDialog<bool>(
     context: context,
-    builder: (dialogContext) => StatefulBuilder(
-      builder: (context, setDialogState) => AlertDialog(
-        title: const Text("Change username"),
-        content: Form(
-          key: formKey,
+    builder: (_) => _UsernameChangeDialog(
+      currentUsername: currentUsername,
+      onSave: onSave,
+    ),
+  );
+  return result == true;
+}
+
+/// Owns its controllers, for the reason given on [_AccountDetailsDialog].
+class _UsernameChangeDialog extends StatefulWidget {
+  final String currentUsername;
+  final Future<void> Function(UsernameChangeInput input) onSave;
+
+  const _UsernameChangeDialog({
+    required this.currentUsername,
+    required this.onSave,
+  });
+
+  @override
+  State<_UsernameChangeDialog> createState() => _UsernameChangeDialogState();
+}
+
+class _UsernameChangeDialogState extends State<_UsernameChangeDialog> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _usernameController;
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+  bool _saving = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController(text: widget.currentUsername);
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      await widget.onSave(
+        UsernameChangeInput(
+          username: _usernameController.text.trim().toLowerCase(),
+          currentPassword: _passwordController.text,
+        ),
+      );
+      if (mounted) Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _error = e.toString().replaceFirst("Exception: ", "");
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Change username"),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _usernameController,
+              enabled: !_saving,
+              autocorrect: false,
+              textCapitalization: TextCapitalization.none,
+              decoration: const InputDecoration(
+                labelText: "New username",
+                hintText: "traveller_name",
+                prefixIcon: Icon(Icons.alternate_email_rounded),
+              ),
+              validator: (value) {
+                final username = value?.trim().toLowerCase() ?? "";
+                if (!RegExp(r"^[a-z0-9_]{3,30}$").hasMatch(username)) {
+                  return "Use 3-30 lowercase letters, numbers, or _";
+                }
+                if (username == widget.currentUsername) {
+                  return "Choose a different username";
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 13),
+            TextFormField(
+              controller: _passwordController,
+              enabled: !_saving,
+              obscureText: _obscurePassword,
+              decoration: InputDecoration(
+                labelText: "Current password",
+                prefixIcon: const Icon(Icons.lock_outline_rounded),
+                suffixIcon: IconButton(
+                  tooltip: _obscurePassword ? "Show password" : "Hide password",
+                  onPressed: () => setState(
+                    () => _obscurePassword = !_obscurePassword,
+                  ),
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
+                ),
+              ),
+              validator: (value) => value == null || value.isEmpty
+                  ? "Enter your current password"
+                  : null,
+            ),
+            if (_error != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                _error!,
+                style: const TextStyle(
+                  color: AppTheme.secondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: _saving ? null : () => Navigator.pop(context),
+          child: const Text("Cancel"),
+        ),
+        ElevatedButton(
+          onPressed: _saving ? null : _submit,
+          child: Text(_saving ? "Updating..." : "Change username"),
+        ),
+      ],
+    );
+  }
+}
+
+Future<bool> showPasswordChangeDialog(
+  BuildContext context, {
+  required Future<void> Function(PasswordChangeInput input) onSave,
+}) async {
+  final result = await showDialog<bool>(
+    context: context,
+    builder: (_) => _PasswordChangeDialog(onSave: onSave),
+  );
+  return result == true;
+}
+
+/// Owns its controllers, for the reason given on [_AccountDetailsDialog].
+class _PasswordChangeDialog extends StatefulWidget {
+  final Future<void> Function(PasswordChangeInput input) onSave;
+
+  const _PasswordChangeDialog({required this.onSave});
+
+  @override
+  State<_PasswordChangeDialog> createState() => _PasswordChangeDialogState();
+}
+
+class _PasswordChangeDialogState extends State<_PasswordChangeDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _currentController = TextEditingController();
+  final _newController = TextEditingController();
+  final _confirmController = TextEditingController();
+  bool _obscureCurrent = true;
+  bool _obscureNew = true;
+  bool _saving = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _currentController.dispose();
+    _newController.dispose();
+    _confirmController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      await widget.onSave(
+        PasswordChangeInput(
+          currentPassword: _currentController.text,
+          newPassword: _newController.text,
+        ),
+      );
+      if (mounted) Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _saving = false;
+        _error = e.toString().replaceFirst("Exception: ", "");
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Change password"),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
-                controller: usernameController,
-                enabled: !saving,
-                autocorrect: false,
-                textCapitalization: TextCapitalization.none,
-                decoration: const InputDecoration(
-                  labelText: "New username",
-                  hintText: "traveller_name",
-                  prefixIcon: Icon(Icons.alternate_email_rounded),
-                ),
-                validator: (value) {
-                  final username = value?.trim().toLowerCase() ?? "";
-                  if (!RegExp(r"^[a-z0-9_]{3,30}$").hasMatch(username)) {
-                    return "Use 3â€“30 lowercase letters, numbers, or _";
-                  }
-                  if (username == currentUsername) {
-                    return "Choose a different username";
-                  }
-                  return null;
-                },
+              _PasswordField(
+                controller: _currentController,
+                label: "Current password",
+                obscureText: _obscureCurrent,
+                enabled: !_saving,
+                onToggle: () =>
+                    setState(() => _obscureCurrent = !_obscureCurrent),
+              ),
+              const SizedBox(height: 13),
+              _PasswordField(
+                controller: _newController,
+                label: "New password",
+                helperText: "At least 8 characters",
+                obscureText: _obscureNew,
+                enabled: !_saving,
+                onToggle: () => setState(() => _obscureNew = !_obscureNew),
+                validator: (value) => value == null || value.length < 8
+                    ? "Use at least 8 characters"
+                    : null,
               ),
               const SizedBox(height: 13),
               TextFormField(
-                controller: passwordController,
-                enabled: !saving,
-                obscureText: obscurePassword,
-                decoration: InputDecoration(
-                  labelText: "Current password",
-                  prefixIcon: const Icon(Icons.lock_outline_rounded),
-                  suffixIcon: IconButton(
-                    tooltip:
-                        obscurePassword ? "Show password" : "Hide password",
-                    onPressed: () => setDialogState(
-                      () => obscurePassword = !obscurePassword,
-                    ),
-                    icon: Icon(
-                      obscurePassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                    ),
-                  ),
+                controller: _confirmController,
+                enabled: !_saving,
+                obscureText: _obscureNew,
+                decoration: const InputDecoration(
+                  labelText: "Confirm new password",
+                  prefixIcon: Icon(Icons.verified_user_outlined),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? "Enter your current password"
+                validator: (value) => value != _newController.text
+                    ? "Passwords do not match"
                     : null,
               ),
-              if (error != null) ...[
+              if (_error != null) ...[
                 const SizedBox(height: 12),
                 Text(
-                  error!,
+                  _error!,
                   style: const TextStyle(
                     color: AppTheme.secondary,
                     fontWeight: FontWeight.w600,
@@ -439,164 +627,19 @@ Future<bool> showUsernameChangeDialog(
             ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: saving ? null : () => Navigator.pop(dialogContext),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: saving
-                ? null
-                : () async {
-                    if (!(formKey.currentState?.validate() ?? false)) return;
-                    setDialogState(() {
-                      saving = true;
-                      error = null;
-                    });
-                    try {
-                      await onSave(
-                        UsernameChangeInput(
-                          username:
-                              usernameController.text.trim().toLowerCase(),
-                          currentPassword: passwordController.text,
-                        ),
-                      );
-                      if (context.mounted) Navigator.pop(dialogContext, true);
-                    } catch (e) {
-                      if (context.mounted) {
-                        setDialogState(() {
-                          saving = false;
-                          error = e.toString().replaceFirst("Exception: ", "");
-                        });
-                      }
-                    }
-                  },
-            child: Text(saving ? "Updatingâ€¦" : "Change username"),
-          ),
-        ],
       ),
-    ),
-  );
-  usernameController.dispose();
-  passwordController.dispose();
-  return result == true;
-}
-
-Future<bool> showPasswordChangeDialog(
-  BuildContext context, {
-  required Future<void> Function(PasswordChangeInput input) onSave,
-}) async {
-  final formKey = GlobalKey<FormState>();
-  final currentController = TextEditingController();
-  final newController = TextEditingController();
-  final confirmController = TextEditingController();
-  var obscureCurrent = true;
-  var obscureNew = true;
-  var saving = false;
-  String? error;
-
-  final result = await showDialog<bool>(
-    context: context,
-    builder: (dialogContext) => StatefulBuilder(
-      builder: (context, setDialogState) => AlertDialog(
-        title: const Text("Change password"),
-        content: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _PasswordField(
-                  controller: currentController,
-                  label: "Current password",
-                  obscureText: obscureCurrent,
-                  enabled: !saving,
-                  onToggle: () => setDialogState(
-                    () => obscureCurrent = !obscureCurrent,
-                  ),
-                ),
-                const SizedBox(height: 13),
-                _PasswordField(
-                  controller: newController,
-                  label: "New password",
-                  helperText: "At least 8 characters",
-                  obscureText: obscureNew,
-                  enabled: !saving,
-                  onToggle: () => setDialogState(
-                    () => obscureNew = !obscureNew,
-                  ),
-                  validator: (value) => value == null || value.length < 8
-                      ? "Use at least 8 characters"
-                      : null,
-                ),
-                const SizedBox(height: 13),
-                TextFormField(
-                  controller: confirmController,
-                  enabled: !saving,
-                  obscureText: obscureNew,
-                  decoration: const InputDecoration(
-                    labelText: "Confirm new password",
-                    prefixIcon: Icon(Icons.verified_user_outlined),
-                  ),
-                  validator: (value) => value != newController.text
-                      ? "Passwords do not match"
-                      : null,
-                ),
-                if (error != null) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    error!,
-                    style: const TextStyle(
-                      color: AppTheme.secondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
+      actions: [
+        TextButton(
+          onPressed: _saving ? null : () => Navigator.pop(context),
+          child: const Text("Cancel"),
         ),
-        actions: [
-          TextButton(
-            onPressed: saving ? null : () => Navigator.pop(dialogContext),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: saving
-                ? null
-                : () async {
-                    if (!(formKey.currentState?.validate() ?? false)) return;
-                    setDialogState(() {
-                      saving = true;
-                      error = null;
-                    });
-                    try {
-                      await onSave(
-                        PasswordChangeInput(
-                          currentPassword: currentController.text,
-                          newPassword: newController.text,
-                        ),
-                      );
-                      if (context.mounted) Navigator.pop(dialogContext, true);
-                    } catch (e) {
-                      if (context.mounted) {
-                        setDialogState(() {
-                          saving = false;
-                          error = e.toString().replaceFirst("Exception: ", "");
-                        });
-                      }
-                    }
-                  },
-            child: Text(saving ? "Updatingâ€¦" : "Change password"),
-          ),
-        ],
-      ),
-    ),
-  );
-  currentController.dispose();
-  newController.dispose();
-  confirmController.dispose();
-  return result == true;
+        ElevatedButton(
+          onPressed: _saving ? null : _submit,
+          child: Text(_saving ? "Updating..." : "Change password"),
+        ),
+      ],
+    );
+  }
 }
 
 class _PasswordField extends StatelessWidget {
@@ -676,17 +719,37 @@ Future<bool> showConfirmAccountAction(
   return result == true;
 }
 
-Future<String?> showDeleteAccountDialog(BuildContext context) async {
-  final formKey = GlobalKey<FormState>();
-  final passwordController = TextEditingController();
-  var obscurePassword = true;
+Future<String?> showDeleteAccountDialog(BuildContext context) =>
+    showDialog<String>(
+      context: context,
+      builder: (_) => const _DeleteAccountDialog(),
+    );
 
-  final result = await showDialog<String>(
-    context: context,
-    builder: (dialogContext) => AlertDialog(
+/// Owns its controller, for the reason given on [_AccountDetailsDialog].
+class _DeleteAccountDialog extends StatefulWidget {
+  const _DeleteAccountDialog();
+
+  @override
+  State<_DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+}
+
+class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
       title: const Text("Delete your account?"),
       content: Form(
-        key: formKey,
+        key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -695,51 +758,45 @@ Future<String?> showDeleteAccountDialog(BuildContext context) async {
               "This permanently removes your profile, itineraries, and shares. This cannot be undone.",
             ),
             const SizedBox(height: 16),
-            StatefulBuilder(
-              builder: (context, setDialogState) => TextFormField(
-                controller: passwordController,
-                obscureText: obscurePassword,
-                decoration: InputDecoration(
-                  labelText: "Current password",
-                  prefixIcon: const Icon(Icons.lock_outline_rounded),
-                  suffixIcon: IconButton(
-                    tooltip:
-                        obscurePassword ? "Show password" : "Hide password",
-                    onPressed: () => setDialogState(
-                      () => obscurePassword = !obscurePassword,
-                    ),
-                    icon: Icon(
-                      obscurePassword
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                    ),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: _obscurePassword,
+              decoration: InputDecoration(
+                labelText: "Current password",
+                prefixIcon: const Icon(Icons.lock_outline_rounded),
+                suffixIcon: IconButton(
+                  tooltip: _obscurePassword ? "Show password" : "Hide password",
+                  onPressed: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
                   ),
                 ),
-                validator: (value) => value == null || value.isEmpty
-                    ? "Enter your current password"
-                    : null,
               ),
+              validator: (value) => value == null || value.isEmpty
+                  ? "Enter your current password"
+                  : null,
             ),
           ],
         ),
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(dialogContext),
+          onPressed: () => Navigator.pop(context),
           child: const Text("Keep account"),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppTheme.secondary),
           onPressed: () {
-            if (formKey.currentState?.validate() ?? false) {
-              Navigator.pop(dialogContext, passwordController.text);
+            if (_formKey.currentState?.validate() ?? false) {
+              Navigator.pop(context, _passwordController.text);
             }
           },
           child: const Text("Delete permanently"),
         ),
       ],
-    ),
-  );
-  passwordController.dispose();
-  return result;
+    );
+  }
 }

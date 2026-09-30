@@ -1,0 +1,82 @@
+{
+  "dest-yao-001": {
+    "name": "Yaounde",
+    "query": "Yaounde, Yaounde, Cameroon",
+    "lat": 3.8707816,
+    "lon": 11.5258987,
+    "display_name": "Yaoundé, Rue 1.093, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "node/6310626492",
+    "category": "railway",
+    "type": "station"
+  },
+  "dest-yao-022": {
+    "name": "Central Market Yaounde",
+    "query": "Central Market Yaounde, Yaounde, Cameroon",
+    "lat": 3.8667026,
+    "lon": 11.5170169,
+    "display_name": "Central Market, Avenue du Pdt El Hadj Ahmadou Ahidjo, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "node/14004711916",
+    "category": "amenity",
+    "type": "marketplace"
+  },
+  "dest-yao-025": {
+    "name": "Dovv Supermarket Bastos",
+    "query": "Dovv Supermarket Bastos, Yaounde, Cameroon",
+    "lat": 3.8925208,
+    "lon": 11.5101055,
+    "display_name": "Dovv Bastos, Rue 1.776, Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, 20829 yde, Cameroun",
+    "osm": "way/193960633",
+    "category": "shop",
+    "type": "supermarket"
+  },
+  "dest-yao-028": {
+    "name": "Parc Mvog-Betsi",
+    "query": "Parc Mvog-Betsi, Yaounde, Cameroon",
+    "lat": 3.8692797,
+    "lon": 11.4889611,
+    "display_name": "Parc National de Matériel de Génie Civil, Rue 3.503, Mvog-betsi, Yaoundé VI, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "way/220994892",
+    "category": "building",
+    "type": "hangar"
+  },
+  "dest-yao-034": {
+    "name": "Hotel Mont Febe",
+    "query": "Hotel Mont Febe, Yaounde, Cameroon",
+    "lat": 3.9125133,
+    "lon": 11.4958814,
+    "display_name": "Hôtel Mont Fébé, Rue 6.018, Fébé, Yaoundé II, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "way/192007841",
+    "category": "tourism",
+    "type": "hotel"
+  },
+  "dest-yao-038": {
+    "name": "Parcours Vita (filename identification)",
+    "query": "Parcours Vita, Yaounde, Cameroon",
+    "lat": 3.9105239,
+    "lon": 11.498987,
+    "display_name": "Parcours Vita, Fébé, Yaoundé II, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "way/583770928",
+    "category": "leisure",
+    "type": "park"
+  },
+  "dest-school-007": {
+    "name": "IUSTY",
+    "query": "IUSTY, Yaounde, Cameroon",
+    "lat": 3.8864584,
+    "lon": 11.5341888,
+    "display_name": "Iusty Institutions Universitaire Des Sciences Et Technologies De Yaoundé, Rue 1.500, Mfandena, Yaoundé V, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "node/7174539002",
+    "category": "amenity",
+    "type": "university"
+  },
+  "dest-school-009": {
+    "name": "Lycee de Nkolbisson",
+    "query": "Lycee de Nkolbisson, Yaounde, Cameroon",
+    "lat": 3.8644047,
+    "lon": 11.4560574,
+    "display_name": "Lycee De Nkolbisson, Rue 6.524, Nkolbisson, Yaoundé VII, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "osm": "node/7163280560",
+    "category": "amenity",
+    "type": "school"
+  }
+}

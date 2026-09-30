@@ -6,8 +6,18 @@ class Destination {
   final List<String> tags;
   final double avgCostPerDay;
   final bool hasCostEstimate;
+
+  /// Where the daily cost came from. These are category estimates rather than
+  /// surveyed prices, so the screen says so instead of implying precision.
+  final String costNotes;
   final String address;
   final String locationNotes;
+
+  /// "exact" when the pin is the place itself, "area" when it is the centre
+  /// of the surrounding neighbourhood, empty when there is no pin. Many of
+  /// these venues are known only by their quarter; a neighbourhood pin helps,
+  /// but only if the map admits that is what it is.
+  final String locationPrecision;
   final List<String> locationSources;
   final List<String> additionalImageAssets;
   final List<String> highlights;
@@ -27,8 +37,10 @@ class Destination {
     required this.avgCostPerDay,
     required this.highlights,
     this.hasCostEstimate = true,
+    this.costNotes = "",
     this.address = "",
     this.locationNotes = "",
+    this.locationPrecision = "",
     this.locationSources = const [],
     this.additionalImageAssets = const [],
     this.imageUrl = "",
@@ -41,6 +53,11 @@ class Destination {
 
   bool get hasCoordinates => latitude != null && longitude != null;
 
+  /// True when the pin locates the surrounding neighbourhood rather than the
+  /// place itself, so the map can label it honestly.
+  bool get isApproximateLocation =>
+      hasCoordinates && locationPrecision == "area";
+
   factory Destination.fromJson(Map<String, dynamic> json) {
     return Destination(
       id: json["id"] as String,
@@ -50,8 +67,10 @@ class Destination {
       tags: List<String>.from(json["tags"] ?? []),
       avgCostPerDay: (json["avg_cost_per_day"] as num?)?.toDouble() ?? 0,
       hasCostEstimate: json["avg_cost_per_day"] != null,
+      costNotes: json["cost_notes"] ?? "",
       address: json["address"] ?? "",
       locationNotes: json["location_notes"] ?? "",
+      locationPrecision: json["location_precision"] ?? "",
       locationSources: List<String>.from(json["location_sources"] ?? []),
       additionalImageAssets:
           List<String>.from(json["additional_image_assets"] ?? []),
@@ -72,8 +91,10 @@ class Destination {
         "description": description,
         "tags": tags,
         "avg_cost_per_day": hasCostEstimate ? avgCostPerDay.toInt() : null,
+        "cost_notes": costNotes,
         "address": address,
         "location_notes": locationNotes,
+        "location_precision": locationPrecision,
         "location_sources": locationSources,
         "additional_image_assets": additionalImageAssets,
         "highlights": highlights,

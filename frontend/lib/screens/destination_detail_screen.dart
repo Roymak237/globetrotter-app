@@ -120,6 +120,26 @@ class DestinationDetailScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if (destination.costNotes.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.info_outline,
+                            size: 15, color: AppTheme.textSecondary),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            destination.costNotes,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(color: AppTheme.textSecondary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   const SizedBox(height: 26),
                   if (destination.address.isNotEmpty) ...[
                     Text(isFrench ? "Adresse" : "Address",
@@ -167,7 +187,11 @@ class DestinationDetailScreen extends StatelessWidget {
                             const SizedBox(height: 4),
                             if (destination.hasCoordinates)
                               Text(
-                                localizations.mapStartingPoint,
+                                destination.isApproximateLocation
+                                    ? (isFrench
+                                        ? "Emplacement approximatif : le quartier, pas l'entrée"
+                                        : "Approximate: the neighbourhood, not the door")
+                                    : localizations.mapStartingPoint,
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodySmall
@@ -204,8 +228,9 @@ class DestinationDetailScreen extends StatelessWidget {
                   else
                     Text(
                       isFrench
-                          ? "Localisation en attente de vérification. Aucune position affichée sur la carte."
-                          : "Location pending verification. No map pin is shown.",
+                          ? "Nous n'avons pas encore pu situer ce lieu sur la carte."
+                          : "We have not been able to place this one on the "
+                              "map yet.",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   const SizedBox(height: 26),

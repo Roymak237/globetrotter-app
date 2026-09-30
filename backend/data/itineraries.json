@@ -20,14 +20,13 @@
     "title": "Weekend in Nature and History",
     "destinations": [
       "dest-yao-004",
-      "dest-yao-003",
-      "dest-yao-009",
-      "dest-yao-010"
+      "dest-yao-003"
     ],
     "start_date": "2026-08-08",
     "end_date": "2026-08-09",
     "notes": "A peaceful weekend combining hiking, museum visits, and park relaxation.",
-    "created_at": "2026-07-23T14:30:00+01:00"
+    "created_at": "2026-07-23T14:30:00+01:00",
+    "visited_stops": []
   },
   {
     "id": "it-yao-003",
@@ -35,13 +34,13 @@
     "title": "Family Day Out in Yaounde",
     "destinations": [
       "dest-yao-007",
-      "dest-yao-010",
       "dest-yao-005"
     ],
     "start_date": "2026-08-15",
     "end_date": "2026-08-15",
     "notes": "Fun day with the kids: zoo in the morning, park picnic at noon, and market snacks in the afternoon.",
-    "created_at": "2026-07-23T15:00:00+01:00"
+    "created_at": "2026-07-23T15:00:00+01:00",
+    "visited_stops": []
   },
   {
     "id": "3cee2887-a5a1-453a-9386-9a00e8cd50f6",

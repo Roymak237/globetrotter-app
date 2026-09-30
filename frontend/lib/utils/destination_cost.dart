@@ -12,6 +12,12 @@ String destinationCostLabel(
   if (!destination.hasCostEstimate) {
     return isFrench ? "Non disponible" : "Not available";
   }
+  // A known zero means the place costs nothing to visit, which is worth
+  // saying outright. "0k XAF" reads like a missing value, which is exactly
+  // the confusion the unknown/known split exists to avoid.
+  if (destination.avgCostPerDay == 0) {
+    return isFrench ? "Gratuit" : "Free";
+  }
   final cost = "${(destination.avgCostPerDay / 1000).toStringAsFixed(0)}k XAF";
   return perDay ? "$cost / ${isFrench ? 'jour' : 'day'}" : cost;
 }
