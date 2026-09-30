@@ -1,30 +1,49 @@
 /* ============================================================
-   Kamer-Go landing page — "Ember" ramp
-   violet #7C3AED → fuchsia #C026D3 → orange #F97316
+   Kamer-Go landing page — "Sahel" ramp
+   terracotta #B4462A → clay #C9703A → amber #D98E2B
+
+   These are the same values as AppTheme in lib/utils/theme.dart, and the
+   gradient below has the same three stops at the same offsets as
+   AppTheme.brandGradient. The page used to run on an unrelated violet and
+   fuchsia ramp, so the site and the app looked like two different products.
+   If the palette changes in theme.dart it has to change here too; nothing
+   links the two automatically.
    ============================================================ */
 
 :root {
-  --violet: #7c3aed;
-  --violet-dark: #5b21b6;
-  --ember: #c026d3;
-  --orange: #f97316;
-  --amber: #fbbf24;
+  --primary: #b4462a;
+  --primary-dark: #7a2e19;
+  --clay: #c9703a;
+  --secondary: #d98e2b;
+  --accent: #e9c46a;
 
-  --ink: #1b1725;
-  --ink-soft: #6b6780;
-  --line: #e9e7f0;
+  --primary-soft: #f7e4d9;
+
+  --ink: #2c1a10;
+  --ink-soft: #7b6553;
+  --line: #e7d9c6;
   --surface: #ffffff;
-  --bg: #faf9fd;
+  --bg: #faf5ee;
 
-  --ramp: linear-gradient(120deg, var(--violet) 0%, var(--ember) 55%, var(--orange) 100%);
+  --ramp: linear-gradient(120deg, var(--primary) 0%, var(--clay) 55%, var(--secondary) 100%);
+
+  /* Deeper variant for anything carrying white text, or for text clipped to
+     the gradient on a light background.
+     
+     The full ramp ends on amber, where white measures 2.67:1 and fails the
+     3:1 floor outright. That is the same trap the app's app bar fell into,
+     where the call buttons at the light end of the gradient were reported as
+     invisible. This variant runs primaryDark -> primary -> clay instead, so
+     white stays between 9.4:1 and 3.6:1 across the whole sweep. */
+  --ramp-ink: linear-gradient(120deg, var(--primary-dark) 0%, var(--primary) 55%, var(--clay) 100%);
 
   --radius-sm: 12px;
   --radius: 18px;
   --radius-lg: 28px;
 
-  --shadow-sm: 0 2px 10px rgba(27, 23, 37, .06);
-  --shadow: 0 18px 44px rgba(91, 33, 182, .12);
-  --shadow-lg: 0 28px 70px rgba(91, 33, 182, .2);
+  --shadow-sm: 0 2px 10px rgba(44, 26, 16, .06);
+  --shadow: 0 18px 44px rgba(122, 46, 25, .12);
+  --shadow-lg: 0 28px 70px rgba(122, 46, 25, .2);
 
   --wrap: 1140px;
   --font-display: "Outfit", "Segoe UI", system-ui, sans-serif;
@@ -67,13 +86,13 @@ svg { width: 100%; height: 100%; }
   filter: blur(90px);
   opacity: .3;
 }
-.aurora__blob--violet { width: 620px; height: 620px; top: -220px; left: -160px; background: var(--violet); }
-.aurora__blob--ember  { width: 520px; height: 520px; top: 34%;   right: -180px; background: var(--ember); }
-.aurora__blob--orange { width: 560px; height: 560px; bottom: -240px; left: 24%; background: var(--orange); opacity: .22; }
+.aurora__blob--primary { width: 620px; height: 620px; top: -220px; left: -160px; background: var(--primary); }
+.aurora__blob--clay    { width: 520px; height: 520px; top: 34%;   right: -180px; background: var(--clay); }
+.aurora__blob--amber   { width: 560px; height: 560px; bottom: -240px; left: 24%; background: var(--secondary); opacity: .22; }
 
 /* ---------- Shared bits ---------- */
 .gradient-text {
-  background: var(--ramp);
+  background: var(--ramp-ink);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -85,7 +104,10 @@ svg { width: 100%; height: 100%; }
   font-weight: 800;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--ember);
+  /* primary, not clay: this is small text, and clay on the page background
+     measures about 3.3:1, under the 4.5:1 needed at this size. primary is
+     5.0:1. */
+  color: var(--primary);
   margin-bottom: 14px;
 }
 
@@ -108,12 +130,12 @@ svg { width: 100%; height: 100%; }
 .btn:hover { transform: translateY(-2px); }
 
 .btn--gradient {
-  background: var(--ramp);
+  background: var(--ramp-ink);
   background-size: 160% 100%;
   color: #fff;
-  box-shadow: 0 10px 26px rgba(124, 58, 237, .33);
+  box-shadow: 0 10px 26px rgba(180, 70, 42, .33);
 }
-.btn--gradient:hover { background-position: 100% 0; box-shadow: 0 16px 34px rgba(192, 38, 211, .38); }
+.btn--gradient:hover { background-position: 100% 0; box-shadow: 0 16px 34px rgba(122, 46, 25, .38); }
 
 .btn--ghost {
   background: rgba(255, 255, 255, .72);
@@ -121,7 +143,7 @@ svg { width: 100%; height: 100%; }
   color: var(--ink);
   backdrop-filter: blur(8px);
 }
-.btn--ghost:hover { border-color: var(--violet); color: var(--violet-dark); }
+.btn--ghost:hover { border-color: var(--primary); color: var(--primary-dark); }
 
 .btn--sm  { padding: 9px 18px;  font-size: .88rem; }
 .btn--lg  { padding: 16px 32px; font-size: 1.02rem; }
@@ -131,8 +153,8 @@ svg { width: 100%; height: 100%; }
   display: inline-block;
   padding: 5px 13px;
   border-radius: 999px;
-  background: #f4f1fe;
-  color: var(--violet-dark);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
   font-size: .78rem;
   font-weight: 600;
 }
@@ -239,7 +261,7 @@ svg { width: 100%; height: 100%; }
   font-size: 2.5rem;
   font-weight: 800;
   letter-spacing: -.03em;
-  background: var(--ramp);
+  background: var(--ramp-ink);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -310,9 +332,9 @@ svg { width: 100%; height: 100%; }
   height: 52px;
   padding: 13px;
   border-radius: 15px;
-  background: var(--ramp);
+  background: var(--ramp-ink);
   color: #fff;
-  box-shadow: 0 8px 20px rgba(124, 58, 237, .26);
+  box-shadow: 0 8px 20px rgba(180, 70, 42, .26);
 }
 .card--download .chip { align-self: flex-start; }
 
@@ -334,7 +356,7 @@ svg { width: 100%; height: 100%; }
   aspect-ratio: 4 / 5;
   border-radius: var(--radius);
   overflow: hidden;
-  background: #efecf8;
+  background: var(--primary-soft);
   box-shadow: var(--shadow-sm);
   transition: transform .26s ease, box-shadow .26s ease;
 }
@@ -348,13 +370,14 @@ svg { width: 100%; height: 100%; }
 }
 .tile:hover img { transform: scale(1.07); }
 
-/* Violet-tinted scrim keeps the photography inside the brand rather than
-   dimming it to neutral grey. */
+/* Tinted with the dark cocoa end of the ramp rather than neutral grey, so the
+   photography still feels part of the brand. Same colour as AppTheme's
+   photoScrim, #2B1508. */
 .tile::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(42, 16, 85, .86) 0%, rgba(42, 16, 85, .22) 42%, transparent 68%);
+  background: linear-gradient(to top, rgba(43, 21, 8, .86) 0%, rgba(43, 21, 8, .22) 42%, transparent 68%);
 }
 .tile__meta {
   position: absolute;
@@ -378,7 +401,7 @@ svg { width: 100%; height: 100%; }
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--accent);
 }
 
 /* ---------- CTA band ---------- */
@@ -387,15 +410,15 @@ svg { width: 100%; height: 100%; }
   margin: 0 auto 90px;
   padding: 66px 32px;
   border-radius: var(--radius-lg);
-  background: var(--ramp);
+  background: var(--ramp-ink);
   color: #fff;
   box-shadow: var(--shadow-lg);
 }
 .cta-band .section__lede { color: rgba(255, 255, 255, .88); margin-bottom: 30px; }
 .cta-band .btn--gradient {
   background: #fff;
-  color: var(--violet-dark);
-  box-shadow: 0 10px 26px rgba(27, 23, 37, .22);
+  color: var(--primary-dark);
+  box-shadow: 0 10px 26px rgba(44, 26, 16, .22);
 }
 
 /* ---------- Footer ---------- */
@@ -420,7 +443,7 @@ svg { width: 100%; height: 100%; }
   font-size: .9rem;
   color: var(--ink-soft);
 }
-.footer__links a:hover { color: var(--violet); }
+.footer__links a:hover { color: var(--primary); }
 .footer__copy { width: 100%; font-size: .82rem; color: var(--ink-soft); }
 
 /* ---------- Motion ---------- */
