@@ -5,9 +5,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Use the same API key as the web version for development
-val googleMapsApiKey = System.getenv("GOOGLE_MAPS_API_KEY") ?: "AIzaSyAazDTq6VPP5yrJLiTUDOcbWaIKOWzB_2Q"
-
 android {
     namespace = "com.example.globetrotter"
     compileSdk = flutter.compileSdkVersion
@@ -28,7 +25,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
     }
 
     buildTypes {
