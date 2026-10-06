@@ -61,13 +61,22 @@ class MediaService {
     throw Exception(message);
   }
 
+  /// Extension groups offered by the chat attach menu.
+  ///
+  /// Narrowing the picker per group matters on mobile: asking for every
+  /// supported extension at once opens a generic file browser, whereas a
+  /// photo-only request opens the gallery, which is what someone tapping
+  /// "Photo" expects to see.
+  static const imageExtensions = <String>['jpg', 'jpeg', 'png', 'gif', 'webp'];
+  static const videoExtensions = <String>['mp4', 'webm', 'mov'];
+  static const documentExtensions = <String>['pdf'];
+
   Future<ChatAttachment?> pickAndUpload(String token,
-      {bool imageOnly = false}) async {
+      {List<String>? extensions}) async {
+    final allowed = extensions ?? types.keys.toList();
     final file = await FilePicker.pickFile(
       type: FileType.custom,
-      allowedExtensions: imageOnly
-          ? ['jpg', 'jpeg', 'png', 'gif', 'webp']
-          : types.keys.toList(),
+      allowedExtensions: allowed,
     );
     if (file == null || _closed) return null;
     final mime = types[file.extension?.toLowerCase()];

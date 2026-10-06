@@ -205,7 +205,12 @@ class CallService extends ChangeNotifier {
       }
       _hasTurn = body["has_turn"] == true;
     } catch (_) {
-      // Keep the built-in STUN server, which covers most networks.
+      // Fall back to the built-in STUN server. That is enough on broadband
+      // and on any NAT that reuses one public mapping per client, but not on
+      // the carrier-grade NAT most mobile networks run, where each
+      // destination gets its own mapping and the address STUN reported is
+      // already stale. `_hasTurn` stays false, which is what makes the
+      // failure message later on say so rather than blame the app.
     }
   }
 

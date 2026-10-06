@@ -86,10 +86,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (token == null) {
           throw Exception("Sign in again to change your photo.");
         }
-        // imageOnly because the avatar endpoint accepts only the image
-        // extensions; letting someone pick a PDF here would upload fine and
-        // then fail at the point of saving, which reads as a random error.
-        final picked = await _media.pickAndUpload(token, imageOnly: true);
+        // Images only: the avatar endpoint accepts only the image extensions,
+        // and letting someone pick a PDF here would upload fine and then fail
+        // at the point of saving, which reads as a random error.
+        final picked = await _media.pickAndUpload(token,
+            extensions: MediaService.imageExtensions);
         return picked?.url;
       },
       onSave: (displayName, email, homeRegion, avatarUrl) async {

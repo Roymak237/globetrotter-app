@@ -377,7 +377,10 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
     required VoidCallback onPressed,
   }) {
     return Material(
-      color: Colors.white,
+      // Matches every other raised control in the app. These float over map
+      // tiles rather than the page background, so the warm surface reads as
+      // part of the product instead of as a piece of the basemap's own chrome.
+      color: AppTheme.surface,
       elevation: 3,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(

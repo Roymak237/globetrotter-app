@@ -71,6 +71,74 @@ services:
     networks:
       - globetrotter_net
 
+  # The media relay that makes calls actually connect.
+  #
+  # The signalling path has been correct for a while, and calls still failed:
+  # the two peers agreed on everything and then had nowhere to send media.
+  # STUN only tells a peer what its public address looks like, which is enough
+  # when the NAT reuses that mapping for any destination. Most Cameroonian
+  # mobile networks run carrier-grade NAT, which allocates a fresh mapping per
+  # destination, so the address the caller learned from the STUN server is
+  # already dead by the time the callee tries it. A relay is the only remedy:
+  # both peers send to one address that never changes.
+  #
+  # Opt-in, because it needs credentials and open UDP ports that a developer
+  # running this locally has no use for. Enable by putting
+  #
+  #     COMPOSE_PROFILES=turn
+  #
+  # in .env next to the credentials. Compose reads that file for its own
+  # settings as well as the services', so no deploy command has to change.
+  coturn:
+    image: coturn/coturn:4.6-alpine
+    container_name: globetrotter_coturn
+    restart: unless-stopped
+    profiles: ["turn"]
+    # Host networking, not published ports. A relay needs a range of UDP ports
+    # and must see the true source address of each packet; publishing the range
+    # would put a userland docker-proxy process in front of every one of them
+    # and rewrite exactly the addresses the relay exists to track.
+    #
+    # The host firewall must therefore allow 3478/udp, 3478/tcp and
+    # 49160-49200/udp from anywhere. Without those open the relay starts
+    # cleanly, advertises itself, and still never passes a packet.
+    network_mode: host
+    command:
+      - --listening-port=3478
+      - --realm=${TURN_REALM:-kamer-go.duckdns.org}
+      # Long-term credentials. Matches TURN_USERNAME/TURN_PASSWORD on the
+      # backend, which is what hands them to the app.
+      - --lt-cred-mech
+      - --user=${TURN_USERNAME:-}:${TURN_PASSWORD:-}
+      - --min-port=49160
+      - --max-port=49200
+      - --fingerprint
+      # No TLS here on purpose. WebRTC encrypts media end to end with
+      # DTLS-SRTP before it ever reaches a relay, so the relay forwards
+      # ciphertext it cannot read whether or not its own transport is wrapped.
+      # TLS on the relay would protect only the TURN control messages, at the
+      # cost of a certificate this container would have to be given and keep
+      # renewed.
+      - --no-tls
+      - --no-dtls
+      # An open relay that will forward to private addresses is a way into
+      # everything else on this host and its network. These blocks are the
+      # reason a misconfigured TURN server is a security incident rather than
+      # a performance problem.
+      - --denied-peer-ip=0.0.0.0-0.255.255.255
+      - --denied-peer-ip=10.0.0.0-10.255.255.255
+      - --denied-peer-ip=127.0.0.0-127.255.255.255
+      - --denied-peer-ip=169.254.0.0-169.254.255.255
+      - --denied-peer-ip=172.16.0.0-172.31.255.255
+      - --denied-peer-ip=192.168.0.0-192.168.255.255
+      - --no-multicast-peers
+      - --no-cli
+      # One relayed call is two streams; this caps a single stolen credential
+      # from turning the host into someone else's CDN.
+      - --user-quota=12
+      - --total-quota=100
+    mem_limit: 256m
+
 volumes:
   backend_data:
 

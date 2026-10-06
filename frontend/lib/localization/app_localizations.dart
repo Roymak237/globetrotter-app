@@ -81,11 +81,18 @@ class AppLocalizations {
   String get chatStartConversation => _text("chatStartConversation");
   String get chatVoiceCall => _text("chatVoiceCall");
   String get chatVideoCall => _text("chatVideoCall");
+  String get chatAttach => _text("chatAttach");
+  String get chatAttachPhoto => _text("chatAttachPhoto");
+  String get chatAttachVideo => _text("chatAttachVideo");
+  String get chatAttachDocument => _text("chatAttachDocument");
+  String get chatAttachRemove => _text("chatAttachRemove");
+  String get chatAttachment => _text("chatAttachment");
 
   // Notifications
   String get notificationsTitle => _text("notificationsTitle");
   String get notificationsEmpty => _text("notificationsEmpty");
   String get notificationsMarkAllRead => _text("notificationsMarkAllRead");
+  String get notificationsOpenFailed => _text("notificationsOpenFailed");
 
   // Comments and reviews
   String get commentsTitle => _text("commentsTitle");
@@ -284,9 +291,16 @@ class AppLocalizations {
       "chatStartConversation": "Say something to get things started.",
       "chatVoiceCall": "Voice call",
       "chatVideoCall": "Video call",
+      "chatAttach": "Attach a file",
+      "chatAttachPhoto": "Photo",
+      "chatAttachVideo": "Video",
+      "chatAttachDocument": "Document (PDF)",
+      "chatAttachRemove": "Remove attachment",
+      "chatAttachment": "Attachment",
       "notificationsTitle": "Notifications",
       "notificationsEmpty": "Nothing new right now.",
       "notificationsMarkAllRead": "Mark all read",
+      "notificationsOpenFailed": "That conversation is no longer available.",
       "commentsTitle": "Traveller notes",
       "commentsEmpty": "No notes yet. Be the first to share one.",
       "commentHint": "Share a tip about this place…",
@@ -510,9 +524,16 @@ class AppLocalizations {
       "chatStartConversation": "Lancez la conversation.",
       "chatVoiceCall": "Appel vocal",
       "chatVideoCall": "Appel vidéo",
+      "chatAttach": "Joindre un fichier",
+      "chatAttachPhoto": "Photo",
+      "chatAttachVideo": "Vidéo",
+      "chatAttachDocument": "Document (PDF)",
+      "chatAttachRemove": "Retirer la pièce jointe",
+      "chatAttachment": "Pièce jointe",
       "notificationsTitle": "Notifications",
       "notificationsEmpty": "Rien de nouveau pour le moment.",
       "notificationsMarkAllRead": "Tout marquer comme lu",
+      "notificationsOpenFailed": "Cette conversation n'est plus disponible.",
       "commentsTitle": "Notes des voyageurs",
       "commentsEmpty": "Aucune note. Soyez le premier à en partager une.",
       "commentHint": "Partagez un conseil sur ce lieu…",
@@ -743,9 +764,16 @@ class AppLocalizations {
       "chatStartConversation": "Talk something make e start.",
       "chatVoiceCall": "Voice call",
       "chatVideoCall": "Video call",
+      "chatAttach": "Put file inside",
+      "chatAttachPhoto": "Photo",
+      "chatAttachVideo": "Video",
+      "chatAttachDocument": "Document (PDF)",
+      "chatAttachRemove": "Comot the file",
+      "chatAttachment": "File wey dey inside",
       "notificationsTitle": "Notifications",
       "notificationsEmpty": "Nothing new for now.",
       "notificationsMarkAllRead": "Mark all as read",
+      "notificationsOpenFailed": "That conversation no dey again.",
       "commentsTitle": "Wetin people talk",
       "commentsEmpty": "Nobody never talk. Be di first.",
       "commentHint": "Share advice about dis place…",

@@ -8,9 +8,11 @@ import "../models/chat.dart";
 import "../providers/auth_provider.dart";
 import "../services/call_service.dart";
 import "../services/chat_service.dart";
+import "../services/media_service.dart";
 import "../utils/chat_wallpaper.dart";
 import "../utils/chat_wallpaper_store.dart";
 import "../utils/theme.dart";
+import "../widgets/chat_media.dart";
 import "../widgets/online_badge.dart";
 
 /// A single conversation. Polls for new messages with a `since` cursor so the
@@ -36,11 +38,20 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   static const List<String> _quickReactions = ["👍", "❤️", "😂", "🔥", "🙏"];
 
   late final ChatService _service = widget.service ?? ChatService();
+  final MediaService _media = MediaService();
   final TextEditingController _input = TextEditingController();
   final ScrollController _scroll = ScrollController();
 
   List<ChatMessage> _messages = [];
   ChatMessage? _replyTarget;
+
+  /// Uploaded but not yet sent.
+  ///
+  /// The file reaches the server as soon as it is chosen, so the wait happens
+  /// while the sender is still writing the accompanying note rather than after
+  /// they press send. It is only attached to a message when they do.
+  ChatAttachment? _attachment;
+  bool _uploading = false;
   bool _loading = true;
   bool _sending = false;
   String? _error;
@@ -70,6 +81,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   void dispose() {
     _poll?.cancel();
     _presencePoll?.cancel();
+    _media.dispose();
     _input.dispose();
     _scroll.dispose();
     super.dispose();
@@ -191,10 +203,87 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     });
   }
 
+  /// Pick a file and upload it, holding the result until the message is sent.
+  ///
+  /// `extensions` narrows the picker to one kind so the platform can open the
+  /// gallery for photos rather than a generic file browser.
+  Future<void> _attach(List<String> extensions) async {
+    final token = _token;
+    if (token == null || _uploading || _sending) return;
+
+    setState(() => _uploading = true);
+    try {
+      final attachment =
+          await _media.pickAndUpload(token, extensions: extensions);
+      // A null result means the picker was dismissed, which is not a failure
+      // and should not leave a message on screen.
+      if (!mounted || attachment == null) return;
+      setState(() => _attachment = attachment);
+    } catch (error) {
+      if (!mounted) return;
+      _showError(error);
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
+  }
+
+  void _showError(Object error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error.toString().replaceFirst("Exception: ", ""))),
+    );
+  }
+
+  /// Offer the three kinds the backend accepts.
+  Future<void> _showAttachMenu(AppLocalizations localizations) async {
+    final choice = await showModalBottomSheet<List<String>>(
+      context: context,
+      backgroundColor: AppTheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(AppTheme.radiusLarge)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 8),
+            ListTile(
+              leading: const Icon(Icons.image_rounded, color: AppTheme.primary),
+              title: Text(localizations.chatAttachPhoto),
+              onTap: () =>
+                  Navigator.pop(sheetContext, MediaService.imageExtensions),
+            ),
+            ListTile(
+              leading:
+                  const Icon(Icons.videocam_rounded, color: AppTheme.primary),
+              title: Text(localizations.chatAttachVideo),
+              onTap: () =>
+                  Navigator.pop(sheetContext, MediaService.videoExtensions),
+            ),
+            ListTile(
+              leading: const Icon(Icons.description_rounded,
+                  color: AppTheme.primary),
+              title: Text(localizations.chatAttachDocument),
+              onTap: () =>
+                  Navigator.pop(sheetContext, MediaService.documentExtensions),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+    if (choice != null) await _attach(choice);
+  }
+
   Future<void> _send() async {
     final token = _token;
     final text = _input.text.trim();
-    if (token == null || text.isEmpty || _sending) return;
+    final attachment = _attachment;
+    // An attachment is a message in its own right, so an empty box is only a
+    // reason to stop when there is nothing attached either.
+    if (token == null || (text.isEmpty && attachment == null) || _sending) {
+      return;
+    }
 
     setState(() => _sending = true);
     try {
@@ -203,20 +292,19 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         roomId: widget.room.id,
         text: text,
         replyTo: _replyTarget?.id,
+        attachment: attachment,
       );
       if (!mounted) return;
       setState(() {
         _messages = [..._messages, message];
         _replyTarget = null;
+        _attachment = null;
         _input.clear();
       });
       _scrollToBottom();
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(error.toString().replaceFirst("Exception: ", ""))),
-      );
+      _showError(error);
     } finally {
       if (mounted) setState(() => _sending = false);
     }
@@ -489,6 +577,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 return _MessageBubble(
                   message: message,
                   showAuthor: showAuthor && !message.mine,
+                  token: _token,
                   onLongPress: message.deleted
                       ? null
                       : () => _showMessageActions(message),
@@ -595,51 +684,131 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           color: AppTheme.surface,
           border: Border(top: BorderSide(color: AppTheme.border)),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: TextField(
-                controller: _input,
-                minLines: 1,
-                maxLines: 4,
-                textInputAction: TextInputAction.send,
-                onSubmitted: (_) => _send(),
-                decoration: InputDecoration(
-                  hintText: localizations.chatMessageHint,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Material(
-              color: AppTheme.primary,
-              shape: const CircleBorder(),
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: _sending ? null : _send,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: _sending
+            if (_attachment != null) _buildAttachmentChip(localizations),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Disabled rather than hidden while an upload is in flight, so
+                // the row does not reflow under the thumb mid-tap.
+                IconButton(
+                  onPressed: _uploading || _sending
+                      ? null
+                      : () => _showAttachMenu(localizations),
+                  tooltip: localizations.chatAttach,
+                  icon: _uploading
                       ? const SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: AppTheme.primary,
                           ),
                         )
-                      : const Icon(Icons.send_rounded,
-                          color: Colors.white, size: 20),
+                      : const Icon(Icons.attach_file_rounded),
+                  color: AppTheme.primary,
                 ),
-              ),
+                Expanded(
+                  child: TextField(
+                    controller: _input,
+                    minLines: 1,
+                    maxLines: 4,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) => _send(),
+                    decoration: InputDecoration(
+                      hintText: localizations.chatMessageHint,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Material(
+                  color: AppTheme.primary,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: _sending ? null : _send,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: _sending
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Icon(Icons.send_rounded,
+                              color: Colors.white, size: 20),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  /// Confirms what is about to be sent, and offers a way out.
+  ///
+  /// Without this the only evidence of a successful upload would be the
+  /// message that appears after sending, which is too late to discover the
+  /// wrong file was picked.
+  Widget _buildAttachmentChip(AppLocalizations localizations) {
+    final attachment = _attachment!;
+    final label = attachment.filename.trim().isEmpty
+        ? localizations.chatAttachment
+        : attachment.filename;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+      decoration: BoxDecoration(
+        color: AppTheme.primarySoft,
+        borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+        border: Border.all(color: AppTheme.primary),
+      ),
+      child: Row(
+        children: [
+          Icon(_attachmentIcon(attachment.kind),
+              size: 18, color: AppTheme.primaryDark),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.primaryDark,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed:
+                _sending ? null : () => setState(() => _attachment = null),
+            tooltip: localizations.chatAttachRemove,
+            icon: const Icon(Icons.close_rounded, size: 18),
+            color: AppTheme.primaryDark,
+          ),
+        ],
+      ),
+    );
+  }
+
+  static IconData _attachmentIcon(String kind) => switch (kind) {
+        "image" => Icons.image_rounded,
+        "video" => Icons.videocam_rounded,
+        "audio" => Icons.graphic_eq_rounded,
+        _ => Icons.description_rounded,
+      };
 }
 
 /// A call button that carries its own dark backing.
@@ -689,6 +858,10 @@ class _CallAction extends StatelessWidget {
 class _MessageBubble extends StatelessWidget {
   final ChatMessage message;
   final bool showAuthor;
+
+  /// Needed to fetch attachment bytes, which are served behind auth.
+  /// Null only in the moment between sign-out and the screen being popped.
+  final String? token;
   final VoidCallback? onLongPress;
   final ValueChanged<String> onReactionTap;
 
@@ -696,6 +869,7 @@ class _MessageBubble extends StatelessWidget {
     required this.message,
     required this.showAuthor,
     required this.onReactionTap,
+    this.token,
     this.onLongPress,
   });
 
@@ -703,6 +877,9 @@ class _MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
     final mine = message.mine;
+    // A deleted message keeps its row but loses its contents, attachment
+    // included, so the file is not still fetchable from a tombstone.
+    final attachment = message.deleted ? null : message.attachment;
 
     return Align(
       alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
@@ -758,18 +935,33 @@ class _MessageBubble extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (message.replyTo != null) _replyQuote(mine),
-                      Text(
-                        message.deleted
-                            ? localizations.chatDeleted
-                            : message.text,
-                        style: TextStyle(
-                          color: mine ? Colors.white : AppTheme.textPrimary,
-                          fontStyle: message.deleted
-                              ? FontStyle.italic
-                              : FontStyle.normal,
-                          height: 1.35,
+                      if (attachment != null && token != null) ...[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: ChatAttachmentView(
+                            attachment: attachment,
+                            token: token!,
+                          ),
                         ),
-                      ),
+                        // Only pad away from the caption when there is one.
+                        if (message.text.isNotEmpty) const SizedBox(height: 6),
+                      ],
+                      // An attachment can travel without a caption, and an
+                      // empty Text would still claim a line of height and open
+                      // a gap under the picture.
+                      if (message.text.isNotEmpty || message.deleted)
+                        Text(
+                          message.deleted
+                              ? localizations.chatDeleted
+                              : message.text,
+                          style: TextStyle(
+                            color: mine ? Colors.white : AppTheme.textPrimary,
+                            fontStyle: message.deleted
+                                ? FontStyle.italic
+                                : FontStyle.normal,
+                            height: 1.35,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -820,7 +1012,10 @@ class _MessageBubble extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 6),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: mine ? Colors.white24 : Colors.white,
+        // Incoming bubbles are `indigoSoft`, so the quote needs its own
+        // surface to read as inset. It used pure white, which separated only
+        // by being colder than everything around it.
+        color: mine ? Colors.white24 : AppTheme.surfaceSunken,
         borderRadius: BorderRadius.circular(8),
         border: Border(
           left: BorderSide(

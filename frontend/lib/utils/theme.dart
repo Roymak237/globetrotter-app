@@ -10,7 +10,27 @@ class AppTheme {
   static const Color secondary = Color(0xFFD98E2B);
   static const Color accent = Color(0xFFE9C46A);
   static const Color background = Color(0xFFFAF5EE);
-  static const Color surface = Colors.white;
+
+  /// Warm paper, not office paper.
+  ///
+  /// This was `Colors.white`, which was reported as making the app — the chat
+  /// list and message composer especially — read as clinical. Pure white is
+  /// the one colour in the interface with no pigment in it at all, so every
+  /// card, input, chip and tile sat on the page as a cold rectangle against a
+  /// warm `background`, and the eye registers that mismatch as a glare rather
+  /// than as a surface. Carrying a trace of the same ochre the background uses
+  /// puts the two on one ramp while staying three steps lighter, so cards
+  /// still lift off the page instead of dissolving into it. Text contrast is
+  /// essentially unchanged: `textPrimary` measures 14.3:1 here against 14.8:1
+  /// on white, both far above the 4.5:1 floor.
+  static const Color surface = Color(0xFFFFFBF4);
+
+  /// One step down from [surface], for panels that sit *on* a surface and need
+  /// to be told apart from it — a quoted reply inside a bubble, an inset
+  /// preview strip. Previously these reached for `Colors.white`, which only
+  /// looked like separation because the surface beneath it was white too.
+  static const Color surfaceSunken = Color(0xFFF6EFE3);
+
   static const Color border = Color(0xFFE7D9C6);
   static const Color primarySoft = Color(0xFFF7E4D9);
   static const Color accentSoft = Color(0xFFFBEFD5);

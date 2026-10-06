@@ -143,7 +143,8 @@ class _GroupInfoScreenState extends State<GroupInfoScreen> {
                                 : () => _act(() async {
                                       final photo = await _media.pickAndUpload(
                                           widget.token,
-                                          imageOnly: true);
+                                          extensions:
+                                              MediaService.imageExtensions);
                                       if (!mounted || photo == null) return;
                                       await _service.editGroup(
                                           widget.token, _room.id,

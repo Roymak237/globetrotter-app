@@ -374,7 +374,7 @@ class _DestinationExtrasState extends State<DestinationExtras> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppTheme.border),
-          color: Colors.white,
+          color: AppTheme.surface,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
