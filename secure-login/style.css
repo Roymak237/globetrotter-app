@@ -1,0 +1,1113 @@
+/* ===================================================================
+   SecureTech Security Portal — demonstration login interface
+   -------------------------------------------------------------------
+   Everything you are likely to want to change lives in :root below.
+   Animations are driven by `transform` and `opacity` so the compositor
+   can run them without re-laying-out the page.
+=================================================================== */
+
+:root {
+  /* Surfaces */
+  --bg: #05070d;
+  --bg-deep: #03050a;
+  --card-bg: rgba(10, 16, 28, 0.6);
+  --panel-bg: rgba(8, 13, 24, 0.55);
+
+  /* Accents */
+  --accent: #27c6ff;
+  --accent-deep: #1e7bff;
+  --accent-soft: rgba(39, 198, 255, 0.14);
+  --accent-line: rgba(39, 198, 255, 0.34);
+
+  /* Text */
+  --text: #e8f2fb;
+  --text-dim: #93a6c0;
+  --text-faint: #5d718c;
+
+  /* Lines and edges */
+  --edge: rgba(125, 165, 215, 0.16);
+  --edge-idle: rgba(125, 165, 215, 0.2);
+
+  /* Shape */
+  --radius-card: 20px;
+  --radius-field: 12px;
+
+  /* Depth */
+  --glow-card:
+    0 0 0 1px rgba(39, 198, 255, 0.16),
+    0 30px 80px -28px rgba(12, 110, 220, 0.6),
+    0 2px 0 0 rgba(255, 255, 255, 0.04) inset;
+  --glow-focus: 0 0 0 3px rgba(39, 198, 255, 0.13), 0 0 22px -4px rgba(39, 198, 255, 0.5);
+
+  /* Timing */
+  --ease: cubic-bezier(0.22, 0.75, 0.3, 1);
+
+  /* Background animation tuning */
+  --grid-size: 52px;
+}
+
+/* ------------------------------------------------------------------
+   Reset and base
+------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Inter, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* A visible focus ring everywhere, because the whole interface is dark
+   and a lost cursor is genuinely hard to find. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ==================================================================
+   1. Animated background
+================================================================== */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(130% 90% at 50% 0%, #0a1222 0%, var(--bg) 46%, var(--bg-deep) 100%);
+}
+
+/* Particles, links and pulses are drawn here by script.js. */
+.backdrop__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Faint drifting grid. The element repeats every --grid-size, and the
+   animation travels exactly one cell, so the loop is seamless. */
+.backdrop__grid {
+  position: absolute;
+  inset: calc(var(--grid-size) * -2);
+  background-image:
+    linear-gradient(to right, rgba(110, 170, 225, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(110, 170, 225, 0.055) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 20%, transparent 80%);
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 20%, transparent 80%);
+  animation: grid-drift 20s linear infinite;
+  will-change: transform;
+}
+
+@keyframes grid-drift {
+  to {
+    transform: translate3d(var(--grid-size), var(--grid-size), 0);
+  }
+}
+
+/* Large blurred radial glows. Kept to three, because each one is a
+   separate blurred layer for the compositor to carry. */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.orb--one {
+  width: 46vmax;
+  height: 46vmax;
+  top: -16vmax;
+  left: -12vmax;
+  background: radial-gradient(circle, rgba(23, 102, 255, 0.4), transparent 68%);
+  animation: orb-one 38s ease-in-out infinite;
+}
+
+.orb--two {
+  width: 40vmax;
+  height: 40vmax;
+  right: -14vmax;
+  top: 8vmax;
+  background: radial-gradient(circle, rgba(39, 198, 255, 0.26), transparent 68%);
+  animation: orb-two 46s ease-in-out infinite;
+}
+
+.orb--three {
+  width: 52vmax;
+  height: 52vmax;
+  left: 22vmax;
+  bottom: -30vmax;
+  background: radial-gradient(circle, rgba(16, 70, 190, 0.34), transparent 70%);
+  animation: orb-three 54s ease-in-out infinite;
+}
+
+@keyframes orb-one {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(12vmax, 8vmax, 0) scale(1.14); }
+}
+
+@keyframes orb-two {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50%      { transform: translate3d(-14vmax, 12vmax, 0) scale(0.92); }
+}
+
+@keyframes orb-three {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-10vmax, -10vmax, 0) scale(1.1); }
+}
+
+/* A single wide band travelling down the screen, rather than a stack of
+   hard CRT lines, which read as a rendering fault on a login page. */
+.backdrop__scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 44vh;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(39, 198, 255, 0.035) 42%,
+    rgba(39, 198, 255, 0.085) 50%,
+    rgba(39, 198, 255, 0.035) 58%,
+    transparent 100%
+  );
+  animation: scan 9s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scan {
+  from { transform: translate3d(0, -60vh, 0); }
+  to   { transform: translate3d(0, 115vh, 0); }
+}
+
+.backdrop__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(2, 4, 9, 0.75) 100%);
+}
+
+/* ==================================================================
+   2. Top bar
+================================================================== */
+
+.topbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px clamp(18px, 4vw, 44px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.brand__mark {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(39, 198, 255, 0.55));
+}
+
+.brand__tick {
+  stroke: #9beaff;
+}
+
+.brand__name span {
+  color: var(--accent);
+}
+
+.chip {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  background: rgba(10, 16, 28, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--text-dim);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.chip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #35e08a;
+  box-shadow: 0 0 10px rgba(53, 224, 138, 0.9);
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.8); }
+}
+
+/* ==================================================================
+   3. Stage layout
+================================================================== */
+
+.stage {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(190px, 270px) minmax(320px, 430px);
+  justify-content: center;
+  align-items: center;
+  gap: clamp(28px, 6vw, 86px);
+  padding: 20px clamp(18px, 4vw, 44px) 40px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* ==================================================================
+   4. Guardian silhouette
+================================================================== */
+
+.guardian {
+  display: flex;
+  justify-content: center;
+}
+
+.guardian__svg {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  overflow: visible;
+  animation: guardian-idle 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+.guardian__shell {
+  fill: #080d18;
+  stroke: rgba(90, 140, 200, 0.35);
+  stroke-width: 1.4;
+}
+
+/* Rim light down the leading edge — the cheapest way to read as 3D. */
+.guardian__rim {
+  fill: none;
+  stroke: url(#rimGradient);
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 7px rgba(39, 198, 255, 0.6));
+}
+
+.guardian__visor {
+  fill: url(#visorGradient);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 14px rgba(39, 198, 255, 0.75));
+  animation: visor-breathe 4.5s ease-in-out infinite;
+}
+
+.guardian__scanbar {
+  fill: rgba(240, 253, 255, 0.85);
+  animation: visor-scan 3.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.guardian__collar {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.55;
+  filter: drop-shadow(0 0 6px rgba(39, 198, 255, 0.6));
+}
+
+.guardian__circuit {
+  fill: rgba(39, 198, 255, 0.5);
+  stroke: rgba(39, 198, 255, 0.28);
+  stroke-width: 1.2;
+  animation: circuit-flicker 5s ease-in-out infinite;
+}
+
+.guardian__circuit path {
+  fill: none;
+}
+
+.guardian__floor {
+  fill: rgba(39, 198, 255, 0.16);
+  filter: blur(11px);
+  animation: visor-breathe 7s ease-in-out infinite;
+}
+
+/* The head moves slightly less than the body and slightly later, which
+   is what stops the idle loop looking like a single rigid bobbing. */
+.guardian__head {
+  transform-origin: 120px 150px;
+  animation: head-idle 9s ease-in-out infinite;
+}
+
+@keyframes guardian-idle {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -9px, 0); }
+}
+
+@keyframes head-idle {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30%      { transform: rotate(-2.2deg) translateY(-2px); }
+  65%      { transform: rotate(1.8deg) translateY(1px); }
+}
+
+@keyframes visor-breathe {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 0.58; }
+}
+
+@keyframes visor-scan {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(58px); }
+}
+
+@keyframes circuit-flicker {
+  0%, 100% { opacity: 0.75; }
+  45%      { opacity: 0.3; }
+  55%      { opacity: 0.85; }
+}
+
+/* ==================================================================
+   5. Login card
+================================================================== */
+
+.card {
+  position: relative;
+  padding: clamp(26px, 4vw, 38px) clamp(22px, 4vw, 36px) clamp(24px, 4vw, 32px);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: var(--glow-card);
+  animation: card-float 8s ease-in-out infinite;
+  will-change: transform;
+  overflow: hidden;
+}
+
+@keyframes card-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -7px, 0); }
+}
+
+/* A single bright highlight along the top edge. */
+.card__sheen {
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(150, 230, 255, 0.8), transparent);
+}
+
+.card__badge {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent-line);
+  border-radius: 15px;
+  background: linear-gradient(160deg, rgba(39, 198, 255, 0.18), rgba(30, 123, 255, 0.06));
+  box-shadow: 0 0 26px -6px rgba(39, 198, 255, 0.75), inset 0 0 18px -8px rgba(39, 198, 255, 0.9);
+  animation: badge-glow 3.6s ease-in-out infinite;
+}
+
+.card__badge svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: #9beaff;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 26px -6px rgba(39, 198, 255, 0.75), inset 0 0 18px -8px rgba(39, 198, 255, 0.9); }
+  50%      { box-shadow: 0 0 40px -4px rgba(39, 198, 255, 0.95), inset 0 0 22px -6px rgba(39, 198, 255, 1); }
+}
+
+.card__title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(22px, 3.4vw, 27px);
+  font-weight: 650;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 25%, #9fd8ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 26px rgba(39, 198, 255, 0.28);
+}
+
+.card__subtitle {
+  margin: 8px 0 26px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* ------------------------------------------------------------------
+   5a. Fields
+------------------------------------------------------------------ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  position: relative;
+}
+
+.field__input {
+  width: 100%;
+  height: 54px;
+  padding: 18px 42px 6px 46px;
+  border: 1px solid var(--edge-idle);
+  border-radius: var(--radius-field);
+  background: rgba(5, 9, 17, 0.55);
+  color: var(--text);
+  font: inherit;
+  font-size: 14.5px;
+  transition:
+    border-color 260ms var(--ease),
+    box-shadow 260ms var(--ease),
+    background-color 260ms var(--ease);
+}
+
+.field--password .field__input {
+  padding-right: 74px;
+}
+
+.field__input:hover {
+  border-color: rgba(125, 165, 215, 0.34);
+}
+
+/* Dark grey to electric blue, with the glow arriving at the same time. */
+.field__input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(7, 14, 26, 0.75);
+  box-shadow: var(--glow-focus);
+}
+
+.field__label {
+  position: absolute;
+  left: 46px;
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+  color: var(--text-faint);
+  font-size: 14.5px;
+  pointer-events: none;
+  transition: transform 220ms var(--ease), color 220ms var(--ease);
+}
+
+/* The label lifts when the field has focus, and stays lifted while it
+   holds text — `:placeholder-shown` is what makes that work without JS. */
+.field__input:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label {
+  transform: translateY(-17px) scale(0.76);
+  color: var(--accent);
+}
+
+.field__icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  width: 19px;
+  height: 19px;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: var(--text-faint);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  transition: stroke 240ms var(--ease);
+}
+
+.field:focus-within .field__icon {
+  stroke: var(--accent);
+}
+
+/* Small indicator light that comes up beside the field on focus. */
+.field__indicator {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+}
+
+.field--password .field__indicator {
+  right: 15px;
+}
+
+.field:focus-within .field__indicator {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 12px rgba(39, 198, 255, 0.95);
+  animation: pulse-dot 1.9s ease-in-out infinite;
+}
+
+/* Show / hide password */
+.reveal {
+  position: absolute;
+  right: 34px;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-faint);
+  transition: color 200ms var(--ease), background-color 200ms var(--ease);
+}
+
+.reveal:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.reveal__icon {
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Only one of the two icons is ever shown; the button's pressed state
+   decides which, so the DOM never has to be rebuilt. */
+.reveal__icon--hidden { display: none; }
+.reveal[aria-pressed="true"] .reveal__icon--shown { display: none; }
+.reveal[aria-pressed="true"] .reveal__icon--hidden { display: block; }
+
+/* ------------------------------------------------------------------
+   5b. Remember me / forgot password
+------------------------------------------------------------------ */
+
+.form__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: -2px;
+  font-size: 13px;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  color: var(--text-dim);
+  user-select: none;
+}
+
+/* The real checkbox stays in the layout and keeps its keyboard
+   behaviour; it is simply made invisible over the drawn box. */
+.check__input {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.check__box {
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--edge-idle);
+  border-radius: 5px;
+  background: rgba(5, 9, 17, 0.6);
+  transition: border-color 200ms var(--ease), background-color 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+
+.check__box svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: #04121d;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 180ms var(--ease), transform 180ms var(--ease);
+}
+
+.check__input:checked + .check__box {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 14px -2px rgba(39, 198, 255, 0.9);
+}
+
+.check__input:checked + .check__box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check__input:focus-visible + .check__box {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.check:hover .check__text {
+  color: var(--text);
+}
+
+.link {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 200ms var(--ease);
+}
+
+.link:hover {
+  color: var(--accent);
+  text-shadow: 0 0 14px rgba(39, 198, 255, 0.6);
+}
+
+/* ------------------------------------------------------------------
+   5c. Submit button
+------------------------------------------------------------------ */
+
+.submit {
+  position: relative;
+  height: 50px;
+  margin-top: 6px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-field);
+  background: linear-gradient(135deg, #2fd0ff 0%, #1e7bff 100%);
+  color: #02121f;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 28px -12px rgba(39, 198, 255, 0.9);
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), filter 220ms var(--ease);
+}
+
+.submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px -10px rgba(39, 198, 255, 1);
+  filter: brightness(1.06);
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit:disabled {
+  cursor: default;
+}
+
+/* Light sweep. The animation is attached on hover so it replays each
+   time the pointer enters, rather than looping forever. */
+.submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 68%
+  );
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+
+.submit:hover:not(:disabled)::after {
+  animation: sweep 850ms var(--ease);
+}
+
+@keyframes sweep {
+  to { transform: translateX(130%); }
+}
+
+/* The three states share one grid cell, so the button never changes
+   size as it moves between them. */
+.submit__label,
+.submit__dots,
+.submit__check {
+  grid-area: 1 / 1;
+  transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+}
+
+.submit__dots,
+.submit__check {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.submit__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.submit__dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #02121f;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.submit__dots i:nth-child(2) { animation-delay: 0.14s; }
+.submit__dots i:nth-child(3) { animation-delay: 0.28s; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%      { transform: translateY(-6px); opacity: 1; }
+}
+
+.submit__check svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #02121f;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.submit.is-loading .submit__label,
+.submit.is-done .submit__label {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.submit.is-loading .submit__dots {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.submit.is-done {
+  background: linear-gradient(135deg, #46e6a4 0%, #14b981 100%);
+  box-shadow: 0 12px 32px -12px rgba(70, 230, 164, 0.9);
+}
+
+.submit.is-done .submit__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ------------------------------------------------------------------
+   5d. Status line
+------------------------------------------------------------------ */
+
+.status {
+  min-height: 20px;
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+}
+
+.status.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status.is-success {
+  color: #58eeb0;
+  text-shadow: 0 0 16px rgba(70, 230, 164, 0.45);
+}
+
+/* ==================================================================
+   6. Terminal panel
+================================================================== */
+
+.terminal {
+  border: 1px solid var(--edge);
+  border-radius: 14px;
+  background: var(--panel-bg);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  /* Deliberately recessive: it sits under the card and must never
+     compete with it for attention. */
+  opacity: 0.62;
+  overflow: hidden;
+  transition: opacity 400ms var(--ease);
+}
+
+.terminal:hover {
+  opacity: 0.92;
+}
+
+.terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--edge);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.terminal__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(125, 165, 215, 0.3);
+}
+
+.terminal__dot:first-child { background: rgba(255, 110, 110, 0.5); }
+.terminal__dot:nth-child(2) { background: rgba(255, 196, 92, 0.5); }
+.terminal__dot:nth-child(3) { background: rgba(70, 230, 164, 0.5); }
+
+.terminal__name {
+  margin-left: 6px;
+  color: var(--text-faint);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.terminal__body {
+  margin: 0;
+  padding: 14px 16px 16px;
+  min-height: 132px;
+  font-family: "Cascadia Code", "JetBrains Mono", Consolas, "SF Mono", ui-monospace, monospace;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Syntax colours for the typed-out sample */
+.tok-kw      { color: #5fb8ff; }
+.tok-var     { color: #d7e7f7; }
+.tok-op      { color: #6f87a4; }
+.tok-str     { color: #46e6a4; }
+.tok-num     { color: #ffb86b; }
+.tok-fn      { color: #c99bff; }
+.tok-comment { color: #4e6480; font-style: italic; }
+
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -2px;
+  background: var(--accent);
+  box-shadow: 0 0 9px rgba(39, 198, 255, 0.85);
+  animation: blink 1.05s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ==================================================================
+   7. Footnote
+================================================================== */
+
+.footnote {
+  position: relative;
+  z-index: 2;
+  padding: 0 clamp(18px, 4vw, 44px) 24px;
+  text-align: center;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  color: var(--text-faint);
+}
+
+/* ==================================================================
+   8. Responsive
+================================================================== */
+
+/* Below this width the figure and the card start fighting for room,
+   so the figure is the one that goes. */
+@media (max-width: 1040px) {
+  .stage {
+    grid-template-columns: minmax(0, 430px);
+  }
+
+  .guardian {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    font-size: 14px;
+  }
+
+  .topbar {
+    padding: 16px 18px;
+  }
+
+  .chip {
+    padding: 6px 11px;
+    font-size: 10px;
+  }
+
+  .stage {
+    padding: 8px 16px 28px;
+    gap: 18px;
+  }
+
+  .terminal__body {
+    min-height: 108px;
+    font-size: 11.5px;
+  }
+
+  /* Blur is the single most expensive thing on this page and phones
+     feel it first. */
+  .card {
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+
+  .orb {
+    filter: blur(70px);
+  }
+}
+
+@media (max-width: 380px) {
+  .form__row {
+    font-size: 12px;
+  }
+
+  .card__title {
+    letter-spacing: 0.12em;
+  }
+}
+
+/* Short landscape windows: stop the card floating off the fold. */
+@media (max-height: 620px) {
+  .stage {
+    align-items: start;
+  }
+
+  .terminal {
+    display: none;
+  }
+}
+
+/* ==================================================================
+   9. Reduced motion
+
+   Honour the setting properly: the decorative loops stop entirely,
+   while the short state transitions that explain what just happened
+   are kept, only quicker.
+================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop__grid,
+  .backdrop__scan,
+  .orb,
+  .card,
+  .card__badge,
+  .chip__dot,
+  .guardian__svg,
+  .guardian__head,
+  .guardian__visor,
+  .guardian__scanbar,
+  .guardian__circuit,
+  .guardian__floor,
+  .field:focus-within .field__indicator,
+  .submit__dots i,
+  .caret {
+    animation: none !important;
+  }
+
+  .submit:hover:not(:disabled)::after {
+    animation: none !important;
+  }
+
+  .backdrop__scan {
+    opacity: 0.4;
+    transform: translate3d(0, 28vh, 0);
+  }
+
+  .caret {
+    opacity: 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 120ms !important;
+  }
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05070d" />
+  <meta name="description" content="SecureTech Security Portal — front-end demonstration login interface." />
+  <title>SECURE LOGIN · SecureTech Security Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- ==================================================================
+       Animated background.
+
+       Everything here is decorative, so it is hidden from assistive
+       technology and sits behind the page in its own stacking context.
+       The canvas draws particles, links and pulses; the rest is CSS.
+  =================================================================== -->
+  <div class="backdrop" aria-hidden="true">
+    <canvas class="backdrop__canvas" id="network"></canvas>
+    <div class="backdrop__grid"></div>
+    <div class="orb orb--one"></div>
+    <div class="orb orb--two"></div>
+    <div class="orb orb--three"></div>
+    <div class="backdrop__scan"></div>
+    <div class="backdrop__vignette"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#card">
+      <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2.5 4.5 5.8v5.4c0 4.6 3.1 8.8 7.5 10.3 4.4-1.5 7.5-5.7 7.5-10.3V5.8L12 2.5Z" />
+        <path d="m8.6 12.1 2.4 2.4 4.4-4.6" class="brand__tick" />
+      </svg>
+      <span class="brand__name">Secure<span>Tech</span></span>
+    </a>
+
+    <p class="chip">
+      <span class="chip__dot" aria-hidden="true"></span>
+      System online
+    </p>
+  </header>
+
+  <main class="stage">
+    <!-- Optional futuristic operator silhouette. Pure SVG, no image
+         assets, so it scales and recolours with the theme. -->
+    <div class="guardian" aria-hidden="true">
+      <svg class="guardian__svg" viewBox="0 0 240 330">
+        <defs>
+          <linearGradient id="visorGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8ef0ff" />
+            <stop offset="55%" stop-color="#27c6ff" />
+            <stop offset="100%" stop-color="#1550d6" />
+          </linearGradient>
+          <linearGradient id="rimGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6ae2ff" stop-opacity="0.95" />
+            <stop offset="100%" stop-color="#1b6bff" stop-opacity="0.15" />
+          </linearGradient>
+        </defs>
+
+        <!-- Floor glow, so the figure does not appear to hover in a void -->
+        <ellipse class="guardian__floor" cx="120" cy="318" rx="86" ry="11" />
+
+        <g class="guardian__body">
+          <!-- Torso and shoulders -->
+          <path class="guardian__shell"
+                d="M26 330c0-58 20-96 54-110h80c34 14 54 52 54 110Z" />
+          <path class="guardian__rim"
+                d="M26 330c0-58 20-96 54-110" />
+
+          <!-- Faint circuitry across the chest -->
+          <g class="guardian__circuit">
+            <path d="M84 258h30l10-12h32" />
+            <path d="M84 278h22l12 14h38" />
+            <circle cx="156" cy="246" r="3.2" />
+            <circle cx="166" cy="292" r="3.2" />
+          </g>
+
+          <!-- Collar light -->
+          <path class="guardian__collar" d="M82 222c12 10 64 10 76 0" />
+
+          <g class="guardian__head">
+            <!-- Hood -->
+            <path class="guardian__shell"
+                  d="M120 42c33 0 56 25 56 59 0 30-23 55-56 55s-56-25-56-55c0-34 23-59 56-59Z" />
+            <path class="guardian__rim"
+                  d="M64 101c0-34 23-59 56-59" />
+            <!-- Visor -->
+            <rect class="guardian__visor" x="80" y="88" width="80" height="25" rx="12.5" />
+            <!-- Sensor sweep inside the visor -->
+            <rect class="guardian__scanbar" x="84" y="94" width="14" height="13" rx="6.5" />
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="stack">
+      <!-- ============================================================
+           Login card
+      ============================================================= -->
+      <section class="card" id="card" aria-labelledby="card-title">
+        <span class="card__sheen" aria-hidden="true"></span>
+
+        <div class="card__badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <rect x="4.5" y="10.5" width="15" height="10" rx="2.6" />
+            <path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5" />
+            <circle cx="12" cy="15.4" r="1.5" />
+          </svg>
+        </div>
+
+        <h1 class="card__title" id="card-title">Secure Login</h1>
+        <p class="card__subtitle">Access the SecureTech Security Portal</p>
+
+        <!-- `novalidate` keeps the browser's own bubbles out of the way;
+             nothing is submitted anywhere regardless. -->
+        <form class="form" id="login-form" autocomplete="off" novalidate>
+          <div class="field">
+            <svg class="field__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8.4" r="3.9" />
+              <path d="M4.8 20.2c.8-4 3.7-6.1 7.2-6.1s6.4 2.1 7.2 6.1" />
+            </svg>
+            <!-- The single-space placeholder lets `:placeholder-shown`
+                 drive the floating label without any JavaScript. -->
+            <input class="field__input" id="username" type="text"
+                   placeholder=" " autocomplete="off" spellcheck="false" />
+            <label class="field__label" for="username">Username</label>
+            <span class="field__indicator" aria-hidden="true"></span>
+          </div>
+
+          <div class="field field--password">
+            <svg class="field__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4.5" y="10.5" width="15" height="10" rx="2.6" />
+              <path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5" />
+            </svg>
+            <input class="field__input" id="password" type="password"
+                   placeholder=" " autocomplete="off" />
+            <label class="field__label" for="password">Password</label>
+
+            <button class="reveal" id="reveal" type="button"
+                    aria-pressed="false" aria-label="Show password"
+                    aria-controls="password">
+              <svg class="reveal__icon reveal__icon--shown" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.6 12S6.4 5.6 12 5.6 21.4 12 21.4 12 17.6 18.4 12 18.4 2.6 12 2.6 12Z" />
+                <circle cx="12" cy="12" r="3.1" />
+              </svg>
+              <svg class="reveal__icon reveal__icon--hidden" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.6 12S6.4 5.6 12 5.6c1.5 0 2.8.4 4 1" />
+                <path d="M21.4 12s-3.8 6.4-9.4 6.4c-1.5 0-2.8-.4-4-1" />
+                <path d="M4 4l16 16" />
+              </svg>
+            </button>
+
+            <span class="field__indicator" aria-hidden="true"></span>
+          </div>
+
+          <div class="form__row">
+            <label class="check">
+              <input class="check__input" type="checkbox" id="remember" />
+              <span class="check__box" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="m5.5 12.4 4.2 4.2 8.8-9.2" /></svg>
+              </span>
+              <span class="check__text">Remember me</span>
+            </label>
+
+            <a class="link" href="#card">Forgot password?</a>
+          </div>
+
+          <button class="submit" id="submit" type="submit">
+            <span class="submit__label">Login</span>
+            <span class="submit__dots" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </span>
+            <span class="submit__check" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="m5.5 12.4 4.2 4.2 8.8-9.2" /></svg>
+            </span>
+          </button>
+
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- ============================================================
+           Terminal panel. Decorative: the text types itself and says
+           nothing a reader needs, so it is hidden from screen readers.
+      ============================================================= -->
+      <section class="terminal" aria-hidden="true">
+        <div class="terminal__bar">
+          <span class="terminal__dot"></span>
+          <span class="terminal__dot"></span>
+          <span class="terminal__dot"></span>
+          <span class="terminal__name">security-core.js</span>
+        </div>
+        <pre class="terminal__body" id="terminal-body"></pre>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footnote">
+    Front-end demonstration interface. No authentication is performed and no
+    credentials are read, stored or transmitted.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
