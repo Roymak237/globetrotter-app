@@ -115,11 +115,20 @@ class DestinationImage extends StatelessWidget {
       "market": Icons.storefront_outlined,
       "shopping": Icons.storefront_outlined,
       "supermarket": Icons.local_grocery_store_outlined,
+      "groceries": Icons.local_grocery_store_outlined,
+      "retail": Icons.storefront_outlined,
       "gaming": Icons.sports_esports_outlined,
+      "entertainment": Icons.sports_esports_outlined,
+      "nightlife": Icons.nightlife_outlined,
       "school": Icons.school_outlined,
       "education": Icons.school_outlined,
+      "university": Icons.school_outlined,
+      "institute": Icons.school_outlined,
+      "library": Icons.local_library_outlined,
       "health": Icons.local_hospital_outlined,
+      "medicine": Icons.local_hospital_outlined,
       "park": Icons.park_outlined,
+      "garden": Icons.local_florist_outlined,
       "zoo": Icons.pets_outlined,
       "wildlife": Icons.pets_outlined,
       "waterfall": Icons.water_outlined,
@@ -128,6 +137,19 @@ class DestinationImage extends StatelessWidget {
       "mountain": Icons.terrain_outlined,
       "hiking": Icons.hiking_outlined,
       "city": Icons.location_city_outlined,
+      "landmark": Icons.location_city_outlined,
+      "architecture": Icons.apartment_outlined,
+      "tourist": Icons.photo_camera_outlined,
+      "art": Icons.palette_outlined,
+      "culture": Icons.theater_comedy_outlined,
+      "sport": Icons.sports_soccer_outlined,
+      "recreation": Icons.sports_soccer_outlined,
+      "pool": Icons.pool_outlined,
+      "leisure": Icons.weekend_outlined,
+      "relaxation": Icons.spa_outlined,
+      "family": Icons.family_restroom_outlined,
+      "adventure": Icons.explore_outlined,
+      "community": Icons.groups_outlined,
     };
     for (final tag in destination.tags) {
       final icon = byTag[tag.toLowerCase()];
@@ -136,16 +158,93 @@ class DestinationImage extends StatelessWidget {
     return Icons.landscape_outlined;
   }
 
-  Widget get _placeholder => Semantics(
-        label: "Destination image unavailable for ${destination.name}",
-        child: Container(
-          color: AppTheme.primarySoft,
-          alignment: Alignment.center,
-          child: Icon(
-            _placeholderIcon,
-            size: 44,
-            color: AppTheme.primary,
+  /// The two tones a photo-less card is painted in.
+  ///
+  /// Fifty identical beige tiles read as a loading failure even when each
+  /// one is deliberate, so the colour follows the category. A row of
+  /// restaurants and a row of churches no longer look like the same
+  /// missing asset repeated.
+  ///
+  /// These are not photographs and are not pretending to be. Commons holds
+  /// no freely licensed picture of a cyber cafe in Biyem-Assi, and putting
+  /// a stock interior there would be a claim about a place we have never
+  /// seen.
+  List<Color> get _placeholderTones {
+    const byTag = <String, List<Color>>{
+      "dining": [Color(0xFFE8B4A0), Color(0xFFC9703A)],
+      "food": [Color(0xFFE8B4A0), Color(0xFFC9703A)],
+      "restaurant": [Color(0xFFE8B4A0), Color(0xFFC9703A)],
+      "market": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
+      "shopping": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
+      "supermarket": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
+      "retail": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
+      "gaming": [Color(0xFFB8C6DE), Color(0xFF1F3A63)],
+      "entertainment": [Color(0xFFB8C6DE), Color(0xFF1F3A63)],
+      "education": [Color(0xFFA9C4D9), Color(0xFF2F5A7A)],
+      "school": [Color(0xFFA9C4D9), Color(0xFF2F5A7A)],
+      "university": [Color(0xFFA9C4D9), Color(0xFF2F5A7A)],
+      "religion": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
+      "landmark": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
+      "monument": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
+      "history": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
+      "museum": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
+      "recreation": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
+      "sport": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
+      "leisure": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
+      "park": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
+      "nature": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
+      "tourist": [Color(0xFFF2D9A8), Color(0xFFB4462A)],
+      "culture": [Color(0xFFF2D9A8), Color(0xFFB4462A)],
+    };
+    for (final tag in destination.tags) {
+      final tones = byTag[tag.toLowerCase()];
+      if (tones != null) return tones;
+    }
+    return const [AppTheme.primarySoft, AppTheme.clay];
+  }
+
+  Widget get _placeholder {
+    final tones = _placeholderTones;
+    return Semantics(
+      label: "No photograph available for ${destination.name}",
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [tones.first, tones.last],
           ),
         ),
-      );
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // A watermark sized to the card, so the same widget works for a
+            // 72 px list thumbnail and a full-bleed detail header.
+            final short = constraints.biggest.shortestSide;
+            final glyph = short.isFinite ? short : 160.0;
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                Positioned(
+                  right: -glyph * 0.22,
+                  bottom: -glyph * 0.26,
+                  child: Icon(
+                    _placeholderIcon,
+                    size: glyph * 0.92,
+                    color: Colors.white.withValues(alpha: 0.18),
+                  ),
+                ),
+                Center(
+                  child: Icon(
+                    _placeholderIcon,
+                    size: (glyph * 0.26).clamp(20.0, 52.0),
+                    color: Colors.white.withValues(alpha: 0.92),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }

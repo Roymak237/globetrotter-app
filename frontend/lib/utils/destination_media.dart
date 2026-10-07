@@ -79,6 +79,11 @@ const verifiedDestinationMedia = <String, DestinationMedia>{
         "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/The_Sultans_Palace%2C_Foumban.jpg/1280px-The_Sultans_Palace%2C_Foumban.jpg",
     attribution: "Elin — Wikimedia Commons, CC BY 2.0",
   ),
+  "dest-yao-066": DestinationMedia(
+    url:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Ecole_des_Travaux_01.jpg/1280px-Ecole_des_Travaux_01.jpg",
+    attribution: "Gtankam — Wikimedia Commons, CC BY-SA 4.0",
+  ),
 };
 
 DestinationMedia? mediaFallbackFor(Destination destination) =>

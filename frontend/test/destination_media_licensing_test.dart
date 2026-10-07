@@ -69,8 +69,7 @@ void main() {
         expect(
           uri.host.endsWith("wikimedia.org"),
           isTrue,
-          reason:
-              "${entry.key} points at ${uri.host}, which is not the source "
+          reason: "${entry.key} points at ${uri.host}, which is not the source "
               "its credit claims",
         );
       }
@@ -85,8 +84,7 @@ void main() {
         expect(
           tracking,
           isEmpty,
-          reason:
-              "${entry.key} would report every fallback fetch to campaign "
+          reason: "${entry.key} would report every fallback fetch to campaign "
               "tracking on the user's behalf: $tracking",
         );
       }
@@ -129,7 +127,8 @@ void main() {
           continue;
         }
 
-        final folder = "assets/images/${asset.substring(0, asset.lastIndexOf('/') + 1)}";
+        final folder =
+            "assets/images/${asset.substring(0, asset.lastIndexOf('/') + 1)}";
         if (!declared.contains(folder)) {
           undeclared.add("${record["id"]} -> $folder");
         }
@@ -164,8 +163,7 @@ void main() {
       expect(
         unaccounted,
         isEmpty,
-        reason:
-            "Photos fetched into assets/images/destinations/ come from "
+        reason: "Photos fetched into assets/images/destinations/ come from "
             "Wikimedia under licences that require credit. These carry none: "
             "$unaccounted",
       );

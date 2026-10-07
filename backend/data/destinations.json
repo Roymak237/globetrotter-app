@@ -545,7 +545,7 @@
     "highlights": [],
     "image_url": "",
     "image_asset": "gaming/arcade game bastos.jpg",
-    "image_attribution": "",
+    "image_attribution": "Local asset: creator and license unverified.",
     "address": "Bastos, Yaounde I, Centre, Cameroon",
     "location_notes": "An arcade in the Bastos quarter of Yaounde I. The pin is the centre of the quarter rather than the door.",
     "location_sources": [
@@ -619,7 +619,7 @@
     "highlights": [],
     "image_url": "",
     "image_asset": "dining/restaurant biyemassi.jpg",
-    "image_attribution": "",
+    "image_attribution": "Local asset: creator and license unverified.",
     "address": "Biyem-Assi, Yaounde VI, Centre, Cameroon",
     "location_notes": "In the Biyem-Assi quarter of Yaounde VI. The pin is the centre of the quarter rather than the door.",
     "location_sources": [
@@ -831,7 +831,7 @@
     "highlights": [],
     "image_url": "",
     "image_asset": "leisure/hotel biyemassi.jpg",
-    "image_attribution": "",
+    "image_attribution": "Local asset: creator and license unverified.",
     "address": "Biyem-Assi, Yaounde VI, Centre, Cameroon",
     "location_notes": "A hotel in the Biyem-Assi quarter of Yaounde VI. The pin is the centre of the quarter; we could not confirm which hotel or its street.",
     "location_sources": [
@@ -2148,9 +2148,9 @@
     ],
     "avg_cost_per_day": null,
     "highlights": [],
-    "image_url": "",
-    "image_asset": "",
-    "image_attribution": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Ecole_des_Travaux_01.jpg/1280px-Ecole_des_Travaux_01.jpg",
+    "image_asset": "destinations/ecole-nationale-superieure-des-travaux-publics.jpg",
+    "image_attribution": "Gtankam — Wikimedia Commons, CC BY-SA 4.0",
     "address": "Zone M, Yaounde, Centre, Cameroon",
     "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
     "location_sources": [

@@ -165,8 +165,7 @@ void main() {
     for (final json in destinations) {
       final hasPin = json["latitude"] != null && json["longitude"] != null;
       if (!hasPin) continue;
-      final sources =
-          List<String>.from(json["location_sources"] ?? const []);
+      final sources = List<String>.from(json["location_sources"] ?? const []);
       expect(sources.where((s) => s.trim().isNotEmpty), isNotEmpty,
           reason: "${json["id"]} is pinned but cites nothing");
     }

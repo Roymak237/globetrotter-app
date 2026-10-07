@@ -30,6 +30,7 @@ import json
 import re
 import sys
 import time
+import unicodedata
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
@@ -297,7 +298,15 @@ def exact_file(url: str) -> Candidate | None:
 
 
 def slugify(value: str) -> str:
-    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    """A filename-safe form of a place name.
+
+    Accents are folded rather than deleted. Stripping them outright turned
+    "Ecole Nationale Superieure" into "cole-nationale-sup-rieure", because
+    the leading E of "Ecole" only exists inside the accented character.
+    """
+    folded = unicodedata.normalize("NFKD", value)
+    ascii_only = "".join(c for c in folded if not unicodedata.combining(c))
+    slug = re.sub(r"[^a-z0-9]+", "-", ascii_only.lower()).strip("-")
     return slug or "destination"
 
 
