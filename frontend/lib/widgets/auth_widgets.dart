@@ -5,6 +5,7 @@ import "../localization/app_localizations.dart";
 import "../utils/theme.dart";
 import "asset_slideshow.dart";
 import "language_switcher.dart";
+import "looping_video.dart";
 
 class AuthBackdrop extends StatelessWidget {
   final Widget child;
@@ -76,9 +77,78 @@ class AuthBackdrop extends StatelessWidget {
   }
 }
 
+/// The animated mark above the sign-in form.
+///
+/// The clip is portrait and runs about fourteen seconds. It is shown whole
+/// rather than cropped, because it is a composed animation and trimming the
+/// frame would cut off whatever it was drawn around.
+///
+/// It collapses in three cases, each of which would otherwise leave a hole
+/// above the form: a screen too short to spare the room, a user who asked
+/// for reduced motion, and a device or browser that will not play it. The
+/// sign-in form is the point of the screen and never depends on this.
+class AuthAnimation extends StatefulWidget {
+  /// Below this, the keyboard plus the form already fill the screen.
+  static const _minimumScreenHeight = 640.0;
+
+  /// Width over height of the source clip, used to reserve exactly the
+  /// space the frame will occupy so nothing jumps when it appears.
+  static const _aspectRatio = 576 / 1024;
+
+  final String assetPath;
+
+  const AuthAnimation({
+    super.key,
+    this.assetPath = "assets/video/login_background.mp4",
+  });
+
+  @override
+  State<AuthAnimation> createState() => _AuthAnimationState();
+}
+
+class _AuthAnimationState extends State<AuthAnimation> {
+  bool _unavailable = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_unavailable) return const SizedBox.shrink();
+
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    if (screenHeight < AuthAnimation._minimumScreenHeight) {
+      return const SizedBox.shrink();
+    }
+
+    // A share of the screen rather than a fixed number, so it stays in
+    // proportion between a small phone and a tablet.
+    final height = (screenHeight * 0.24).clamp(150.0, 260.0);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
+      child: Center(
+        child: SizedBox(
+          height: height,
+          width: height * AuthAnimation._aspectRatio,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+            child: LoopingVideo(
+              assetPath: widget.assetPath,
+              fit: BoxFit.contain,
+              onUnavailable: () {
+                if (mounted) setState(() => _unavailable = true);
+              },
+              // Nothing is drawn while the clip loads. A spinner here would
+              // promise something the screen does not need.
+              child: const SizedBox.shrink(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class AuthFormCard extends StatelessWidget {
   final Widget child;
-
   const AuthFormCard({super.key, required this.child});
 
   @override

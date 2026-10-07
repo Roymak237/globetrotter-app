@@ -63,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const AuthAnimation(),
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 6, 4, 18),
             child: Text(

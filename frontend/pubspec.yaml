@@ -74,6 +74,9 @@ flutter:
     # photographer and licence recorded in the matching image_attribution
     # field in backend/data/destinations.json.
     - assets/images/destinations/
+    # Looping background for the sign-in screen. Falls back to the still
+    # slideshow wherever it cannot play, so it is safe to ship anywhere.
+    - assets/video/
 
 # Launcher icons, generated from one source image by `dart run
 # flutter_launcher_icons`. The generated files are committed, so a clean
