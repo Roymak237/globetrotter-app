@@ -160,7 +160,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets("tells the caller when it will never play, so the space "
+    testWidgets(
+        "tells the caller when it will never play, so the space "
         "can be reclaimed", (tester) async {
       // Without this the login screen holds open a 200 pixel gap where an
       // animation was supposed to be.
@@ -172,7 +173,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets("does not start the video when the user asked for less "
+    testWidgets(
+        "does not start the video when the user asked for less "
         "motion", (tester) async {
       // An endlessly looping clip is the thing "reduce motion" exists to
       // switch off.
@@ -197,16 +199,14 @@ void main() {
       expect(controller.playing, isFalse,
           reason: "decoding frames nobody can see drains the battery");
 
-      tester.binding
-          .handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await tester.pump();
       expect(controller.playing, isTrue);
 
       await tester.pumpAndSettle();
     });
 
-    testWidgets("releases the player when the screen is left",
-        (tester) async {
+    testWidgets("releases the player when the screen is left", (tester) async {
       final controller = await pumpVideo(tester);
 
       await tester.pumpWidget(const SizedBox.shrink());

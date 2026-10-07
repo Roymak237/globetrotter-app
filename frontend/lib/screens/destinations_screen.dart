@@ -443,25 +443,31 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
                     DropdownButtonFormField<String>(
                       initialValue: draftMaxCost?.toString() ?? "any",
                       decoration: const InputDecoration(
-                        labelText: "Maximum daily cost",
+                        // Prices are not all per day, so the filter cannot
+                        // claim to be a daily budget.
+                        labelText: "Maximum cost",
                         prefixIcon: Icon(Icons.payments_outlined),
                       ),
+                      // The old thresholds were 50k, 100k and 200k XAF. The
+                      // most expensive destination costs 60 000 XAF, so two
+                      // of the three selected every priced record and gave
+                      // identical results. These sit inside the real range.
                       items: const [
                         DropdownMenuItem(
                           value: "any",
                           child: Text("Any budget"),
                         ),
                         DropdownMenuItem(
-                          value: "50000",
-                          child: Text("Up to 50k XAF"),
+                          value: "2000",
+                          child: Text("Up to 2\u202f000 XAF"),
                         ),
                         DropdownMenuItem(
-                          value: "100000",
-                          child: Text("Up to 100k XAF"),
+                          value: "6000",
+                          child: Text("Up to 6\u202f000 XAF"),
                         ),
                         DropdownMenuItem(
-                          value: "200000",
-                          child: Text("Up to 200k XAF"),
+                          value: "30000",
+                          child: Text("Up to 30\u202f000 XAF"),
                         ),
                       ],
                       onChanged: (value) {

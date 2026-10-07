@@ -228,7 +228,9 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
   }
 
   String _costLabel(double value) {
-    return "${(value / 1000).round()}k XAF";
+    // Was "${(value / 1000).round()}k XAF", which rounded a 1499 XAF budget
+    // down to "1k" and a 1500 one up to "2k".
+    return formatXaf(value);
   }
 
   @override

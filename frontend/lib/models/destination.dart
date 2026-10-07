@@ -7,6 +7,14 @@ class Destination {
   final double avgCostPerDay;
   final bool hasCostEstimate;
 
+  /// What the figure buys: "per_day", "per_visit", "per_meal",
+  /// "per_night", "per_trip", "free" or "none".
+  ///
+  /// Only four records are priced by the day. Labelling a museum's 2000 XAF
+  /// admission as a daily cost overstates a day in Yaounde several times
+  /// over, so the screens read this rather than assuming.
+  final String costBasis;
+
   /// Where the daily cost came from. These are category estimates rather than
   /// surveyed prices, so the screen says so instead of implying precision.
   final String costNotes;
@@ -37,6 +45,7 @@ class Destination {
     required this.avgCostPerDay,
     required this.highlights,
     this.hasCostEstimate = true,
+    this.costBasis = "",
     this.costNotes = "",
     this.address = "",
     this.locationNotes = "",
@@ -67,6 +76,7 @@ class Destination {
       tags: List<String>.from(json["tags"] ?? []),
       avgCostPerDay: (json["avg_cost_per_day"] as num?)?.toDouble() ?? 0,
       hasCostEstimate: json["avg_cost_per_day"] != null,
+      costBasis: json["cost_basis"] ?? "",
       costNotes: json["cost_notes"] ?? "",
       address: json["address"] ?? "",
       locationNotes: json["location_notes"] ?? "",
@@ -91,6 +101,7 @@ class Destination {
         "description": description,
         "tags": tags,
         "avg_cost_per_day": hasCostEstimate ? avgCostPerDay.toInt() : null,
+        "cost_basis": costBasis,
         "cost_notes": costNotes,
         "address": address,
         "location_notes": locationNotes,

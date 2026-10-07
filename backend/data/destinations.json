@@ -28,7 +28,8 @@
     "latitude": 3.868987,
     "longitude": 11.521334,
     "location_precision": "area",
-    "cost_notes": "Rough daily budget for one visitor covering local transport, meals and small entry fees. Not a surveyed figure."
+    "cost_notes": "Rough daily budget for one visitor covering local transport, meals and small entry fees. Not a surveyed figure.",
+    "cost_basis": "per_day"
   },
   {
     "id": "dest-yao-002",
@@ -60,7 +61,8 @@
     "latitude": 3.85246,
     "longitude": 11.51343,
     "location_precision": "exact",
-    "cost_notes": "Free to view from the square. Any guided tour or interior access would be extra."
+    "cost_notes": "Free to view from the square. Any guided tour or interior access would be extra.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-003",
@@ -92,7 +94,8 @@
     "latitude": 3.860278,
     "longitude": 11.515556,
     "location_precision": "exact",
-    "cost_notes": "Typical museum admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical museum admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-004",
@@ -120,7 +123,8 @@
     "latitude": 3.913889,
     "longitude": 11.488889,
     "location_precision": "exact",
-    "cost_notes": "No charge for the hill itself. Budget for the taxi up and back."
+    "cost_notes": "No charge for the hill itself. Budget for the taxi up and back.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-005",
@@ -151,7 +155,8 @@
     "latitude": 3.842149,
     "longitude": 11.488817,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Bring cash for whatever you buy."
+    "cost_notes": "Free to enter. Bring cash for whatever you buy.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-006",
@@ -178,7 +183,8 @@
     "latitude": 3.887857,
     "longitude": 11.498443,
     "location_precision": "exact",
-    "cost_notes": "No admission charge."
+    "cost_notes": "No admission charge.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-007",
@@ -208,7 +214,8 @@
     "latitude": 3.8649,
     "longitude": 11.48751,
     "location_precision": "exact",
-    "cost_notes": "Typical zoo admission for one adult. Confirm on arrival."
+    "cost_notes": "Typical zoo admission for one adult. Confirm on arrival.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-008",
@@ -236,7 +243,8 @@
     "latitude": 3.894018,
     "longitude": 11.510882,
     "location_precision": "area",
-    "cost_notes": "Free to walk around. Spending depends on where you stop."
+    "cost_notes": "Free to walk around. Spending depends on where you stop.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-cmr-001",
@@ -265,7 +273,8 @@
     "latitude": 4.216667,
     "longitude": 9.1725,
     "location_precision": "exact",
-    "cost_notes": "Indicative daily cost of a guided climb including guide and porter fees. Operators vary widely."
+    "cost_notes": "Indicative daily cost of a guided climb including guide and porter fees. Operators vary widely.",
+    "cost_basis": "per_day"
   },
   {
     "id": "dest-cmr-002",
@@ -294,7 +303,8 @@
     "latitude": 4.0134,
     "longitude": 9.212,
     "location_precision": "exact",
-    "cost_notes": "Typical garden admission for one adult."
+    "cost_notes": "Typical garden admission for one adult.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-cmr-003",
@@ -324,7 +334,8 @@
     "latitude": 2.881389,
     "longitude": 9.897778,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of local access and a short boat trip. Negotiated on the day."
+    "cost_notes": "Indicative cost of local access and a short boat trip. Negotiated on the day.",
+    "cost_basis": "per_trip"
   },
   {
     "id": "dest-cmr-004",
@@ -353,7 +364,8 @@
     "latitude": 5.062222,
     "longitude": 10.029444,
     "location_precision": "exact",
-    "cost_notes": "Indicative site access and local guide cost."
+    "cost_notes": "Indicative site access and local guide cost.",
+    "cost_basis": "per_trip"
   },
   {
     "id": "dest-cmr-005",
@@ -381,7 +393,8 @@
     "latitude": 11.333333,
     "longitude": 14.733333,
     "location_precision": "area",
-    "cost_notes": "Indicative daily cost of park entry with a vehicle and guide."
+    "cost_notes": "Indicative daily cost of park entry with a vehicle and guide.",
+    "cost_basis": "per_day"
   },
   {
     "id": "dest-cmr-006",
@@ -411,7 +424,8 @@
     "latitude": 5.733044,
     "longitude": 10.901154,
     "location_precision": "exact",
-    "cost_notes": "Typical palace and museum admission for one adult."
+    "cost_notes": "Typical palace and museum admission for one adult.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-011",
@@ -436,7 +450,8 @@
     "latitude": 3.875898,
     "longitude": 11.543453,
     "location_precision": "area",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-012",
@@ -457,7 +472,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-013",
@@ -478,7 +494,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-014",
@@ -504,7 +521,8 @@
     "latitude": 3.84047,
     "longitude": 11.486478,
     "location_precision": "area",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-015",
@@ -529,7 +547,8 @@
     "latitude": 3.894018,
     "longitude": 11.510882,
     "location_precision": "area",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-016",
@@ -555,7 +574,8 @@
     "latitude": 3.894018,
     "longitude": 11.510882,
     "location_precision": "area",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-017",
@@ -581,7 +601,8 @@
     "latitude": 3.894018,
     "longitude": 11.510882,
     "location_precision": "area",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-018",
@@ -603,7 +624,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-019",
@@ -630,7 +652,8 @@
     "latitude": 3.84047,
     "longitude": 11.486478,
     "location_precision": "area",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-020",
@@ -652,7 +675,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-021",
@@ -678,7 +702,8 @@
     "latitude": 3.894018,
     "longitude": 11.510882,
     "location_precision": "area",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-022",
@@ -708,7 +733,8 @@
     "latitude": 3.866318,
     "longitude": 11.517807,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Bring cash for whatever you buy."
+    "cost_notes": "Free to enter. Bring cash for whatever you buy.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-023",
@@ -731,7 +757,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "Free to enter. Spending depends on your shopping.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-024",
@@ -758,7 +785,8 @@
     "latitude": 3.932829,
     "longitude": 11.52233,
     "location_precision": "area",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-025",
@@ -785,7 +813,8 @@
     "latitude": 3.892521,
     "longitude": 11.510106,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-026",
@@ -814,7 +843,8 @@
     "latitude": 3.912513,
     "longitude": 11.495881,
     "location_precision": "exact",
-    "cost_notes": "Indicative day-pass cost for a hotel pool. Confirm with the hotel."
+    "cost_notes": "Indicative day-pass cost for a hotel pool. Confirm with the hotel.",
+    "cost_basis": "per_day"
   },
   {
     "id": "dest-yao-027",
@@ -842,7 +872,8 @@
     "latitude": 3.84047,
     "longitude": 11.486478,
     "location_precision": "area",
-    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property."
+    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-028",
@@ -870,7 +901,8 @@
     "latitude": 3.862809,
     "longitude": 11.47826,
     "location_precision": "area",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-029",
@@ -899,7 +931,8 @@
     "latitude": 3.796663,
     "longitude": 10.024779,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of local access and a boat trip."
+    "cost_notes": "Indicative cost of local access and a boat trip.",
+    "cost_basis": "per_trip"
   },
   {
     "id": "dest-yao-031",
@@ -928,7 +961,8 @@
     "latitude": 3.8425,
     "longitude": 11.507778,
     "location_precision": "exact",
-    "cost_notes": "No admission charge."
+    "cost_notes": "No admission charge.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-032",
@@ -955,7 +989,8 @@
     "latitude": 3.834088,
     "longitude": 11.485016,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply. Treatment charges depend entirely on the care you need."
+    "cost_notes": "A daily visitor cost does not apply. Treatment charges depend entirely on the care you need.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-033",
@@ -981,7 +1016,8 @@
     "latitude": 3.894018,
     "longitude": 11.510882,
     "location_precision": "area",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-034",
@@ -1008,7 +1044,8 @@
     "latitude": 3.912513,
     "longitude": 11.495881,
     "location_precision": "exact",
-    "cost_notes": "Indicative nightly rate for a room at this hotel. Confirm current rates when booking."
+    "cost_notes": "Indicative nightly rate for a room at this hotel. Confirm current rates when booking.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-035",
@@ -1035,7 +1072,8 @@
     "latitude": 3.84047,
     "longitude": 11.486478,
     "location_precision": "area",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-036",
@@ -1057,7 +1095,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "Outdoor monuments are normally free to view.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-037",
@@ -1086,7 +1125,8 @@
     "latitude": 3.874691,
     "longitude": 11.500193,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Bring cash for whatever you buy."
+    "cost_notes": "Free to enter. Bring cash for whatever you buy.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-038",
@@ -1111,7 +1151,8 @@
     "latitude": 3.910524,
     "longitude": 11.498987,
     "location_precision": "exact",
-    "cost_notes": "Free to use."
+    "cost_notes": "Free to use.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-school-001",
@@ -1138,7 +1179,8 @@
     "latitude": 4.063812,
     "longitude": 9.740959,
     "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-002",
@@ -1165,7 +1207,8 @@
     "latitude": 3.869594,
     "longitude": 11.446827,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-003",
@@ -1192,7 +1235,8 @@
     "latitude": 3.932829,
     "longitude": 11.52233,
     "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-004",
@@ -1219,7 +1263,8 @@
     "latitude": 3.857117,
     "longitude": 11.483427,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees."
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-005",
@@ -1241,7 +1286,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-006",
@@ -1265,7 +1311,8 @@
     ],
     "additional_image_assets": [],
     "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-007",
@@ -1292,7 +1339,8 @@
     "latitude": 3.886458,
     "longitude": 11.534189,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-008",
@@ -1314,7 +1362,8 @@
     "location_sources": [],
     "additional_image_assets": [],
     "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
-    "location_precision": ""
+    "location_precision": "",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-009",
@@ -1341,7 +1390,8 @@
     "latitude": 3.864356,
     "longitude": 11.456249,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees."
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-010",
@@ -1367,7 +1417,8 @@
     "latitude": 3.855833,
     "longitude": 11.507222,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees."
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-011",
@@ -1394,7 +1445,8 @@
     "latitude": 5.728226,
     "longitude": 10.89716,
     "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees."
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-012",
@@ -1423,7 +1475,8 @@
     "latitude": 3.856624,
     "longitude": 11.499981,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the faculty about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the faculty about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-school-013",
@@ -1450,7 +1503,8 @@
     "latitude": 3.97818,
     "longitude": 11.593129,
     "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-039",
@@ -1476,7 +1530,8 @@
     "latitude": 3.871073,
     "longitude": 11.533672,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-040",
@@ -1502,7 +1557,8 @@
     "latitude": 3.886288,
     "longitude": 11.505654,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-041",
@@ -1528,7 +1584,8 @@
     "latitude": 3.873806,
     "longitude": 11.539171,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-042",
@@ -1554,7 +1611,8 @@
     "latitude": 3.861043,
     "longitude": 11.521366,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-043",
@@ -1580,7 +1638,8 @@
     "latitude": 3.806013,
     "longitude": 11.472139,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-044",
@@ -1606,7 +1665,8 @@
     "latitude": 3.892711,
     "longitude": 11.512034,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-045",
@@ -1632,7 +1692,8 @@
     "latitude": 3.90414,
     "longitude": 11.52657,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-046",
@@ -1658,7 +1719,8 @@
     "latitude": 3.864197,
     "longitude": 11.516061,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-047",
@@ -1684,7 +1746,8 @@
     "latitude": 3.833949,
     "longitude": 11.490974,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-048",
@@ -1710,7 +1773,8 @@
     "latitude": 3.80874,
     "longitude": 11.520139,
     "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-049",
@@ -1735,7 +1799,8 @@
     "latitude": 3.832148,
     "longitude": 11.489609,
     "location_precision": "exact",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-050",
@@ -1760,7 +1825,8 @@
     "latitude": 3.867114,
     "longitude": 11.564865,
     "location_precision": "exact",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-051",
@@ -1785,7 +1851,8 @@
     "latitude": 3.877617,
     "longitude": 11.532577,
     "location_precision": "exact",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-052",
@@ -1810,7 +1877,8 @@
     "latitude": 3.861707,
     "longitude": 11.530089,
     "location_precision": "exact",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-053",
@@ -1835,7 +1903,8 @@
     "latitude": 3.87115,
     "longitude": 11.534473,
     "location_precision": "exact",
-    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-054",
@@ -1860,7 +1929,8 @@
     "latitude": 3.844797,
     "longitude": 11.486683,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-055",
@@ -1885,7 +1955,8 @@
     "latitude": 3.872389,
     "longitude": 11.524163,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-056",
@@ -1910,7 +1981,8 @@
     "latitude": 3.90814,
     "longitude": 11.528772,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-057",
@@ -1935,7 +2007,8 @@
     "latitude": 3.872641,
     "longitude": 11.457151,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-058",
@@ -1960,7 +2033,8 @@
     "latitude": 3.887413,
     "longitude": 11.494258,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-059",
@@ -1985,7 +2059,8 @@
     "latitude": 3.857917,
     "longitude": 11.602327,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-060",
@@ -2010,7 +2085,8 @@
     "latitude": 3.864086,
     "longitude": 11.495358,
     "location_precision": "exact",
-    "cost_notes": "Free to enter. Spending depends on your shopping."
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-061",
@@ -2035,7 +2111,8 @@
     "latitude": 3.86779,
     "longitude": 11.511575,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-062",
@@ -2060,7 +2137,8 @@
     "latitude": 3.836509,
     "longitude": 11.47802,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-063",
@@ -2085,7 +2163,8 @@
     "latitude": 3.870352,
     "longitude": 11.479368,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-064",
@@ -2110,7 +2189,8 @@
     "latitude": 3.897973,
     "longitude": 11.508327,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-065",
@@ -2135,7 +2215,8 @@
     "latitude": 3.815178,
     "longitude": 11.492916,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-066",
@@ -2160,7 +2241,8 @@
     "latitude": 3.869671,
     "longitude": 11.496181,
     "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
   },
   {
     "id": "dest-yao-067",
@@ -2185,7 +2267,8 @@
     "latitude": 3.926053,
     "longitude": 11.470647,
     "location_precision": "exact",
-    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-068",
@@ -2210,7 +2293,8 @@
     "latitude": 3.946063,
     "longitude": 11.567722,
     "location_precision": "exact",
-    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-069",
@@ -2235,7 +2319,8 @@
     "latitude": 3.884152,
     "longitude": 11.552578,
     "location_precision": "exact",
-    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-070",
@@ -2260,7 +2345,8 @@
     "latitude": 3.867118,
     "longitude": 11.513035,
     "location_precision": "exact",
-    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-071",
@@ -2285,7 +2371,8 @@
     "latitude": 3.918177,
     "longitude": 11.528195,
     "location_precision": "exact",
-    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-072",
@@ -2310,7 +2397,8 @@
     "latitude": 3.91239,
     "longitude": 11.563179,
     "location_precision": "exact",
-    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-073",
@@ -2335,7 +2423,8 @@
     "latitude": 3.915341,
     "longitude": 11.498511,
     "location_precision": "exact",
-    "cost_notes": "Outdoor landmarks are normally free to view."
+    "cost_notes": "Outdoor landmarks are normally free to view.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-074",
@@ -2360,7 +2449,8 @@
     "latitude": 3.838332,
     "longitude": 11.47382,
     "location_precision": "exact",
-    "cost_notes": "Outdoor landmarks are normally free to view."
+    "cost_notes": "Outdoor landmarks are normally free to view.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-075",
@@ -2385,7 +2475,8 @@
     "latitude": 3.795279,
     "longitude": 11.520502,
     "location_precision": "exact",
-    "cost_notes": "Outdoor landmarks are normally free to view."
+    "cost_notes": "Outdoor landmarks are normally free to view.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-076",
@@ -2410,7 +2501,8 @@
     "latitude": 3.888142,
     "longitude": 11.543811,
     "location_precision": "exact",
-    "cost_notes": "Outdoor landmarks are normally free to view."
+    "cost_notes": "Outdoor landmarks are normally free to view.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-077",
@@ -2435,7 +2527,8 @@
     "latitude": 3.839653,
     "longitude": 11.480489,
     "location_precision": "exact",
-    "cost_notes": "Outdoor landmarks are normally free to view."
+    "cost_notes": "Outdoor landmarks are normally free to view.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-078",
@@ -2460,7 +2553,8 @@
     "latitude": 3.890093,
     "longitude": 11.45836,
     "location_precision": "exact",
-    "cost_notes": "Outdoor landmarks are normally free to view."
+    "cost_notes": "Outdoor landmarks are normally free to view.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-079",
@@ -2485,7 +2579,8 @@
     "latitude": 3.902748,
     "longitude": 11.518455,
     "location_precision": "exact",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-080",
@@ -2510,7 +2605,8 @@
     "latitude": 3.859211,
     "longitude": 11.496607,
     "location_precision": "exact",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-081",
@@ -2535,7 +2631,8 @@
     "latitude": 3.876276,
     "longitude": 11.5157,
     "location_precision": "exact",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-082",
@@ -2560,7 +2657,8 @@
     "latitude": 3.847397,
     "longitude": 11.501965,
     "location_precision": "exact",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-083",
@@ -2585,7 +2683,8 @@
     "latitude": 3.86411,
     "longitude": 11.459954,
     "location_precision": "exact",
-    "cost_notes": "Indicative entry for a public park. Some are free."
+    "cost_notes": "Indicative entry for a public park. Some are free.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-084",
@@ -2610,7 +2709,8 @@
     "latitude": 3.872542,
     "longitude": 11.48811,
     "location_precision": "exact",
-    "cost_notes": "Free to use where public. Clubs and pools may charge."
+    "cost_notes": "Free to use where public. Clubs and pools may charge.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-085",
@@ -2635,7 +2735,8 @@
     "latitude": 3.827662,
     "longitude": 11.527914,
     "location_precision": "exact",
-    "cost_notes": "Free to use where public. Clubs and pools may charge."
+    "cost_notes": "Free to use where public. Clubs and pools may charge.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-086",
@@ -2660,7 +2761,8 @@
     "latitude": 3.783158,
     "longitude": 11.534619,
     "location_precision": "exact",
-    "cost_notes": "Free to use where public. Clubs and pools may charge."
+    "cost_notes": "Free to use where public. Clubs and pools may charge.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-087",
@@ -2685,7 +2787,8 @@
     "latitude": 3.857533,
     "longitude": 11.497232,
     "location_precision": "exact",
-    "cost_notes": "Free to use where public. Clubs and pools may charge."
+    "cost_notes": "Free to use where public. Clubs and pools may charge.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-088",
@@ -2710,6 +2813,7 @@
     "latitude": 3.891773,
     "longitude": 11.516602,
     "location_precision": "exact",
-    "cost_notes": "Free to use where public. Clubs and pools may charge."
+    "cost_notes": "Free to use where public. Clubs and pools may charge.",
+    "cost_basis": "free"
   }
 ]

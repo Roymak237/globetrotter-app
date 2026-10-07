@@ -153,12 +153,25 @@ void main() {
       const basis = "Indicative cost of a sit-down meal for one.";
 
       await tester.pumpWidget(testApp(
-          place(cost: 6000, extra: {"cost_notes": basis}), language,
+          place(
+              cost: 6000,
+              extra: {"cost_notes": basis, "cost_basis": "per_meal"}),
+          language,
           detail: true));
       await tester.pumpAndSettle();
       // The tile is labelled as an estimate; this line says what kind.
       expect(find.text(basis), findsOneWidget);
-      expect(find.text(language == "fr" ? "6k XAF / jour" : "6k XAF / day"),
+      // 6000 XAF buys one meal, not a day in Yaounde. The tile used to read
+      // "6k XAF / day", which was wrong twice over: wrong unit, and rounded
+      // so that 6000 and 6499 printed the same.
+      expect(
+          find.text(language == "fr"
+              ? "6\u202f000 XAF / repas"
+              : "6\u202f000 XAF / meal"),
+          findsOneWidget);
+      expect(
+          find.text(
+              language == "fr" ? "REPAS POUR UNE PERSONNE" : "MEAL FOR ONE"),
           findsOneWidget);
       expect(tester.takeException(), isNull);
     });

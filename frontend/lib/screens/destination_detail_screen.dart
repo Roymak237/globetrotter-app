@@ -112,9 +112,11 @@ class DestinationDetailScreen extends StatelessWidget {
                       Expanded(
                         child: _MetaTile(
                           icon: Icons.payments_outlined,
-                          label: isFrench
-                              ? "COÛT JOURNALIER ESTIMÉ"
-                              : "EST. DAILY COST",
+                          // Not every price is a day's budget. A museum
+                          // admission labelled "daily cost" overstates a day
+                          // in Yaounde several times over, so the heading is
+                          // read from the record rather than assumed.
+                          label: destinationCostHeading(context, destination),
                           value: cost,
                         ),
                       ),
