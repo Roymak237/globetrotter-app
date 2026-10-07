@@ -7,6 +7,7 @@ import "../localization/app_localizations.dart";
 import "../models/chat.dart";
 import "../providers/auth_provider.dart";
 import "../services/chat_service.dart";
+import "../utils/chat_wallpaper.dart";
 import "../utils/media_url.dart";
 import "../utils/theme.dart";
 import "../widgets/online_badge.dart";
@@ -19,14 +20,22 @@ class ChatScreen extends StatefulWidget {
   /// When false the screen renders bare, for embedding inside the home shell.
   final bool showScaffold;
 
-  const ChatScreen({super.key, this.showScaffold = true});
+  /// Transport override, for tests only.
+  ///
+  /// [ChatService] reaches for the top-level `http` functions rather than an
+  /// injected client, so there is no other seam to fake the network through.
+  /// Production always leaves this null and gets the real service.
+  @visibleForTesting
+  final ChatService? service;
+
+  const ChatScreen({super.key, this.showScaffold = true, this.service});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final ChatService _service = ChatService();
+  late final ChatService _service = widget.service ?? ChatService();
 
   List<ChatRoom> _rooms = const [];
   bool _loading = true;
@@ -195,11 +204,30 @@ class _RoomTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
     final last = room.lastMessage;
-    final subtitle = last == null
+
+    // The sender's name used to be concatenated into the preview string and
+    // drawn in the same muted brown as the message text, at the same weight.
+    // It was present and unreadable at a glance, which is what "you can't see
+    // the person's name" meant. Keeping it as a separate span lets it carry
+    // its own weight and colour.
+    final speaker = last == null || last.deleted
+        ? ""
+        : last.mine
+            ? localizations.chatYou
+            : (last.displayName.trim().isEmpty
+                ? last.username
+                : last.displayName);
+    final preview = last == null
         ? room.description
         : last.deleted
             ? localizations.chatDeleted
-            : "${last.mine ? "You" : last.displayName}: ${last.text}";
+            : last.text;
+
+    // Reusing the thread's own palette means a name learned inside a
+    // conversation is recognised at a glance in the list.
+    final speakerColor = last == null || last.mine
+        ? AppTheme.textPrimary
+        : ChatWallpaper.authorColor(last.username);
 
     return Material(
       color: AppTheme.surface,
@@ -245,13 +273,33 @@ class _RoomTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            // Stated outright rather than inherited. Who the
+                            // conversation is with is the most important thing
+                            // on this row and must not depend on an ancestor
+                            // getting its text colour right.
+                            color: AppTheme.textPrimary,
                             fontWeight: FontWeight.w700,
                           ),
                     ),
-                    if (subtitle.isNotEmpty) ...[
+                    if (preview.isNotEmpty || speaker.isNotEmpty) ...[
                       const SizedBox(height: 3),
-                      Text(
-                        subtitle,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            if (speaker.isNotEmpty)
+                              TextSpan(
+                                text: "$speaker: ",
+                                style: TextStyle(
+                                  // Same colour the room uses for this
+                                  // speaker, so a name learned in the thread
+                                  // is recognised in the list.
+                                  fontWeight: FontWeight.w700,
+                                  color: speakerColor,
+                                ),
+                              ),
+                            TextSpan(text: preview),
+                          ],
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(

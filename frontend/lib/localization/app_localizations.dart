@@ -74,6 +74,7 @@ class AppLocalizations {
   String get chatReply => _text("chatReply");
   String get chatDelete => _text("chatDelete");
   String get chatDeleted => _text("chatDeleted");
+  String get chatYou => _text("chatYou");
   String get chatNewGroup => _text("chatNewGroup");
   String get chatGroupName => _text("chatGroupName");
   String get chatFindPeople => _text("chatFindPeople");
@@ -284,6 +285,7 @@ class AppLocalizations {
       "chatReply": "Reply",
       "chatDelete": "Delete",
       "chatDeleted": "This message was deleted",
+      "chatYou": "You",
       "chatNewGroup": "New group",
       "chatGroupName": "Group name",
       "chatFindPeople": "Find people",
@@ -517,6 +519,7 @@ class AppLocalizations {
       "chatReply": "Répondre",
       "chatDelete": "Supprimer",
       "chatDeleted": "Ce message a été supprimé",
+      "chatYou": "Vous",
       "chatNewGroup": "Nouveau groupe",
       "chatGroupName": "Nom du groupe",
       "chatFindPeople": "Trouver des personnes",
@@ -757,6 +760,7 @@ class AppLocalizations {
       "chatReply": "Answer",
       "chatDelete": "Comot am",
       "chatDeleted": "Dem don comot dis message",
+      "chatYou": "You",
       "chatNewGroup": "New group",
       "chatGroupName": "Group name",
       "chatFindPeople": "Find people",
