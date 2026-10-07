@@ -16,8 +16,8 @@
       "National Museum",
       "Mount Febe"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg",
+    "image_asset": "destinations/yaounde.jpg",
     "image_attribution": "Emmanuel Taquet — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Yaounde, Centre, Cameroon",
     "location_notes": "The pin sits on the centre of Yaounde's urban community. Use it to orient yourself, then open one of the individual listings below for a specific place to visit.",
@@ -46,9 +46,9 @@
     "highlights": [
       "Reunification history"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Monument_de_la_R%C3%A9unification.JPG?width=1200",
-    "image_asset": "tourist/reunifiacation monument.jpg",
-    "image_attribution": "Local assets: creator and license unverified. Remote fallback only (inherited credit): Borigue — Wikimedia Commons, CC BY-SA 3.0.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Monument_Reunification_4.JPG/1280px-Monument_Reunification_4.JPG",
+    "image_asset": "destinations/reunification-monument.jpg",
+    "image_attribution": "Steve Mvondo — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Centre Administratif, Yaounde III, Centre, Cameroon",
     "location_notes": "The monument stands in the Centre Administratif district, south-west of the city centre. It is an outdoor landmark, visible and photographable from the surrounding square.",
     "location_sources": [
@@ -80,9 +80,9 @@
       "Traditional masks",
       "Artifacts collection"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg?width=1200",
-    "image_asset": "tourist/museu national.jpg",
-    "image_attribution": "Local asset: creator and license unverified. Remote fallback only (inherited credit): Manuella sali — Wikimedia Commons, CC BY-SA 4.0.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg/1280px-Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg",
+    "image_asset": "destinations/national-museum.jpg",
+    "image_attribution": "Manuella sali — Wikimedia Commons, CC BY-SA 4.0",
     "address": "Rue 3.038, Centre Administratif, Yaounde III, Cameroon",
     "location_notes": "Housed in the former presidential palace on Rue 3.038 in the Centre Administratif district. The pin is on the building itself.",
     "location_sources": [
@@ -108,8 +108,8 @@
     "highlights": [
       "Yaounde hills"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg",
+    "image_asset": "destinations/mount-febe.jpg",
     "image_attribution": "Emmanuel Taquet — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Mont Febe, north-west of Yaounde, Centre, Cameroon",
     "location_notes": "The pin marks the summit of the hill, not a trailhead or car park. The hotel and its pool are separate listings further down the slope.",
@@ -196,9 +196,9 @@
     "highlights": [
       "Zoo-botanical park"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Mvog-Betsi_Zoo-Botanical_Park.jpg?width=1200",
-    "image_asset": "recreational/mvogbetsi zoo.jpg",
-    "image_attribution": "Local asset: creator and license unverified. Remote fallback only (inherited credit): Eleazar — Wikimedia Commons, CC BY-SA 3.0.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Mvog-Betsi_Zoo-Botanical_Park.jpg/1280px-Mvog-Betsi_Zoo-Botanical_Park.jpg",
+    "image_asset": "destinations/mvog-betsi-zoo.jpg",
+    "image_attribution": "Eleazar — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Mvog-Betsi, Yaounde VI, Centre, Cameroon",
     "location_notes": "The zoo-botanical park in Mvog-Betsi, south-west of the centre. Allow a couple of hours.",
     "location_sources": [
@@ -223,8 +223,8 @@
     ],
     "avg_cost_per_day": 0,
     "highlights": [],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Bastos_under_the_moon.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bastos_under_the_moon.jpg/1280px-Bastos_under_the_moon.jpg",
+    "image_asset": "destinations/bastos-district.jpg",
     "image_attribution": "Shaowu Fan — Wikimedia Commons, CC BY 3.0",
     "address": "Bastos, Yaounde I, Centre, Cameroon",
     "location_notes": "Bastos is a residential and diplomatic quarter north of the centre, known for restaurants and nightlife. The pin is the middle of the quarter, not any single venue.",
@@ -253,8 +253,8 @@
     "highlights": [
       "Volcanic landscape"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Mount_Cameroon.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mount_Cameroon.jpg/1280px-Mount_Cameroon.jpg",
+    "image_asset": "destinations/mount-cameroon.jpg",
     "image_attribution": "Daina — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Mount Cameroon, near Buea, Southwest, Cameroon",
     "location_notes": "The pin is the summit, reached on foot from Buea over one to three days. Climbs are arranged through guides in Buea; do not set out alone.",
@@ -282,8 +282,8 @@
     "highlights": [
       "Botanical collections"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/19/Limbe_Botanic_Garden.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Limbe_Botanic_Garden.jpg/1280px-Limbe_Botanic_Garden.jpg",
+    "image_asset": "destinations/limbe-botanic-garden.jpg",
     "image_attribution": "Awah Nadege — Wikimedia Commons, CC BY-SA 4.0",
     "address": "Morton Bay, Limbe, Fako, Southwest, Cameroon",
     "location_notes": "On the Morton Bay coast in Limbe, at the mouth of the Limbe River. The pin is the garden, not a named gate.",
@@ -312,8 +312,8 @@
       "Waterfall into the ocean",
       "Kribi coast"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Chutes_de_la_Lob%C3%A9_2.JPG?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Chutes_de_la_Lob%C3%A9_2.JPG/1280px-Chutes_de_la_Lob%C3%A9_2.JPG",
+    "image_asset": "destinations/chutes-de-la-lob.jpg",
     "image_attribution": "Aseret Zardep — Wikimedia Commons, CC BY-SA 4.0",
     "address": "About 7 km south of Kribi, South, Cameroon",
     "location_notes": "The falls meet the Atlantic about 7 km south of Kribi. The pin is the falls; boat trips are arranged on the beach nearby.",
@@ -341,8 +341,8 @@
     "highlights": [
       "Nkam River falls"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Ekom_falls.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Ekom_falls.jpg/1280px-Ekom_falls.jpg",
+    "image_asset": "destinations/chutes-d-ekom-nkam.jpg",
     "image_attribution": "UJung — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Ekom-Nkam village, near Melong, Moungo, Littoral, Cameroon",
     "location_notes": "On the Nkam River at Ekom-Nkam village, near Melong in the Moungo department. The final approach is a walk down to the viewpoint.",
@@ -369,9 +369,9 @@
     "highlights": [
       "Savanna landscapes"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/10/Waza-NP-Elephant.jpg?width=1200",
-    "image_asset": "recreational/waza park.webp",
-    "image_attribution": "Local asset: creator and license unverified. Remote fallback only (inherited credit): Albert Backer — Wikimedia Commons, CC BY-SA 3.0.",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Waza-NP-Elephant.jpg/1280px-Waza-NP-Elephant.jpg",
+    "image_asset": "destinations/waza-national-park.jpg",
+    "image_attribution": "Albert Backer — Wikimedia Commons, CC BY-SA 3.0",
     "address": "Waza, Logone-et-Chari, Far North, Cameroon",
     "location_notes": "The pin is a representative point inside the park, not an entrance. Check current travel advice for the Far North before planning a visit.",
     "location_sources": [
@@ -399,8 +399,8 @@
       "Bamoun heritage",
       "Royal architecture"
     ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/The_Sultans_Palace%2C_Foumban.jpg?width=1200",
-    "image_asset": "",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/The_Sultans_Palace%2C_Foumban.jpg/1280px-The_Sultans_Palace%2C_Foumban.jpg",
+    "image_asset": "destinations/foumban-royal-palace.jpg",
     "image_attribution": "Elin — Wikimedia Commons, CC BY 2.0",
     "address": "Royal Palace, Foumban, Noun, West, Cameroon",
     "location_notes": "The palace of the Bamum kingdom sits in the centre of Foumban and houses a museum.",

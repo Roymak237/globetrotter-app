@@ -69,6 +69,11 @@ flutter:
     - assets/images/Schools/
     - assets/images/shopping/
     - assets/images/tourist/
+    # Photographs fetched from Wikimedia Commons by
+    # scripts/fetch_destination_images.py. Every file here has its
+    # photographer and licence recorded in the matching image_attribution
+    # field in backend/data/destinations.json.
+    - assets/images/destinations/
 
 # Launcher icons, generated from one source image by `dart run
 # flutter_launcher_icons`. The generated files are committed, so a clean
