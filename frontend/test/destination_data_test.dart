@@ -157,4 +157,44 @@ void main() {
     }
     expect(dangling, isEmpty, reason: dangling.join("\n"));
   });
+
+  test("a pin always says where it came from", () {
+    // The nine records with no coordinate exist precisely because nobody
+    // could source one. The inverse has to hold too, or the next bulk
+    // import can quietly reintroduce guessed pins.
+    for (final json in destinations) {
+      final hasPin = json["latitude"] != null && json["longitude"] != null;
+      if (!hasPin) continue;
+      final sources =
+          List<String>.from(json["location_sources"] ?? const []);
+      expect(sources.where((s) => s.trim().isNotEmpty), isNotEmpty,
+          reason: "${json["id"]} is pinned but cites nothing");
+    }
+  });
+
+  test("records taken from OpenStreetMap attribute their claims to it", () {
+    // OSM tags a chess club as an amusement arcade and hangs a bank's
+    // operator tag on the supermarket hosting its ATM. We did not visit
+    // these places, so the copy has to attribute the classification rather
+    // than assert it, otherwise their mistake becomes our claim.
+    final osmObject = RegExp(
+      r"openstreetmap\.org/(node|way|relation)/\d+",
+      caseSensitive: false,
+    );
+
+    final imported = destinations.where((json) {
+      final sources = List<String>.from(json["location_sources"] ?? const []);
+      return sources.any(osmObject.hasMatch);
+    }).toList();
+
+    expect(imported, isNotEmpty,
+        reason: "expected the imported OpenStreetMap destinations");
+
+    for (final json in imported) {
+      expect(json["description"] as String, contains("OpenStreetMap"),
+          reason: "${json["id"]} states OSM's classification as our own");
+      expect(json["location_precision"], equals("exact"),
+          reason: "${json["id"]} cites one OSM object, so its pin is exact");
+    }
+  });
 }

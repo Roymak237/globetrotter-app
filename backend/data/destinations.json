@@ -1451,5 +1451,1265 @@
     "longitude": 11.593129,
     "location_precision": "area",
     "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-039",
+    "name": "Karoka BBQ service",
+    "region": "Centre",
+    "description": "A restaurant in the Mvogada area of Yaounde, as listed on OpenStreetMap. The same entry says it serves burger, african and sandwich and is operated by Yannick. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Avenue Germaine Ahidjo, Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/4933980224"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.871073,
+    "longitude": 11.533672,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-040",
+    "name": "Dolcezza Yde food",
+    "region": "Centre",
+    "description": "A restaurant in the Nkol-Etonn area of Yaounde, as listed on OpenStreetMap. The same entry says it serves pizza, chicken and italian. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nouve route bastos, Nkol-Etonn, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/192776473"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.886288,
+    "longitude": 11.505654,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-041",
+    "name": "Bifteck 5 Stars",
+    "region": "Centre",
+    "description": "A restaurant in Yaounde, as listed on OpenStreetMap. The same entry says it serves african, french and italian pizza and is operated by Wouri Essos. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue Jean Abanda, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/5416926923"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.873806,
+    "longitude": 11.539171,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-042",
+    "name": "Le Premium",
+    "region": "Centre",
+    "description": "A restaurant in the Mvogada area of Yaounde, as listed on OpenStreetMap. The same entry says it serves chicken, friture and african. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue 1.001, Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/5680784421"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.861043,
+    "longitude": 11.521366,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-043",
+    "name": "Jodi Bites",
+    "region": "Centre",
+    "description": "A restaurant in the Mbalngong area of Yaounde, as listed on OpenStreetMap. The same entry says it serves african, ice cream and breakfast. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Grand Chefere Simbock, Mbalngong, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/13301918629"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.806013,
+    "longitude": 11.472139,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-044",
+    "name": "Le Baron",
+    "region": "Centre",
+    "description": "A restaurant in the Nkol-Etonn area of Yaounde, as listed on OpenStreetMap. The same entry says it serves lebanese. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Carrefour Bastos, Nkol-Etonn, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/6339547604"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.892711,
+    "longitude": 11.512034,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-045",
+    "name": "les merveilles de FOLOLO",
+    "region": "Centre",
+    "description": "A restaurant in the Tongola-Assi area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue 1.570, Tongola-Assi, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/9026271302"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.90414,
+    "longitude": 11.52657,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-046",
+    "name": "Le Safoutier",
+    "region": "Centre",
+    "description": "A restaurant in the Mvogada area of Yaounde, as listed on OpenStreetMap. The same entry says it is operated by Hilton. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Boulevard du 20 Mai, Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/1116281761"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.864197,
+    "longitude": 11.516061,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-047",
+    "name": "FLORA RESTO",
+    "region": "Centre",
+    "description": "A restaurant in Yaounde, as listed on OpenStreetMap. The same entry says it serves african. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/7934998927"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.833949,
+    "longitude": 11.490974,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-048",
+    "name": "O'GOOD FOOD",
+    "region": "Centre",
+    "description": "A restaurant in the Odza I area of Yaounde, as listed on OpenStreetMap. The same entry says it serves american and lebanese. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Odza I, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/13809657736"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.80874,
+    "longitude": 11.520139,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed."
+  },
+  {
+    "id": "dest-yao-049",
+    "name": "Logiteckcybercafe",
+    "region": "Centre",
+    "description": "An internet cafe in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "gaming",
+      "entertainment"
+    ],
+    "avg_cost_per_day": 3000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Avenue de Nsimeyong, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/6872906685"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.832148,
+    "longitude": 11.489609,
+    "location_precision": "exact",
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+  },
+  {
+    "id": "dest-yao-050",
+    "name": "Wisad Koncept",
+    "region": "Centre",
+    "description": "An internet cafe in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "gaming",
+      "entertainment"
+    ],
+    "avg_cost_per_day": 3000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue 4.804, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/6542995086"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.867114,
+    "longitude": 11.564865,
+    "location_precision": "exact",
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+  },
+  {
+    "id": "dest-yao-051",
+    "name": "Cyber Et Secrétariat Bureautique",
+    "region": "Centre",
+    "description": "An internet cafe in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "gaming",
+      "entertainment"
+    ],
+    "avg_cost_per_day": 3000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/7168862427"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.877617,
+    "longitude": 11.532577,
+    "location_precision": "exact",
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+  },
+  {
+    "id": "dest-yao-052",
+    "name": "Baless Trading Consulting",
+    "region": "Centre",
+    "description": "An internet cafe in the Mvogada area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "gaming",
+      "entertainment"
+    ],
+    "avg_cost_per_day": 3000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/7168867235"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.861707,
+    "longitude": 11.530089,
+    "location_precision": "exact",
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+  },
+  {
+    "id": "dest-yao-053",
+    "name": "Lune Business Center",
+    "region": "Centre",
+    "description": "An internet cafe in the Mvogada area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "gaming",
+      "entertainment"
+    ],
+    "avg_cost_per_day": 3000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/7168864217"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.87115,
+    "longitude": 11.534473,
+    "location_precision": "exact",
+    "cost_notes": "Indicative spend for an afternoon of play. Not a quoted price."
+  },
+  {
+    "id": "dest-yao-054",
+    "name": "Kenza Market 100% Bio",
+    "region": "Centre",
+    "description": "A supermarket in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/5582117322"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.844797,
+    "longitude": 11.486683,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-055",
+    "name": "MIRE WORLD SARL",
+    "region": "Centre",
+    "description": "A department store in the Mvogada area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Place Elig-Essono, Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/4565558592"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.872389,
+    "longitude": 11.524163,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-056",
+    "name": "Dovv, Tongolo",
+    "region": "Centre",
+    "description": "A supermarket in the Tongola-Assi area of Yaounde, as listed on OpenStreetMap. The same entry says it is operated by DÔVV DISTRIBUTION SARL. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Tongola-Assi, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/525564645"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.90814,
+    "longitude": 11.528772,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-057",
+    "name": "Sogali Vitrerie Complexe",
+    "region": "Centre",
+    "description": "A shopping mall in the Nkolbisson area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nkolbisson, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/7150530011"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.872641,
+    "longitude": 11.457151,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-058",
+    "name": "Marché aux Bestiaux",
+    "region": "Centre",
+    "description": "A market in the Zone O area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Zone O, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/218539503"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.887413,
+    "longitude": 11.494258,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-059",
+    "name": "carrefour Kongossa",
+    "region": "Centre",
+    "description": "A supermarket in the Nkombassi area of Yaounde, as listed on OpenStreetMap. The same entry says it is operated by Grand Public. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nkombassi, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/10275402003"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.857917,
+    "longitude": 11.602327,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-060",
+    "name": "SANTA LUCIA Melen",
+    "region": "Centre",
+    "description": "A supermarket in the Zone M area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "shopping",
+      "retail"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Zone M, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/5777138840"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.864086,
+    "longitude": 11.495358,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Spending depends on your shopping."
+  },
+  {
+    "id": "dest-yao-061",
+    "name": "Médiathèque de l’Institut français du Cameroun",
+    "region": "Centre",
+    "description": "A library in Yaounde, as listed on OpenStreetMap. The same entry says it is operated by IFC. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "education",
+      "school"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/192821227"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.86779,
+    "longitude": 11.511575,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-062",
+    "name": "Centre de Formation Les Teachers du Web",
+    "region": "Centre",
+    "description": "A college in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "education",
+      "school"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/6598271297"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.836509,
+    "longitude": 11.47802,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-063",
+    "name": "Institut supérieur de traduction d’interprétation et de communication",
+    "region": "Centre",
+    "description": "A college in the Zone M area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "education",
+      "school"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Zone M, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/11455044387"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.870352,
+    "longitude": 11.479368,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-064",
+    "name": "Academic School of Excellence",
+    "region": "Centre",
+    "description": "A college in the Nkol-Etonn area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "education",
+      "school"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue 1.792, Nkol-Etonn, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/192687932"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.897973,
+    "longitude": 11.508327,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-065",
+    "name": "YSEM",
+    "region": "Centre",
+    "description": "A college in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "education",
+      "school"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "8.711, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/13172748384"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.815178,
+    "longitude": 11.492916,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-066",
+    "name": "École Nationale Supérieure des Travaux Publics",
+    "region": "Centre",
+    "description": "A university in the Zone M area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "education",
+      "school"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Zone M, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/relation/17428694"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.869671,
+    "longitude": 11.496181,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition."
+  },
+  {
+    "id": "dest-yao-067",
+    "name": "Catholic Cross of Ngoya summit",
+    "region": "Centre",
+    "description": "A visitor attraction in the Ngoya III area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "tourist",
+      "culture"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Montée du Mt Ngoya, Ngoya III, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/5174142027"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.926053,
+    "longitude": 11.470647,
+    "location_precision": "exact",
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+  },
+  {
+    "id": "dest-yao-068",
+    "name": "Village Madiba",
+    "region": "Centre",
+    "description": "A visitor attraction in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "tourist",
+      "culture"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/293193590"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.946063,
+    "longitude": 11.567722,
+    "location_precision": "exact",
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+  },
+  {
+    "id": "dest-yao-069",
+    "name": "Architec les Concepteurs Réunis, Titi Garage, Yaoundé",
+    "region": "Centre",
+    "description": "A public artwork in the Mfandéna II area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "tourist",
+      "culture"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Mfandéna II, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/4789521727"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.884152,
+    "longitude": 11.552578,
+    "location_precision": "exact",
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+  },
+  {
+    "id": "dest-yao-070",
+    "name": "Plus vieux bâtiment en dur de Yaoundé",
+    "region": "Centre",
+    "description": "A visitor attraction in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "tourist",
+      "culture"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/2450442448"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.867118,
+    "longitude": 11.513035,
+    "location_precision": "exact",
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+  },
+  {
+    "id": "dest-yao-071",
+    "name": "Concrete Mixer, Yaoundé, Ngousso",
+    "region": "Centre",
+    "description": "A public artwork in the Tongola-Assi area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "tourist",
+      "culture"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Tongola-Assi, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/4792010821"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.918177,
+    "longitude": 11.528195,
+    "location_precision": "exact",
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+  },
+  {
+    "id": "dest-yao-072",
+    "name": "Résidence GUEFANO MOUDIO",
+    "region": "Centre",
+    "description": "A public artwork in the Nkolfoulou I area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "tourist",
+      "culture"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nkolfoulou I, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/9926352317"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.91239,
+    "longitude": 11.563179,
+    "location_precision": "exact",
+    "cost_notes": "Typical admission for one adult. Check current prices before travelling."
+  },
+  {
+    "id": "dest-yao-073",
+    "name": "Monastère Notre Dame des Bénédictin du mont Fébé",
+    "region": "Centre",
+    "description": "A place of worship in Yaounde, as listed on OpenStreetMap. The same entry says it belongs to the catholic tradition. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "landmark",
+      "history"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/192007560"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.915341,
+    "longitude": 11.498511,
+    "location_precision": "exact",
+    "cost_notes": "Outdoor landmarks are normally free to view."
+  },
+  {
+    "id": "dest-yao-074",
+    "name": "Salle du Royaume des Témoins de Jéhovah",
+    "region": "Centre",
+    "description": "A place of worship in Yaounde, as listed on OpenStreetMap. The same entry says it belongs to the jehovahs witness tradition. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "landmark",
+      "history"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/192860377"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.838332,
+    "longitude": 11.47382,
+    "location_precision": "exact",
+    "cost_notes": "Outdoor landmarks are normally free to view."
+  },
+  {
+    "id": "dest-yao-075",
+    "name": "Saint-Pierre Apôtre de Messamendongo",
+    "region": "Centre",
+    "description": "A place of worship in the Odza I area of Yaounde, as listed on OpenStreetMap. The same entry says it belongs to the roman catholic tradition. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "landmark",
+      "history"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Odza I, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/219330375"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.795279,
+    "longitude": 11.520502,
+    "location_precision": "exact",
+    "cost_notes": "Outdoor landmarks are normally free to view."
+  },
+  {
+    "id": "dest-yao-076",
+    "name": "Eglise Advantiste du 7e jour",
+    "region": "Centre",
+    "description": "A place of worship in the Mfandéna II area of Yaounde, as listed on OpenStreetMap. The same entry says it belongs to the adventist tradition. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "landmark",
+      "history"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Mfandéna II, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/221365573"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.888142,
+    "longitude": 11.543811,
+    "location_precision": "exact",
+    "cost_notes": "Outdoor landmarks are normally free to view."
+  },
+  {
+    "id": "dest-yao-077",
+    "name": "Église Presbytérienne Camerounaise Paroisse Margareth Ann-Chasse de Biyem-assi",
+    "region": "Centre",
+    "description": "A place of worship in Yaounde, as listed on OpenStreetMap. The same entry says it belongs to the presbyterian tradition. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "landmark",
+      "history"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/219330435"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.839653,
+    "longitude": 11.480489,
+    "location_precision": "exact",
+    "cost_notes": "Outdoor landmarks are normally free to view."
+  },
+  {
+    "id": "dest-yao-078",
+    "name": "Église Catholique Orthodoxe Byzantine Cathédrale Saint-Michel Archange",
+    "region": "Centre",
+    "description": "A place of worship in the Nkolafémé area of Yaounde, as listed on OpenStreetMap. The same entry says it belongs to the orthodox tradition. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "landmark",
+      "history"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nkolafémé, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/219466518"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.890093,
+    "longitude": 11.45836,
+    "location_precision": "exact",
+    "cost_notes": "Outdoor landmarks are normally free to view."
+  },
+  {
+    "id": "dest-yao-079",
+    "name": "mballa 2 - stade congo",
+    "region": "Centre",
+    "description": "A public park in the Tongola-Assi area of Yaounde, as listed on OpenStreetMap. The same entry says it is operated by 2-0 mballa 2. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "leisure",
+      "relaxation"
+    ],
+    "avg_cost_per_day": 1000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue 1.877, Tongola-Assi, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/13069251184"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.902748,
+    "longitude": 11.518455,
+    "location_precision": "exact",
+    "cost_notes": "Indicative entry for a public park. Some are free."
+  },
+  {
+    "id": "dest-yao-080",
+    "name": "Majestic Yaoundé I University",
+    "region": "Centre",
+    "description": "A cinema in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "leisure",
+      "relaxation"
+    ],
+    "avg_cost_per_day": 1000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/881969107"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.859211,
+    "longitude": 11.496607,
+    "location_precision": "exact",
+    "cost_notes": "Indicative entry for a public park. Some are free."
+  },
+  {
+    "id": "dest-yao-081",
+    "name": "Tennis Club de Yaoundé",
+    "region": "Centre",
+    "description": "A garden in Yaounde, as listed on OpenStreetMap. The same entry says it is used for tennis. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "leisure",
+      "relaxation"
+    ],
+    "avg_cost_per_day": 1000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/188699697"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.876276,
+    "longitude": 11.5157,
+    "location_precision": "exact",
+    "cost_notes": "Indicative entry for a public park. Some are free."
+  },
+  {
+    "id": "dest-yao-082",
+    "name": "Jardin des amis",
+    "region": "Centre",
+    "description": "A garden in Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "leisure",
+      "relaxation"
+    ],
+    "avg_cost_per_day": 1000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Rue Joseph Tchoungui Akoa, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/458853822"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.847397,
+    "longitude": 11.501965,
+    "location_precision": "exact",
+    "cost_notes": "Indicative entry for a public park. Some are free."
+  },
+  {
+    "id": "dest-yao-083",
+    "name": "reposoire",
+    "region": "Centre",
+    "description": "A public park in the Nkolbisson area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "leisure",
+      "relaxation"
+    ],
+    "avg_cost_per_day": 1000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nkolbisson, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/1422647524"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.86411,
+    "longitude": 11.459954,
+    "location_precision": "exact",
+    "cost_notes": "Indicative entry for a public park. Some are free."
+  },
+  {
+    "id": "dest-yao-084",
+    "name": "Rosy Fitness",
+    "region": "Centre",
+    "description": "A gym in the Zone M area of Yaounde, as listed on OpenStreetMap. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "recreation",
+      "sport"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Montée du Lycée, Zone M, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/5549602123"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.872542,
+    "longitude": 11.48811,
+    "location_precision": "exact",
+    "cost_notes": "Free to use where public. Clubs and pools may charge."
+  },
+  {
+    "id": "dest-yao-085",
+    "name": "Complexe de La BEAC Centre Sportif et Culturel de NKOL-EKIÉ",
+    "region": "Centre",
+    "description": "A sports pitch in Yaounde, as listed on OpenStreetMap. The same entry says it is used for soccer. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "recreation",
+      "sport"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/198805770"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.827662,
+    "longitude": 11.527914,
+    "location_precision": "exact",
+    "cost_notes": "Free to use where public. Clubs and pools may charge."
+  },
+  {
+    "id": "dest-yao-086",
+    "name": "Centre Technique de la Fédération Camerounaise de Football",
+    "region": "Centre",
+    "description": "A sports centre in the Odza II area of Yaounde, as listed on OpenStreetMap. The same entry says it is used for soccer. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "recreation",
+      "sport"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Odza II, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/237084655"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.783158,
+    "longitude": 11.534619,
+    "location_precision": "exact",
+    "cost_notes": "Free to use where public. Clubs and pools may charge."
+  },
+  {
+    "id": "dest-yao-087",
+    "name": "MATECO Complexe Sportif de l'Université de Yaoundé 1",
+    "region": "Centre",
+    "description": "A sports pitch in Yaounde, as listed on OpenStreetMap. The same entry says it is used for multi. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "recreation",
+      "sport"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/188072763"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.857533,
+    "longitude": 11.497232,
+    "location_precision": "exact",
+    "cost_notes": "Free to use where public. Clubs and pools may charge."
+  },
+  {
+    "id": "dest-yao-088",
+    "name": "Stade de l'église orthodoxe Bastos",
+    "region": "Centre",
+    "description": "A sports pitch in the Nkol-Etonn area of Yaounde, as listed on OpenStreetMap. The same entry says it is used for soccer. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "recreation",
+      "sport"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "",
+    "image_attribution": "",
+    "address": "Nkol-Etonn, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/way/1526071387"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.891773,
+    "longitude": 11.516602,
+    "location_precision": "exact",
+    "cost_notes": "Free to use where public. Clubs and pools may charge."
   }
 ]
