@@ -42,6 +42,15 @@ class AppTheme {
   /// collapsing into a flat band where terracotta meets ochre.
   static const Color clay = Color(0xFFC9703A);
 
+  /// [secondary] taken down to 74% brightness, same hue.
+  ///
+  /// White on [secondary] measures 2.67:1, under the 3:1 WCAG floor for
+  /// icons and large text, and the chat app bar puts its call, video and
+  /// wallpaper icons exactly at that end of the sweep. This stop measures
+  /// 4.61:1, so the bar still finishes on ochre rather than mud but the
+  /// icons on top of it are actually visible.
+  static const Color ochreDeep = Color(0xFFA16920);
+
   /// Adire indigo: the cool counterpoint the warm ramp needs. Reserved for
   /// surfaces that must read as distinct from the brand — incoming chat
   /// bubbles, unread badges and informational states.
@@ -63,10 +72,15 @@ class AppTheme {
 
   /// Horizontal variant for wide, short surfaces such as app bars, where a
   /// diagonal sweep would be clipped to a single muddled band.
+  ///
+  /// Ends on [ochreDeep] rather than [secondary] because everything drawn on
+  /// an app bar is white. See that colour's note for the measurements; the
+  /// darkest point of this sweep carries white at 9.4:1 and the lightest at
+  /// 4.6:1, so no icon lands on a background that cannot hold it.
   static const LinearGradient brandGradientHorizontal = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-    colors: [primaryDark, primary, clay, secondary],
+    colors: [primaryDark, primary, clay, ochreDeep],
     stops: [0.0, 0.35, 0.72, 1.0],
   );
 
@@ -89,8 +103,16 @@ class AppTheme {
 
   /// Ready-made gradient fill for `AppBar.flexibleSpace`. `AppBarTheme` cannot
   /// express a gradient, so screens opt in by passing this widget.
+  ///
+  /// The `SizedBox.expand` child is load-bearing, not decoration. A
+  /// `DecoratedBox` with no child sizes itself to `constraints.smallest`,
+  /// and `flexibleSpace` hands down *loose* constraints, so without a child
+  /// this laid out 800x0 and painted nothing at all. Screens that also set
+  /// `backgroundColor: Colors.transparent` were then left with white icons
+  /// on the bare scaffold colour.
   static const Widget appBarBackground = DecoratedBox(
     decoration: BoxDecoration(gradient: brandGradientHorizontal),
+    child: SizedBox.expand(),
   );
 
   static const double radiusInput = 14;

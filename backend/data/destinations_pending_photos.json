@@ -162,33 +162,6 @@
     "cost_basis": "per_meal"
   },
   {
-    "id": "dest-yao-046",
-    "name": "Le Safoutier",
-    "region": "Centre",
-    "description": "A restaurant in the Mvogada area of Yaounde, as listed on OpenStreetMap. The same entry says it is operated by Hilton. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
-    "tags": [
-      "dining",
-      "food",
-      "restaurant"
-    ],
-    "avg_cost_per_day": 6000,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "",
-    "image_attribution": "",
-    "address": "Boulevard du 20 Mai, Mvogada, Yaounde, Centre, Cameroon",
-    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
-    "location_sources": [
-      "https://www.openstreetmap.org/node/1116281761"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.864197,
-    "longitude": 11.516061,
-    "location_precision": "exact",
-    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
-    "cost_basis": "per_meal"
-  },
-  {
     "id": "dest-yao-047",
     "name": "FLORA RESTO",
     "region": "Centre",

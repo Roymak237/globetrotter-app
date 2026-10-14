@@ -14,20 +14,26 @@ media directory or overwrite a neighbour.
 
 Routes
 ------
-POST /api/media            Upload a file, returns its public URL
-GET  /api/media/<file_id>  Stream a stored file back
+POST /api/media                   Upload a file, returns its public URL
+POST /api/media/<file_id>/ticket  Short-lived signed URL for playback
+GET  /api/media/<file_id>         Stream a stored file back
 """
 import datetime
 import mimetypes
 import os
 import uuid
 
-from flask import Blueprint, jsonify, request, send_file
+import jwt
+from flask import Blueprint, current_app, jsonify, request, send_file
 
 from app.auth import get_current_user
 from app.models import MEDIA_DIR
 
 media_bp = Blueprint("media", __name__)
+
+# How long a playback ticket stays valid. Long enough to start and scrub a
+# long voice note, short enough that a copied URL is not a lasting handout.
+TICKET_TTL_SECONDS = 300
 
 # Kept in step with ``client_max_body_size`` in both nginx layers. Raising this
 # without raising those will surface as an opaque 413 from the proxy.
@@ -58,6 +64,26 @@ KIND_BY_PREFIX = {
     "image/": "image",
     "video/": "video",
     "audio/": "audio",
+}
+
+# Reverse of ALLOWED_TYPES, for naming the type of a file already on disk.
+# ``.webm`` maps to both video and audio in ALLOWED_TYPES; video wins here
+# because a browser given video/webm for an audio-only stream still plays it,
+# whereas the reverse shows nothing.
+EXTENSION_TYPES = {
+    ".jpg": "image/jpeg",
+    ".png": "image/png",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
+    ".mp4": "video/mp4",
+    ".webm": "video/webm",
+    ".mov": "video/quicktime",
+    ".mp3": "audio/mpeg",
+    ".m4a": "audio/mp4",
+    ".aac": "audio/aac",
+    ".ogg": "audio/ogg",
+    ".wav": "audio/wav",
+    ".pdf": "application/pdf",
 }
 
 
@@ -136,6 +162,69 @@ def upload_media():
     }), 201
 
 
+@media_bp.route("/api/media/<file_id>/ticket", methods=["POST"])
+def media_ticket(file_id: str):
+    """Issue a short-lived signed URL for playing one stored file.
+
+    The Flutter client asks for this before opening the audio or video
+    player, because a ``<video>`` element cannot carry an Authorization
+    header. Without this route the player received a 404 and every voice
+    note and video attachment failed to open.
+
+    Signed with the same JWT secret as session tokens, so no server-side
+    state is needed and a forged or expired ticket is detectable.
+    """
+    username = get_current_user(request)
+    if username is None:
+        return jsonify({"error": "authentication required"}), 401
+
+    path = _resolve_stored_path(file_id)
+    if path is None:
+        return jsonify({"error": "file not found"}), 404
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    ticket = jwt.encode(
+        {
+            "sub": username,
+            "fid": file_id,
+            "iat": now,
+            "exp": now + datetime.timedelta(seconds=TICKET_TTL_SECONDS),
+        },
+        current_app.config["SECRET_KEY"],
+        algorithm="HS256",
+    )
+    return jsonify({
+        "url": f"/api/media/{file_id}?ticket={ticket}",
+        "expires_in": TICKET_TTL_SECONDS,
+    }), 200
+
+
+def _ticket_rejection(file_id: str):
+    """Validate a ``ticket`` query parameter if one was supplied.
+
+    Returns an error response, or ``None`` when the request may proceed.
+    A missing ticket is allowed: these URLs are also used in ``<img>`` tags
+    that cannot be given one, and the identifiers are unguessable random
+    hex. A ticket that *is* present must be real, otherwise presenting a
+    tampered one would be quietly equivalent to presenting none.
+    """
+    ticket = request.args.get("ticket")
+    if not ticket:
+        return None
+    try:
+        payload = jwt.decode(
+            ticket, current_app.config["SECRET_KEY"], algorithms=["HS256"]
+        )
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "this media link has expired"}), 403
+    except jwt.PyJWTError:
+        return jsonify({"error": "invalid media link"}), 403
+    # A ticket for one file must not unlock another.
+    if payload.get("fid") != file_id:
+        return jsonify({"error": "invalid media link"}), 403
+    return None
+
+
 @media_bp.route("/api/media/<file_id>", methods=["GET"])
 def fetch_media(file_id: str):
     """Stream a stored file.
@@ -144,11 +233,23 @@ def fetch_media(file_id: str):
     ``<audio>`` tags that cannot carry an Authorization header, and the
     identifiers are unguessable random hex.
     """
+    rejection = _ticket_rejection(file_id)
+    if rejection is not None:
+        return rejection
+
     path = _resolve_stored_path(file_id)
     if path is None:
         return jsonify({"error": "file not found"}), 404
 
     content_type, _ = mimetypes.guess_type(path)
+    # mimetypes is seeded from the host OS, so a thin container can fail to
+    # recognise .mp4 and hand back octet-stream, which a <video> element
+    # refuses to play. The extension came from ALLOWED_TYPES on upload, so
+    # that table is the authoritative answer.
+    if content_type is None:
+        extension = os.path.splitext(path)[1].lower()
+        content_type = EXTENSION_TYPES.get(extension)
+
     response = send_file(
         path,
         mimetype=content_type or "application/octet-stream",
@@ -156,4 +257,6 @@ def fetch_media(file_id: str):
     )
     # Content is immutable once written, so it can be cached hard.
     response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    # Lets a player seek without refetching from byte zero.
+    response.headers["Accept-Ranges"] = "bytes"
     return response

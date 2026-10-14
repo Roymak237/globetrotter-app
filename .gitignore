@@ -38,3 +38,11 @@ _*.sh
 
 # Archived metadata from the short-lived split repos
 *.git.split-backup/
+
+# Runtime uploads: chat attachments, voice notes and avatars. These are user
+# content written by the running server, not source. A stray test run that
+# forgets to set DATA_DIR would otherwise offer them up for commit.
+backend/data/media/
+
+# Flutter error screenshots dropped by the tooling
+frontend/assets/errors/

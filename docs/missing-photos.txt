@@ -4,7 +4,6 @@ dest-yao-042	Le Premium	destinations/le-premium.jpg
 dest-yao-043	Jodi Bites	destinations/jodi-bites.jpg
 dest-yao-044	Le Baron	destinations/le-baron.jpg
 dest-yao-045	les merveilles de FOLOLO	destinations/les-merveilles-de-fololo.jpg
-dest-yao-046	Le Safoutier	destinations/le-safoutier.jpg
 dest-yao-047	FLORA RESTO	destinations/flora-resto.jpg
 dest-yao-048	O'GOOD FOOD	destinations/o-good-food.jpg
 dest-yao-049	Logiteckcybercafe	destinations/logiteckcybercafe.jpg

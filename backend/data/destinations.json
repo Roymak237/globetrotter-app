@@ -1,252 +1,5 @@
 [
   {
-    "id": "dest-yao-001",
-    "name": "Yaounde",
-    "region": "Centre",
-    "description": "Cameroon's capital city in the Centre Region.",
-    "tags": [
-      "city",
-      "culture",
-      "museum",
-      "shopping"
-    ],
-    "avg_cost_per_day": 25000,
-    "highlights": [
-      "Reunification Monument",
-      "National Museum",
-      "Mount Febe"
-    ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg",
-    "image_asset": "destinations/yaounde.jpg",
-    "image_attribution": "Emmanuel Taquet — Wikimedia Commons, CC BY-SA 3.0",
-    "address": "Yaounde, Centre, Cameroon",
-    "location_notes": "The pin sits on the centre of Yaounde's urban community. Use it to orient yourself, then open one of the individual listings below for a specific place to visit.",
-    "location_sources": [
-      "https://en.wikipedia.org/wiki/Yaound%C3%A9"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.868987,
-    "longitude": 11.521334,
-    "location_precision": "area",
-    "cost_notes": "Rough daily budget for one visitor covering local transport, meals and small entry fees. Not a surveyed figure.",
-    "cost_basis": "per_day"
-  },
-  {
-    "id": "dest-yao-002",
-    "name": "Reunification Monument",
-    "region": "Centre",
-    "description": "A monument in Yaounde commemorating the reunification of Cameroon.",
-    "tags": [
-      "history",
-      "culture",
-      "monument",
-      "landmark",
-      "tourist"
-    ],
-    "avg_cost_per_day": 0,
-    "highlights": [
-      "Reunification history"
-    ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Monument_Reunification_4.JPG/1280px-Monument_Reunification_4.JPG",
-    "image_asset": "destinations/reunification-monument.jpg",
-    "image_attribution": "Steve Mvondo — Wikimedia Commons, CC BY-SA 3.0",
-    "address": "Centre Administratif, Yaounde III, Centre, Cameroon",
-    "location_notes": "The monument stands in the Centre Administratif district, south-west of the city centre. It is an outdoor landmark, visible and photographable from the surrounding square.",
-    "location_sources": [
-      "https://en.wikipedia.org/wiki/Reunification_Monument"
-    ],
-    "additional_image_assets": [
-      "tourist/reunification monument.avif"
-    ],
-    "latitude": 3.85246,
-    "longitude": 11.51343,
-    "location_precision": "exact",
-    "cost_notes": "Free to view from the square. Any guided tour or interior access would be extra.",
-    "cost_basis": "free"
-  },
-  {
-    "id": "dest-yao-003",
-    "name": "National Museum",
-    "region": "Centre",
-    "description": "Housed in the former presidential palace, this museum showcases Cameroon's cultural heritage, traditional crafts, and historical artifacts.",
-    "tags": [
-      "museum",
-      "culture",
-      "history",
-      "art",
-      "tourist"
-    ],
-    "avg_cost_per_day": 2000,
-    "highlights": [
-      "Presidential palace history",
-      "Traditional masks",
-      "Artifacts collection"
-    ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg/1280px-Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg",
-    "image_asset": "destinations/national-museum.jpg",
-    "image_attribution": "Manuella sali — Wikimedia Commons, CC BY-SA 4.0",
-    "address": "Rue 3.038, Centre Administratif, Yaounde III, Cameroon",
-    "location_notes": "Housed in the former presidential palace on Rue 3.038 in the Centre Administratif district. The pin is on the building itself.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Mus%C3%A9e_national_du_Cameroun"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.860278,
-    "longitude": 11.515556,
-    "location_precision": "exact",
-    "cost_notes": "Typical museum admission for one adult. Check current prices before travelling.",
-    "cost_basis": "per_visit"
-  },
-  {
-    "id": "dest-yao-004",
-    "name": "Mount Febe",
-    "region": "Centre",
-    "description": "A hill near Yaounde, distinct from the Hotel Mont Febe and its swimming pool.",
-    "tags": [
-      "nature",
-      "mountain",
-      "leisure"
-    ],
-    "avg_cost_per_day": 0,
-    "highlights": [
-      "Yaounde hills"
-    ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg",
-    "image_asset": "destinations/mount-febe.jpg",
-    "image_attribution": "Emmanuel Taquet — Wikimedia Commons, CC BY-SA 3.0",
-    "address": "Mont Febe, north-west of Yaounde, Centre, Cameroon",
-    "location_notes": "The pin marks the summit of the hill, not a trailhead or car park. The hotel and its pool are separate listings further down the slope.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Mont_F%C3%A9b%C3%A9"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.913889,
-    "longitude": 11.488889,
-    "location_precision": "exact",
-    "cost_notes": "No charge for the hill itself. Budget for the taxi up and back.",
-    "cost_basis": "free"
-  },
-  {
-    "id": "dest-yao-005",
-    "name": "Biyeme Market",
-    "region": "Centre",
-    "description": "Market listing associated with the Biyem-Assi market name in Yaounde; the legacy name is retained.",
-    "tags": [
-      "market",
-      "shopping",
-      "food",
-      "culture",
-      "dining"
-    ],
-    "avg_cost_per_day": 0,
-    "highlights": [
-      "Biyem-Assi market"
-    ],
-    "image_url": "",
-    "image_asset": "dining/marche biyemassi.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Avenue de Mvolye, Biyem-Assi, Yaounde VI, Cameroon",
-    "location_notes": "The Grand Marche de Biyem-Assi, on Avenue de Mvolye in Yaounde VI. Busiest in the morning.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Biyem-Assi",
-      "https://www.openstreetmap.org/?mlat=3.842149&mlon=11.488817#map=17/3.842149/11.488817"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.842149,
-    "longitude": 11.488817,
-    "location_precision": "exact",
-    "cost_notes": "Free to enter. Bring cash for whatever you buy.",
-    "cost_basis": "free"
-  },
-  {
-    "id": "dest-yao-006",
-    "name": "Yaounde Grand Mosque",
-    "region": "Centre",
-    "description": "Legacy mosque listing whose exact mosque identity still needs confirmation.",
-    "tags": [
-      "culture",
-      "history",
-      "architecture",
-      "religion"
-    ],
-    "avg_cost_per_day": 0,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Yaounde Grand Mosque.webp",
-    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
-    "address": "Rue 2.375, Tsinga, Yaounde II, Cameroon",
-    "location_notes": "The Grande Mosquee on Rue 2.375 in the Tsinga quarter of Yaounde II. It is an active place of worship, so dress modestly and ask before entering or photographing.",
-    "location_sources": [
-      "https://www.openstreetmap.org/?mlat=3.887857&mlon=11.498443#map=17/3.887857/11.498443"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.887857,
-    "longitude": 11.498443,
-    "location_precision": "exact",
-    "cost_notes": "No admission charge.",
-    "cost_basis": "free"
-  },
-  {
-    "id": "dest-yao-007",
-    "name": "Mvog-Betsi Zoo",
-    "region": "Centre",
-    "description": "The Mvog-Betsi zoo-botanical park in Yaounde.",
-    "tags": [
-      "wildlife",
-      "family",
-      "zoo",
-      "nature",
-      "recreation"
-    ],
-    "avg_cost_per_day": 2000,
-    "highlights": [
-      "Zoo-botanical park"
-    ],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Mvog-Betsi_Zoo-Botanical_Park.jpg/1280px-Mvog-Betsi_Zoo-Botanical_Park.jpg",
-    "image_asset": "destinations/mvog-betsi-zoo.jpg",
-    "image_attribution": "Eleazar — Wikimedia Commons, CC BY-SA 3.0",
-    "address": "Mvog-Betsi, Yaounde VI, Centre, Cameroon",
-    "location_notes": "The zoo-botanical park in Mvog-Betsi, south-west of the centre. Allow a couple of hours.",
-    "location_sources": [
-      "https://en.wikipedia.org/wiki/Mvog-Betsi_Zoo"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.8649,
-    "longitude": 11.48751,
-    "location_precision": "exact",
-    "cost_notes": "Typical zoo admission for one adult. Confirm on arrival.",
-    "cost_basis": "per_visit"
-  },
-  {
-    "id": "dest-yao-008",
-    "name": "Bastos District",
-    "region": "Centre",
-    "description": "Bastos is a neighborhood of Yaounde, not a specific restaurant.",
-    "tags": [
-      "city",
-      "nightlife",
-      "food",
-      "shopping"
-    ],
-    "avg_cost_per_day": 0,
-    "highlights": [],
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bastos_under_the_moon.jpg/1280px-Bastos_under_the_moon.jpg",
-    "image_asset": "destinations/bastos-district.jpg",
-    "image_attribution": "Shaowu Fan — Wikimedia Commons, CC BY 3.0",
-    "address": "Bastos, Yaounde I, Centre, Cameroon",
-    "location_notes": "Bastos is a residential and diplomatic quarter north of the centre, known for restaurants and nightlife. The pin is the middle of the quarter, not any single venue.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Bastos",
-      "https://www.openstreetmap.org/?mlat=3.894018&mlon=11.510882#map=17/3.894018/11.510882"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.894018,
-    "longitude": 11.510882,
-    "location_precision": "area",
-    "cost_notes": "Free to walk around. Spending depends on where you stop.",
-    "cost_basis": "free"
-  },
-  {
     "id": "dest-cmr-001",
     "name": "Mount Cameroon",
     "region": "Southwest",
@@ -426,6 +179,607 @@
     "location_precision": "exact",
     "cost_notes": "Typical palace and museum admission for one adult.",
     "cost_basis": "per_visit"
+  },
+  {
+    "id": "dest-school-001",
+    "name": "African Institute of Management and Technology (AIMT)",
+    "region": "Littoral",
+    "description": "An educational institution whose official contact page lists a main campus in Douala.",
+    "tags": [
+      "education",
+      "school",
+      "institute"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/African Institute of Management and Technology (AIMT), Yaoundé.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Makepe Carrefour Koppa Cabana, opposite Direction Orange, Douala, Littoral, Cameroon",
+    "location_notes": "The official contact page gives a main campus at Makepe Carrefour Koppa Cabana in Douala, opposite Direction Orange. The pin is the centre of Makepe.",
+    "location_sources": [
+      "https://aimtinstitute.com/contact",
+      "https://www.openstreetmap.org/?mlat=4.063812&mlon=9.740959#map=17/4.063812/9.740959"
+    ],
+    "additional_image_assets": [],
+    "latitude": 4.063812,
+    "longitude": 9.740959,
+    "location_precision": "area",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-002",
+    "name": "Catholic University of Central Africa (UCAC)",
+    "region": "Centre",
+    "description": "The Catholic University of Central Africa, whose official contact address is in Nkolbisson, Yaounde.",
+    "tags": [
+      "education",
+      "school",
+      "university"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/Catholic University of Central Africa (UCAC), Yaoundé.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Rue 6.538, Nkolbisson, Yaounde VII, Cameroon (BP 11628)",
+    "location_notes": "The campus is on Rue 6.538 in Nkolbisson, Yaounde VII. Postal contact is BP 11628.",
+    "location_sources": [
+      "https://www.ucac-icy.net/",
+      "https://www.openstreetmap.org/?mlat=3.869594&mlon=11.446827#map=17/3.869594/11.446827"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.869594,
+    "longitude": 11.446827,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-003",
+    "name": "ESMATA",
+    "region": "Centre",
+    "description": "Ecole Superieure de Management et des Technologies Appliquees, an educational institution in Yaounde.",
+    "tags": [
+      "education",
+      "school",
+      "institute"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/ESMATA University.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Emana pont, Yaounde I, Centre, Cameroon",
+    "location_notes": "The official contact page gives Emana pont, Yaounde. The pin is the centre of Emana.",
+    "location_sources": [
+      "https://esmata.com/contact/",
+      "https://www.openstreetmap.org/?mlat=3.932829&mlon=11.52233#map=17/3.932829/11.52233"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.932829,
+    "longitude": 11.52233,
+    "location_precision": "area",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-004",
+    "name": "GBHS Etoug-Ebe",
+    "region": "Centre",
+    "description": "The bilingual secondary school associated with Etoug-Ebe in Yaounde.",
+    "tags": [
+      "education",
+      "school",
+      "secondary"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/GBHS ETOUG-EBE.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Rue 7.029, Etoug-Ebe, Yaounde VI, Cameroon",
+    "location_notes": "The bilingual secondary school on Rue 7.029, between Etoug-Ebe and Mvog-Betsi in Yaounde VI.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Etoug-Ebe",
+      "https://www.openstreetmap.org/?mlat=3.857117&mlon=11.483427#map=17/3.857117/11.483427"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.857117,
+    "longitude": 11.483427,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-005",
+    "name": "Global Higher Institute of Management (GHIM)",
+    "region": "Centre",
+    "description": "A higher education institute in Yaounde.",
+    "tags": [
+      "education",
+      "school",
+      "institute"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/Global Higher Institute of Management (GHIM), Yaoundé.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Yaounde, Centre, Cameroon (campus address unknown)",
+    "location_notes": "We could not confirm this institution's campus address, so there is no map pin yet.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "location_precision": "",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-006",
+    "name": "The ICT University",
+    "region": "Centre",
+    "description": "A university with a campus in Yaounde.",
+    "tags": [
+      "education",
+      "school",
+      "university"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/ICT-University.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Zoatupsi campus, Yaounde, Centre, Cameroon",
+    "location_notes": "The university refers to a Zoatupsi campus in Yaounde, but we have not been able to place it on the map yet.",
+    "location_sources": [
+      "https://ictuniversity.org/"
+    ],
+    "additional_image_assets": [],
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "location_precision": "",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-007",
+    "name": "IUSTY",
+    "region": "Centre",
+    "description": "An educational institution associated with Yaounde; the local filename identifies IUSTY.",
+    "tags": [
+      "education",
+      "school",
+      "institute"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/IUSTY University.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Rue 1.500, Yaounde, Centre, Cameroon",
+    "location_notes": "The Institut Universitaire des Sciences et Technologies de Yaounde, on Rue 1.500. The institution lists more than one campus, so confirm which one you need.",
+    "location_sources": [
+      "https://www.facebook.com/IUSTYofficiel/",
+      "https://www.openstreetmap.org/?mlat=3.886458&mlon=11.534189#map=17/3.886458/11.534189"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.886458,
+    "longitude": 11.534189,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-008",
+    "name": "Lycee de l'Observatoire (filename identification)",
+    "region": "Unverified",
+    "description": "A secondary school in Cameroon. We have not yet confirmed which town it is in.",
+    "tags": [
+      "education",
+      "school",
+      "secondary"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/Lycee de l'observatoire.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Cameroon (city and campus not yet confirmed)",
+    "location_notes": "We have not confirmed which school this is or which city it is in, so there is no map pin yet.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "location_precision": "",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-009",
+    "name": "Lycee de Nkolbisson",
+    "region": "Centre",
+    "description": "A secondary school listed among the institutions of Nkolbisson in Yaounde.",
+    "tags": [
+      "education",
+      "school",
+      "secondary"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/Lycee De Nkolbisson.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Rue 6.513, Nkolbisson, Yaounde VII, Cameroon",
+    "location_notes": "On Rue 6.513 in Nkolbisson, Yaounde VII. This is the lycee, not the separate Lycee Technique in the same quarter.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Nkolbisson",
+      "https://www.openstreetmap.org/?mlat=3.864356&mlon=11.456249#map=17/3.864356/11.456249"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.864356,
+    "longitude": 11.456249,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-010",
+    "name": "Lycee General-Leclerc, Yaounde",
+    "region": "Centre",
+    "description": "A secondary school in Ngoa Ekele, Yaounde III.",
+    "tags": [
+      "education",
+      "school",
+      "secondary"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/Lycee General-Leclerc.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Ngoa Ekele, Yaounde III, Centre, Cameroon",
+    "location_notes": "In Ngoa Ekele, Yaounde III. Not to be confused with the school of the same name in Saverne, France.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Lyc%C3%A9e_G%C3%A9n%C3%A9ral-Leclerc_(Yaound%C3%A9)"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.855833,
+    "longitude": 11.507222,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-011",
+    "name": "Lycee Technique de Foumban",
+    "region": "West",
+    "description": "A technical secondary school in Foumban, in the West region.",
+    "tags": [
+      "education",
+      "school",
+      "secondary"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/Lycee Technique De Foumban.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Foumban, Noun, West, Cameroon (campus street unknown)",
+    "location_notes": "In Foumban, in the Noun department of the West region. The pin is the centre of the town; we could not confirm the campus address.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Foumban",
+      "https://www.openstreetmap.org/?mlat=5.728226&mlon=10.89716#map=17/5.728226/10.89716"
+    ],
+    "additional_image_assets": [],
+    "latitude": 5.728226,
+    "longitude": 10.89716,
+    "location_precision": "area",
+    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-012",
+    "name": "University of Yaounde I - Faculty of Medicine and Biomedical Sciences",
+    "region": "Centre",
+    "description": "The Faculty of Medicine and Biomedical Sciences of the University of Yaounde I.",
+    "tags": [
+      "education",
+      "school",
+      "university",
+      "medicine"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/University of Yaoundé I (Faculty of Medicine and Biomedical Sciences).jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Rue Tsoungui Akoa, Ngoa Ekele, Yaounde III, Cameroon",
+    "location_notes": "The university is in Ngoa Ekele, off Rue Tsoungui Akoa. The pin is the main campus; the medical faculty is one building within it, so ask at the gate.",
+    "location_sources": [
+      "https://uy1.uninet.cm/faculte-de-medecine-et-des-sciences-biomedicales/",
+      "https://fr.wikipedia.org/wiki/Universit%C3%A9_de_Yaound%C3%A9_I",
+      "https://www.openstreetmap.org/?mlat=3.856624&mlon=11.499981#map=17/3.856624/11.499981"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.856624,
+    "longitude": 11.499981,
+    "location_precision": "exact",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the faculty about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-school-013",
+    "name": "University of Yaounde II",
+    "region": "Centre",
+    "description": "The University of Yaounde II, with its official contact in Soa.",
+    "tags": [
+      "education",
+      "school",
+      "university"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Schools/University of Yaoundé II.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Soa, Mefou-et-Afamba, Centre, Cameroon (BP 18 Soa)",
+    "location_notes": "The university is at Soa, north-east of Yaounde. The pin is the centre of Soa; postal contact is BP 18 Soa.",
+    "location_sources": [
+      "https://site.univ-yaounde2.org/",
+      "https://www.openstreetmap.org/?mlat=3.97818&mlon=11.593129#map=17/3.97818/11.593129"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.97818,
+    "longitude": 11.593129,
+    "location_precision": "area",
+    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-001",
+    "name": "Yaounde",
+    "region": "Centre",
+    "description": "Cameroon's capital city in the Centre Region.",
+    "tags": [
+      "city",
+      "culture",
+      "museum",
+      "shopping"
+    ],
+    "avg_cost_per_day": 25000,
+    "highlights": [
+      "Reunification Monument",
+      "National Museum",
+      "Mount Febe"
+    ],
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg",
+    "image_asset": "destinations/yaounde.jpg",
+    "image_attribution": "Emmanuel Taquet — Wikimedia Commons, CC BY-SA 3.0",
+    "address": "Yaounde, Centre, Cameroon",
+    "location_notes": "The pin sits on the centre of Yaounde's urban community. Use it to orient yourself, then open one of the individual listings below for a specific place to visit.",
+    "location_sources": [
+      "https://en.wikipedia.org/wiki/Yaound%C3%A9"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.868987,
+    "longitude": 11.521334,
+    "location_precision": "area",
+    "cost_notes": "Rough daily budget for one visitor covering local transport, meals and small entry fees. Not a surveyed figure.",
+    "cost_basis": "per_day"
+  },
+  {
+    "id": "dest-yao-002",
+    "name": "Reunification Monument",
+    "region": "Centre",
+    "description": "A monument in Yaounde commemorating the reunification of Cameroon.",
+    "tags": [
+      "history",
+      "culture",
+      "monument",
+      "landmark",
+      "tourist"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [
+      "Reunification history"
+    ],
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Monument_Reunification_4.JPG/1280px-Monument_Reunification_4.JPG",
+    "image_asset": "destinations/reunification-monument.jpg",
+    "image_attribution": "Steve Mvondo — Wikimedia Commons, CC BY-SA 3.0",
+    "address": "Centre Administratif, Yaounde III, Centre, Cameroon",
+    "location_notes": "The monument stands in the Centre Administratif district, south-west of the city centre. It is an outdoor landmark, visible and photographable from the surrounding square.",
+    "location_sources": [
+      "https://en.wikipedia.org/wiki/Reunification_Monument"
+    ],
+    "additional_image_assets": [
+      "tourist/reunification monument.avif"
+    ],
+    "latitude": 3.85246,
+    "longitude": 11.51343,
+    "location_precision": "exact",
+    "cost_notes": "Free to view from the square. Any guided tour or interior access would be extra.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-003",
+    "name": "National Museum",
+    "region": "Centre",
+    "description": "Housed in the former presidential palace, this museum showcases Cameroon's cultural heritage, traditional crafts, and historical artifacts.",
+    "tags": [
+      "museum",
+      "culture",
+      "history",
+      "art",
+      "tourist"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [
+      "Presidential palace history",
+      "Traditional masks",
+      "Artifacts collection"
+    ],
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg/1280px-Mus%C3%A9e_national_de_Yaound%C3%A9_Cameroun.jpg",
+    "image_asset": "destinations/national-museum.jpg",
+    "image_attribution": "Manuella sali — Wikimedia Commons, CC BY-SA 4.0",
+    "address": "Rue 3.038, Centre Administratif, Yaounde III, Cameroon",
+    "location_notes": "Housed in the former presidential palace on Rue 3.038 in the Centre Administratif district. The pin is on the building itself.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Mus%C3%A9e_national_du_Cameroun"
+    ],
+    "additional_image_assets": [
+      "National mesuem.jpg"
+    ],
+    "latitude": 3.860278,
+    "longitude": 11.515556,
+    "location_precision": "exact",
+    "cost_notes": "Typical museum admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
+  },
+  {
+    "id": "dest-yao-004",
+    "name": "Mount Febe",
+    "region": "Centre",
+    "description": "A hill near Yaounde, distinct from the Hotel Mont Febe and its swimming pool.",
+    "tags": [
+      "nature",
+      "mountain",
+      "leisure"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [
+      "Yaounde hills"
+    ],
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/75/Yaounde_from_Febe.jpg",
+    "image_asset": "destinations/mount-febe.jpg",
+    "image_attribution": "Emmanuel Taquet — Wikimedia Commons, CC BY-SA 3.0",
+    "address": "Mont Febe, north-west of Yaounde, Centre, Cameroon",
+    "location_notes": "The pin marks the summit of the hill, not a trailhead or car park. The hotel and its pool are separate listings further down the slope.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Mont_F%C3%A9b%C3%A9"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.913889,
+    "longitude": 11.488889,
+    "location_precision": "exact",
+    "cost_notes": "No charge for the hill itself. Budget for the taxi up and back.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-005",
+    "name": "Biyeme Market",
+    "region": "Centre",
+    "description": "Market listing associated with the Biyem-Assi market name in Yaounde; the legacy name is retained.",
+    "tags": [
+      "market",
+      "shopping",
+      "food",
+      "culture",
+      "dining"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [
+      "Biyem-Assi market"
+    ],
+    "image_url": "",
+    "image_asset": "dining/marche biyemassi.jpg",
+    "image_attribution": "Local asset: creator and license unverified.",
+    "address": "Avenue de Mvolye, Biyem-Assi, Yaounde VI, Cameroon",
+    "location_notes": "The Grand Marche de Biyem-Assi, on Avenue de Mvolye in Yaounde VI. Busiest in the morning.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Biyem-Assi",
+      "https://www.openstreetmap.org/?mlat=3.842149&mlon=11.488817#map=17/3.842149/11.488817"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.842149,
+    "longitude": 11.488817,
+    "location_precision": "exact",
+    "cost_notes": "Free to enter. Bring cash for whatever you buy.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-006",
+    "name": "Yaounde Grand Mosque",
+    "region": "Centre",
+    "description": "Legacy mosque listing whose exact mosque identity still needs confirmation.",
+    "tags": [
+      "culture",
+      "history",
+      "architecture",
+      "religion"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Yaounde Grand Mosque.webp",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Rue 2.375, Tsinga, Yaounde II, Cameroon",
+    "location_notes": "The Grande Mosquee on Rue 2.375 in the Tsinga quarter of Yaounde II. It is an active place of worship, so dress modestly and ask before entering or photographing.",
+    "location_sources": [
+      "https://www.openstreetmap.org/?mlat=3.887857&mlon=11.498443#map=17/3.887857/11.498443"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.887857,
+    "longitude": 11.498443,
+    "location_precision": "exact",
+    "cost_notes": "No admission charge.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-007",
+    "name": "Mvog-Betsi Zoo",
+    "region": "Centre",
+    "description": "The Mvog-Betsi zoo-botanical park in Yaounde.",
+    "tags": [
+      "wildlife",
+      "family",
+      "zoo",
+      "nature",
+      "recreation"
+    ],
+    "avg_cost_per_day": 2000,
+    "highlights": [
+      "Zoo-botanical park"
+    ],
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Mvog-Betsi_Zoo-Botanical_Park.jpg/1280px-Mvog-Betsi_Zoo-Botanical_Park.jpg",
+    "image_asset": "destinations/mvog-betsi-zoo.jpg",
+    "image_attribution": "Eleazar — Wikimedia Commons, CC BY-SA 3.0",
+    "address": "Mvog-Betsi, Yaounde VI, Centre, Cameroon",
+    "location_notes": "The zoo-botanical park in Mvog-Betsi, south-west of the centre. Allow a couple of hours.",
+    "location_sources": [
+      "https://en.wikipedia.org/wiki/Mvog-Betsi_Zoo"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8649,
+    "longitude": 11.48751,
+    "location_precision": "exact",
+    "cost_notes": "Typical zoo admission for one adult. Confirm on arrival.",
+    "cost_basis": "per_visit"
+  },
+  {
+    "id": "dest-yao-008",
+    "name": "Bastos District",
+    "region": "Centre",
+    "description": "Bastos is a neighborhood of Yaounde, not a specific restaurant.",
+    "tags": [
+      "city",
+      "nightlife",
+      "food",
+      "shopping"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bastos_under_the_moon.jpg/1280px-Bastos_under_the_moon.jpg",
+    "image_asset": "destinations/bastos-district.jpg",
+    "image_attribution": "Shaowu Fan — Wikimedia Commons, CC BY 3.0",
+    "address": "Bastos, Yaounde I, Centre, Cameroon",
+    "location_notes": "Bastos is a residential and diplomatic quarter north of the centre, known for restaurants and nightlife. The pin is the middle of the quarter, not any single venue.",
+    "location_sources": [
+      "https://fr.wikipedia.org/wiki/Bastos",
+      "https://www.openstreetmap.org/?mlat=3.894018&mlon=11.510882#map=17/3.894018/11.510882"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.894018,
+    "longitude": 11.510882,
+    "location_precision": "area",
+    "cost_notes": "Free to walk around. Spending depends on where you stop.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-011",
@@ -1155,358 +1509,6 @@
     "cost_basis": "free"
   },
   {
-    "id": "dest-school-001",
-    "name": "African Institute of Management and Technology (AIMT)",
-    "region": "Littoral",
-    "description": "An educational institution whose official contact page lists a main campus in Douala.",
-    "tags": [
-      "education",
-      "school",
-      "institute"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/African Institute of Management and Technology (AIMT), Yaoundé.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Makepe Carrefour Koppa Cabana, opposite Direction Orange, Douala, Littoral, Cameroon",
-    "location_notes": "The official contact page gives a main campus at Makepe Carrefour Koppa Cabana in Douala, opposite Direction Orange. The pin is the centre of Makepe.",
-    "location_sources": [
-      "https://aimtinstitute.com/contact",
-      "https://www.openstreetmap.org/?mlat=4.063812&mlon=9.740959#map=17/4.063812/9.740959"
-    ],
-    "additional_image_assets": [],
-    "latitude": 4.063812,
-    "longitude": 9.740959,
-    "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-002",
-    "name": "Catholic University of Central Africa (UCAC)",
-    "region": "Centre",
-    "description": "The Catholic University of Central Africa, whose official contact address is in Nkolbisson, Yaounde.",
-    "tags": [
-      "education",
-      "school",
-      "university"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/Catholic University of Central Africa (UCAC), Yaoundé.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Rue 6.538, Nkolbisson, Yaounde VII, Cameroon (BP 11628)",
-    "location_notes": "The campus is on Rue 6.538 in Nkolbisson, Yaounde VII. Postal contact is BP 11628.",
-    "location_sources": [
-      "https://www.ucac-icy.net/",
-      "https://www.openstreetmap.org/?mlat=3.869594&mlon=11.446827#map=17/3.869594/11.446827"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.869594,
-    "longitude": 11.446827,
-    "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-003",
-    "name": "ESMATA",
-    "region": "Centre",
-    "description": "Ecole Superieure de Management et des Technologies Appliquees, an educational institution in Yaounde.",
-    "tags": [
-      "education",
-      "school",
-      "institute"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/ESMATA University.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Emana pont, Yaounde I, Centre, Cameroon",
-    "location_notes": "The official contact page gives Emana pont, Yaounde. The pin is the centre of Emana.",
-    "location_sources": [
-      "https://esmata.com/contact/",
-      "https://www.openstreetmap.org/?mlat=3.932829&mlon=11.52233#map=17/3.932829/11.52233"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.932829,
-    "longitude": 11.52233,
-    "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-004",
-    "name": "GBHS Etoug-Ebe",
-    "region": "Centre",
-    "description": "The bilingual secondary school associated with Etoug-Ebe in Yaounde.",
-    "tags": [
-      "education",
-      "school",
-      "secondary"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/GBHS ETOUG-EBE.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Rue 7.029, Etoug-Ebe, Yaounde VI, Cameroon",
-    "location_notes": "The bilingual secondary school on Rue 7.029, between Etoug-Ebe and Mvog-Betsi in Yaounde VI.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Etoug-Ebe",
-      "https://www.openstreetmap.org/?mlat=3.857117&mlon=11.483427#map=17/3.857117/11.483427"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.857117,
-    "longitude": 11.483427,
-    "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-005",
-    "name": "Global Higher Institute of Management (GHIM)",
-    "region": "Centre",
-    "description": "A higher education institute in Yaounde.",
-    "tags": [
-      "education",
-      "school",
-      "institute"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/Global Higher Institute of Management (GHIM), Yaoundé.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Yaounde, Centre, Cameroon (campus address unknown)",
-    "location_notes": "We could not confirm this institution's campus address, so there is no map pin yet.",
-    "location_sources": [],
-    "additional_image_assets": [],
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "location_precision": "",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-006",
-    "name": "The ICT University",
-    "region": "Centre",
-    "description": "A university with a campus in Yaounde.",
-    "tags": [
-      "education",
-      "school",
-      "university"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/ICT-University.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Zoatupsi campus, Yaounde, Centre, Cameroon",
-    "location_notes": "The university refers to a Zoatupsi campus in Yaounde, but we have not been able to place it on the map yet.",
-    "location_sources": [
-      "https://ictuniversity.org/"
-    ],
-    "additional_image_assets": [],
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "location_precision": "",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-007",
-    "name": "IUSTY",
-    "region": "Centre",
-    "description": "An educational institution associated with Yaounde; the local filename identifies IUSTY.",
-    "tags": [
-      "education",
-      "school",
-      "institute"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/IUSTY University.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Rue 1.500, Yaounde, Centre, Cameroon",
-    "location_notes": "The Institut Universitaire des Sciences et Technologies de Yaounde, on Rue 1.500. The institution lists more than one campus, so confirm which one you need.",
-    "location_sources": [
-      "https://www.facebook.com/IUSTYofficiel/",
-      "https://www.openstreetmap.org/?mlat=3.886458&mlon=11.534189#map=17/3.886458/11.534189"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.886458,
-    "longitude": 11.534189,
-    "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-008",
-    "name": "Lycee de l'Observatoire (filename identification)",
-    "region": "Unverified",
-    "description": "A secondary school in Cameroon. We have not yet confirmed which town it is in.",
-    "tags": [
-      "education",
-      "school",
-      "secondary"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/Lycee de l'observatoire.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Cameroon (city and campus not yet confirmed)",
-    "location_notes": "We have not confirmed which school this is or which city it is in, so there is no map pin yet.",
-    "location_sources": [],
-    "additional_image_assets": [],
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
-    "location_precision": "",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-009",
-    "name": "Lycee de Nkolbisson",
-    "region": "Centre",
-    "description": "A secondary school listed among the institutions of Nkolbisson in Yaounde.",
-    "tags": [
-      "education",
-      "school",
-      "secondary"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/Lycee De Nkolbisson.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Rue 6.513, Nkolbisson, Yaounde VII, Cameroon",
-    "location_notes": "On Rue 6.513 in Nkolbisson, Yaounde VII. This is the lycee, not the separate Lycee Technique in the same quarter.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Nkolbisson",
-      "https://www.openstreetmap.org/?mlat=3.864356&mlon=11.456249#map=17/3.864356/11.456249"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.864356,
-    "longitude": 11.456249,
-    "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-010",
-    "name": "Lycee General-Leclerc, Yaounde",
-    "region": "Centre",
-    "description": "A secondary school in Ngoa Ekele, Yaounde III.",
-    "tags": [
-      "education",
-      "school",
-      "secondary"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/Lycee General-Leclerc.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Ngoa Ekele, Yaounde III, Centre, Cameroon",
-    "location_notes": "In Ngoa Ekele, Yaounde III. Not to be confused with the school of the same name in Saverne, France.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Lyc%C3%A9e_G%C3%A9n%C3%A9ral-Leclerc_(Yaound%C3%A9)"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.855833,
-    "longitude": 11.507222,
-    "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-011",
-    "name": "Lycee Technique de Foumban",
-    "region": "West",
-    "description": "A technical secondary school in Foumban, in the West region.",
-    "tags": [
-      "education",
-      "school",
-      "secondary"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/Lycee Technique De Foumban.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Foumban, Noun, West, Cameroon (campus street unknown)",
-    "location_notes": "In Foumban, in the Noun department of the West region. The pin is the centre of the town; we could not confirm the campus address.",
-    "location_sources": [
-      "https://fr.wikipedia.org/wiki/Foumban",
-      "https://www.openstreetmap.org/?mlat=5.728226&mlon=10.89716#map=17/5.728226/10.89716"
-    ],
-    "additional_image_assets": [],
-    "latitude": 5.728226,
-    "longitude": 10.89716,
-    "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a school. Contact the school about fees.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-012",
-    "name": "University of Yaounde I - Faculty of Medicine and Biomedical Sciences",
-    "region": "Centre",
-    "description": "The Faculty of Medicine and Biomedical Sciences of the University of Yaounde I.",
-    "tags": [
-      "education",
-      "school",
-      "university",
-      "medicine"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/University of Yaoundé I (Faculty of Medicine and Biomedical Sciences).jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Rue Tsoungui Akoa, Ngoa Ekele, Yaounde III, Cameroon",
-    "location_notes": "The university is in Ngoa Ekele, off Rue Tsoungui Akoa. The pin is the main campus; the medical faculty is one building within it, so ask at the gate.",
-    "location_sources": [
-      "https://uy1.uninet.cm/faculte-de-medecine-et-des-sciences-biomedicales/",
-      "https://fr.wikipedia.org/wiki/Universit%C3%A9_de_Yaound%C3%A9_I",
-      "https://www.openstreetmap.org/?mlat=3.856624&mlon=11.499981#map=17/3.856624/11.499981"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.856624,
-    "longitude": 11.499981,
-    "location_precision": "exact",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the faculty about tuition.",
-    "cost_basis": "none"
-  },
-  {
-    "id": "dest-school-013",
-    "name": "University of Yaounde II",
-    "region": "Centre",
-    "description": "The University of Yaounde II, with its official contact in Soa.",
-    "tags": [
-      "education",
-      "school",
-      "university"
-    ],
-    "avg_cost_per_day": null,
-    "highlights": [],
-    "image_url": "",
-    "image_asset": "Schools/University of Yaoundé II.jpg",
-    "image_attribution": "Local asset: creator and license unverified.",
-    "address": "Soa, Mefou-et-Afamba, Centre, Cameroon (BP 18 Soa)",
-    "location_notes": "The university is at Soa, north-east of Yaounde. The pin is the centre of Soa; postal contact is BP 18 Soa.",
-    "location_sources": [
-      "https://site.univ-yaounde2.org/",
-      "https://www.openstreetmap.org/?mlat=3.97818&mlon=11.593129#map=17/3.97818/11.593129"
-    ],
-    "additional_image_assets": [],
-    "latitude": 3.97818,
-    "longitude": 11.593129,
-    "location_precision": "area",
-    "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
-    "cost_basis": "none"
-  },
-  {
     "id": "dest-yao-039",
     "name": "Karoka BBQ service",
     "region": "Centre",
@@ -1529,6 +1531,33 @@
     "additional_image_assets": [],
     "latitude": 3.871073,
     "longitude": 11.533672,
+    "location_precision": "exact",
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
+  },
+  {
+    "id": "dest-yao-046",
+    "name": "Le Safoutier",
+    "region": "Centre",
+    "description": "A restaurant in the Mvogada area of Yaounde, as listed on OpenStreetMap. The same entry says it is operated by Hilton. Opening hours and prices were not checked for this listing, so confirm them locally before travelling.",
+    "tags": [
+      "dining",
+      "food",
+      "restaurant"
+    ],
+    "avg_cost_per_day": 6000,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Le Safoutier.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Boulevard du 20 Mai, Mvogada, Yaounde, Centre, Cameroon",
+    "location_notes": "The pin comes from this venue's OpenStreetMap entry, linked below, so it can be checked against the source.",
+    "location_sources": [
+      "https://www.openstreetmap.org/node/1116281761"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.864197,
+    "longitude": 11.516061,
     "location_precision": "exact",
     "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
     "cost_basis": "per_meal"
@@ -1557,6 +1586,752 @@
     "longitude": 11.496181,
     "location_precision": "exact",
     "cost_notes": "A daily visitor cost does not apply to a campus. Contact the institution about tuition.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-089",
+    "name": "Black & White Sports Bar",
+    "region": "Centre",
+    "description": "A sports bar in Yaounde.",
+    "tags": [
+      "nightlife",
+      "entertainment"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Black&White sportsbar.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No price recorded for this venue yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-090",
+    "name": "Le Bois d'Ebene",
+    "region": "Centre",
+    "description": "A restaurant on Avenue Monseigneur Vogt, in the Centre Commercial quarter.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Bois d'ebene.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Le Bois d'Ébène, Avenue Mgr. François Xavier Vogt, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/6310583396, matched on the query 'Bois d'Ebene Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.869655,
+    "longitude": 11.5237918,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-091",
+    "name": "Cathedrale Notre-Dame des Victoires",
+    "region": "Centre",
+    "description": "The Catholic cathedral on Avenue Monseigneur Vogt. It is an active place of worship, so dress modestly and ask before photographing inside.",
+    "tags": [
+      "religion",
+      "architecture",
+      "landmark"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "cathedrale-nd-des-victoires.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Cathédrale Notre-Dame des Victoires, Avenue Mgr. François Xavier Vogt, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/188702599, matched on the query 'Cathedrale Notre-Dame des Victoires Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.863116,
+    "longitude": 11.5209963,
+    "location_precision": "exact",
+    "cost_notes": "A place of worship. There is no admission charge.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-092",
+    "name": "Charles Atangana Memorial",
+    "region": "Centre",
+    "description": "A memorial to Charles Atangana, the Ewondo paramount chief, in the administrative quarter.",
+    "tags": [
+      "history",
+      "monument",
+      "landmark"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "charles-atangana.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Charles Atangana, Rue 3.085, Centre Administratif, Yaoundé III, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/220117510, matched on the query 'Monument Charles Atangana Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8588266,
+    "longitude": 11.5201856,
+    "location_precision": "exact",
+    "cost_notes": "A public monument. There is no admission charge.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-093",
+    "name": "Chez Kalli",
+    "region": "Centre",
+    "description": "A restaurant on Rue 1.905 in Bastos.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Chez kalli.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Chez Kalli, Rue 1.905, Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/192697083, matched on the query 'Chez Kalli Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8949411,
+    "longitude": 11.5082877,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-094",
+    "name": "Chez Wou",
+    "region": "Centre",
+    "description": "A restaurant on Rue Joseph Mballa Eloumdem in Bastos.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Chez wou.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Chez Wou, 908, Rue Joseph Mballa Eloumdem, Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/193961865, matched on the query 'Chez Wou Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8910666,
+    "longitude": 11.5142767,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-095",
+    "name": "Cosy Pool",
+    "region": "Centre",
+    "description": "A venue on Rue 1.866 in Bastos. OpenStreetMap lists it as a restaurant rather than a swimming pool, despite the name.",
+    "tags": [
+      "leisure",
+      "dining",
+      "relaxation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Cosy pool.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Cosy Pool, Rue 1.866, Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/193965320, matched on the query 'Cosy Pool Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.886677,
+    "longitude": 11.5117895,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-096",
+    "name": "Hilton Yaounde",
+    "region": "Centre",
+    "description": "A hotel on Boulevard du 20 Mai in the administrative quarter. The photograph shows the pool terrace.",
+    "tags": [
+      "hotel",
+      "accommodation",
+      "pool"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "hilton yaounde pool-exterior.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Hilton Yaoundé, Boulevard du 20 Mai 1972, Centre Administratif, Yaoundé III, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/6310721514, matched on the query 'Hilton Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8645784,
+    "longitude": 11.5156674,
+    "location_precision": "exact",
+    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-097",
+    "name": "Hotel Merina",
+    "region": "Centre",
+    "description": "A hotel on Rue Marie Gocker in the Centre Commercial quarter. The photograph shows the frontage.",
+    "tags": [
+      "hotel",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "hotel merina yaounde facade-de-l-hotel-a-la.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Hôtel Merina, Rue Marie Gocker, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/6308327459, matched on the query 'Hotel Merina Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8645784,
+    "longitude": 11.519098,
+    "location_precision": "exact",
+    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-098",
+    "name": "Hotel La Falaise",
+    "region": "Centre",
+    "description": "A hotel on Rue du Marechal Foch in the Centre Commercial quarter.",
+    "tags": [
+      "hotel",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "hotel-la-falaise.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "La Falaise, Rue du Maréchal Foch, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, 1430 Yaoundé, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/6308029352, matched on the query 'Hotel La Falaise Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8705916,
+    "longitude": 11.5154153,
+    "location_precision": "exact",
+    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-099",
+    "name": "Inside Salsa",
+    "region": "Centre",
+    "description": "A bar and dance venue in Yaounde.",
+    "tags": [
+      "nightlife",
+      "entertainment"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "inside-salsa.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No price recorded for this venue yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-100",
+    "name": "L'Orient Rouge",
+    "region": "Centre",
+    "description": "A restaurant on Rue 1.800 in Bastos.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "L'orient rouge.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "L'Orient Rouge, Rue 1.800, Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/192687206, matched on the query 'L'Orient Rouge Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8947377,
+    "longitude": 11.5072718,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-101",
+    "name": "Restaurant Le Bacchus",
+    "region": "Centre",
+    "description": "A restaurant on Rue 1.048 in Elig-Essono.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Le Bacchus plus.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Restaurant Le Bacchus, Rue 1.048, Élig-Éssono, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/6315935389, matched on the query 'Le Bacchus Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8775347,
+    "longitude": 11.5256694,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-102",
+    "name": "Le Bayama, Obala",
+    "region": "Centre",
+    "description": "A restaurant at Abokono in Obala, in the Lekie division north of Yaounde. This one is out of town.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Le Bayama Obala.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Bayama, Abokono, Obala, Lekié, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/5554472621, matched on the query 'Bayama Obala'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 4.1561789,
+    "longitude": 11.5313482,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-103",
+    "name": "Le Moulin de France",
+    "region": "Centre",
+    "description": "A bakery and restaurant on Boulevard du 20 Mai.",
+    "tags": [
+      "dining",
+      "restaurant",
+      "food"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Le Moulin de france.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Le Moulin de France, Boulevard du 20 Mai 1972, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/222103883, matched on the query 'Le Moulin de France Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8626868,
+    "longitude": 11.5195897,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-104",
+    "name": "Maison Blanche",
+    "region": "Centre",
+    "description": "A restaurant on Rue Rodolphe Abessolo in Mvog-Ada.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "maison blanche.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Maison Blanche, Rue Rodolphe Abessolo, Mvog-Ada, Yaoundé V, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/2368816743, matched on the query 'Maison Blanche Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8658761,
+    "longitude": 11.5273556,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-105",
+    "name": "Musee Ethnographique et d'Histoire des Peuples de la Foret",
+    "region": "Centre",
+    "description": "A museum of the peoples of the Central African forest.",
+    "tags": [
+      "museum",
+      "culture",
+      "history"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "musee-ethnographique.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Musée Ethnographique et d'Histoire des Peuples de la Forêt d'Afrique Centrale, Place Elig-Essono, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap node/4204481689, matched on the query 'Musee Ethnographique Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8712749,
+    "longitude": 11.5236132,
+    "location_precision": "exact",
+    "cost_notes": "No admission price recorded yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-106",
+    "name": "Mahima Supermarket, Essos",
+    "region": "Centre",
+    "description": "A supermarket on Rue Jean Abanda Bili in Essos.",
+    "tags": [
+      "shopping",
+      "supermarket",
+      "groceries"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "my-second-visit-to-mahima.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Mahima, Rue Jean Abanda Bili, Éssos, Yaoundé V, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/410311071, matched on the query 'Mahima Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8740015,
+    "longitude": 11.5410119,
+    "location_precision": "exact",
+    "cost_notes": "Spend depends entirely on what you buy.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-107",
+    "name": "O Paletuvier",
+    "region": "Centre",
+    "description": "A restaurant on Rue 1.115 in Elig-Essono.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "o-paletuvier.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "O Palétuvier, Rue 1.115, Élig-Éssono, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/192817321, matched on the query 'O Paletuvier Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8790916,
+    "longitude": 11.5225297,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-108",
+    "name": "Ole! Vins et Tapas",
+    "region": "Centre",
+    "description": "A wine and tapas bar in Yaounde.",
+    "tags": [
+      "dining",
+      "restaurant",
+      "nightlife"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Ole! Vins et Tapas.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-109",
+    "name": "Paroisse Saint-Esprit de Mvolye",
+    "region": "Centre",
+    "description": "A Catholic parish in the Mvolye quarter. It is an active place of worship, so dress modestly and ask before photographing inside.",
+    "tags": [
+      "religion",
+      "community"
+    ],
+    "avg_cost_per_day": 0,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "paroisse saint-esprit de Mvoyle-3.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Mvolye, Yaoundé III, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "OpenStreetMap does not hold this building, so the pin marks the surrounding quarter rather than the place itself. Expect to ask locally for the last few hundred metres.",
+    "location_sources": [
+      "OpenStreetMap relation/3092158, matched on the query 'Mvolye Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8439189,
+    "longitude": 11.5044139,
+    "location_precision": "area",
+    "cost_notes": "A place of worship. There is no admission charge.",
+    "cost_basis": "free"
+  },
+  {
+    "id": "dest-yao-110",
+    "name": "Prodiges Hotel",
+    "region": "Centre",
+    "description": "A hotel in Yaounde.",
+    "tags": [
+      "hotel",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "prodiges-hotel.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-111",
+    "name": "Residence La Paix",
+    "region": "Centre",
+    "description": "Guest accommodation in Yaounde.",
+    "tags": [
+      "lodging",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Residence la paix.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No room rate recorded. Contact the property for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-112",
+    "name": "Residence Massou",
+    "region": "Centre",
+    "description": "Guest accommodation in Yaounde.",
+    "tags": [
+      "lodging",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Residence Massou.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No room rate recorded. Contact the property for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-113",
+    "name": "Le Colisee",
+    "region": "Centre",
+    "description": "A restaurant on Boulevard de l'U.R.S.S. in Bastos.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "Restaurant le colisse.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Le colisée, Boulevard de l'U.R.S.S., Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/192686834, matched on the query 'Le Colisee Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8940043,
+    "longitude": 11.5149342,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-114",
+    "name": "Safyad Hotel",
+    "region": "Centre",
+    "description": "A hotel in Yaounde.",
+    "tags": [
+      "hotel",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "safyad-hotel.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-115",
+    "name": "Seven Hills",
+    "region": "Centre",
+    "description": "A restaurant on Avenue Mvog-Fouda Ada in the Centre Commercial quarter.",
+    "tags": [
+      "dining",
+      "restaurant"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "seven hills yaounde.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Seven Hills, Avenue Mvog-Fouda Ada, Centre Commercial, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/192826288, matched on the query 'Seven Hills Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.8709816,
+    "longitude": 11.5235992,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this kitchen yet.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-116",
+    "name": "Starland Hotel, Bastos",
+    "region": "Centre",
+    "description": "A hotel in the Bastos quarter.",
+    "tags": [
+      "hotel",
+      "accommodation"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "starland hotel bastos.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "Yaounde, Centre, Cameroon (exact street unknown)",
+    "location_notes": "We have a photograph of this place but have not been able to confirm its address, so there is no map pin yet. Ask locally for directions.",
+    "location_sources": [],
+    "additional_image_assets": [],
+    "latitude": null,
+    "longitude": null,
+    "location_precision": "",
+    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
+    "cost_basis": "none"
+  },
+  {
+    "id": "dest-yao-117",
+    "name": "The Famous",
+    "region": "Centre",
+    "description": "A bar on Boulevard de l'U.R.S.S. in Bastos.",
+    "tags": [
+      "nightlife",
+      "entertainment"
+    ],
+    "avg_cost_per_day": null,
+    "highlights": [],
+    "image_url": "",
+    "image_asset": "The Famous.jpg",
+    "image_attribution": "Supplied by the project maintainer. Source and licence not yet recorded.",
+    "address": "The famous, Boulevard de l'U.R.S.S., Bastos, Yaoundé I, Communauté urbaine de Yaoundé, Mfoundi, Centre, Cameroun",
+    "location_notes": "The pin comes from the OpenStreetMap entry named in the sources below, so it can be checked against that record.",
+    "location_sources": [
+      "OpenStreetMap way/729246320, matched on the query 'The Famous Yaounde'"
+    ],
+    "additional_image_assets": [],
+    "latitude": 3.892699,
+    "longitude": 11.5181771,
+    "location_precision": "exact",
+    "cost_notes": "No price recorded for this venue yet.",
     "cost_basis": "none"
   }
 ]
