@@ -147,7 +147,7 @@ class _SuggestPlaceScreenState extends State<SuggestPlaceScreen> {
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.white,
+                        color: AppTheme.onPrimary,
                       ),
                     )
                   : Text(localizations.suggestPlaceSubmit),

@@ -170,37 +170,42 @@ class DestinationImage extends StatelessWidget {
   /// a stock interior there would be a claim about a place we have never
   /// seen.
   List<Color> get _placeholderTones {
+    // Each pair keeps its category's hue and drops it into the dark half of
+    // the ramp. The hue is the information — it is what stops fifty missing
+    // photographs reading as one repeated failure — but a pastel tile in a
+    // page this dark would be the brightest thing on screen and would read as
+    // the photograph rather than as its absence.
     const byTag = <String, List<Color>>{
-      "dining": [Color(0xFFE8B4A0), Color(0xFFC9703A)],
-      "food": [Color(0xFFE8B4A0), Color(0xFFC9703A)],
-      "restaurant": [Color(0xFFE8B4A0), Color(0xFFC9703A)],
-      "market": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
-      "shopping": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
-      "supermarket": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
-      "retail": [Color(0xFFF0C98A), Color(0xFFD98E2B)],
-      "gaming": [Color(0xFFB8C6DE), Color(0xFF1F3A63)],
-      "entertainment": [Color(0xFFB8C6DE), Color(0xFF1F3A63)],
-      "education": [Color(0xFFA9C4D9), Color(0xFF2F5A7A)],
-      "school": [Color(0xFFA9C4D9), Color(0xFF2F5A7A)],
-      "university": [Color(0xFFA9C4D9), Color(0xFF2F5A7A)],
-      "religion": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
-      "landmark": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
-      "monument": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
-      "history": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
-      "museum": [Color(0xFFD9C9E2), Color(0xFF6B4A7A)],
-      "recreation": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
-      "sport": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
-      "leisure": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
-      "park": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
-      "nature": [Color(0xFFAFCFA8), Color(0xFF4F7A3F)],
-      "tourist": [Color(0xFFF2D9A8), Color(0xFFB4462A)],
-      "culture": [Color(0xFFF2D9A8), Color(0xFFB4462A)],
+      "dining": [Color(0xFF3B241E), Color(0xFF1A100D)],
+      "food": [Color(0xFF3B241E), Color(0xFF1A100D)],
+      "restaurant": [Color(0xFF3B241E), Color(0xFF1A100D)],
+      "market": [Color(0xFF3C2E18), Color(0xFF1B150C)],
+      "shopping": [Color(0xFF3C2E18), Color(0xFF1B150C)],
+      "supermarket": [Color(0xFF3C2E18), Color(0xFF1B150C)],
+      "retail": [Color(0xFF3C2E18), Color(0xFF1B150C)],
+      "gaming": [Color(0xFF1E2A3E), Color(0xFF0E141D)],
+      "entertainment": [Color(0xFF1E2A3E), Color(0xFF0E141D)],
+      "education": [Color(0xFF1B2E38), Color(0xFF0D171C)],
+      "school": [Color(0xFF1B2E38), Color(0xFF0D171C)],
+      "university": [Color(0xFF1B2E38), Color(0xFF0D171C)],
+      "religion": [Color(0xFF2D2239), Color(0xFF15111B)],
+      "landmark": [Color(0xFF2D2239), Color(0xFF15111B)],
+      "monument": [Color(0xFF2D2239), Color(0xFF15111B)],
+      "history": [Color(0xFF2D2239), Color(0xFF15111B)],
+      "museum": [Color(0xFF2D2239), Color(0xFF15111B)],
+      "recreation": [Color(0xFF1F3324), Color(0xFF0F1A12)],
+      "sport": [Color(0xFF1F3324), Color(0xFF0F1A12)],
+      "leisure": [Color(0xFF1F3324), Color(0xFF0F1A12)],
+      "park": [Color(0xFF1F3324), Color(0xFF0F1A12)],
+      "nature": [Color(0xFF1F3324), Color(0xFF0F1A12)],
+      "tourist": [Color(0xFF3B2E1C), Color(0xFF1B1610)],
+      "culture": [Color(0xFF3B2E1C), Color(0xFF1B1610)],
     };
     for (final tag in destination.tags) {
       final tones = byTag[tag.toLowerCase()];
       if (tones != null) return tones;
     }
-    return const [AppTheme.primarySoft, AppTheme.clay];
+    return const [AppTheme.primarySoft, AppTheme.background];
   }
 
   Widget get _placeholder {

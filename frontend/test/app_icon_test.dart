@@ -94,18 +94,19 @@ void main() {
       // around the app before any Dart runs, so a mismatch here is the first
       // thing a user sees.
       final manifest = File("web/manifest.json").readAsStringSync();
-      expect(manifest, contains("#B4462A"));
-      expect(manifest, contains("#FAF5EE"));
+      expect(manifest, contains("#89AACC"));
+      expect(manifest, contains("#0A0A0A"));
     });
 
     test("the Android adaptive icon sits on the brand background", () {
-      // This colour fills the launcher mask around the artwork. It was
-      // #000000, which put a black frame round a warm-sand icon on every
-      // Android home screen.
+      // This colour fills the launcher mask around the artwork. It has to
+      // match the disc the icon is drawn on, or the mask leaves a ring of a
+      // colour the product uses nowhere.
       final colours =
           File("android/app/src/main/res/values/colors.xml").readAsStringSync();
-      expect(colours, contains("#FAF5EE"),
-          reason: "the adaptive icon background should be the brand sand");
+      expect(colours, contains("#101820"),
+          reason: "the adaptive icon background should be the icon's own "
+              "slate disc");
       expect(colours, isNot(contains("#000000")));
     });
   });

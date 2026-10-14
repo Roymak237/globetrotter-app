@@ -143,7 +143,7 @@ class _DeveloperHero extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryDark.withValues(alpha: 0.28),
+            color: AppTheme.shadow.withValues(alpha: 0.5),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),

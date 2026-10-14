@@ -192,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: AppTheme.onPrimary,
                               ),
                             )
                           : const Icon(Icons.auto_awesome_rounded, size: 20),

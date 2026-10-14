@@ -71,6 +71,11 @@ class TravelPreferenceSelector extends StatelessWidget {
                 avatar: Icon(
                   isSelected ? Icons.check_rounded : option.icon,
                   size: 16,
+                  // The chip theme carries one icon colour and this glyph
+                  // needs two: the pill is a pale fill when selected and the
+                  // dark surface when not.
+                  color:
+                      isSelected ? AppTheme.onPrimary : AppTheme.textSecondary,
                 ),
                 onSelected: enabled ? (_) => onToggle(option.id) : null,
               ),

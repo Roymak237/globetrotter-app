@@ -29,7 +29,7 @@ class FavoriteButton extends StatelessWidget {
           : "Save ${destination.name} to favorites",
       child: Material(
         color: filledBackground
-            ? Colors.white.withValues(alpha: 0.92)
+            ? AppTheme.surface.withValues(alpha: 0.92)
             : Colors.transparent,
         shape: const CircleBorder(),
         child: IconButton(

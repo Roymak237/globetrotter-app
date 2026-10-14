@@ -96,7 +96,7 @@ Future<bool> showPreferenceEditor(
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: AppTheme.onPrimary,
                         ),
                       )
                     : const Icon(Icons.check_rounded, size: 18),

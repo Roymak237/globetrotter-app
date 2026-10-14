@@ -86,7 +86,7 @@ class _NotificationBellState extends State<NotificationBell> {
                 _unread > 9 ? "9+" : "$_unread",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppTheme.onPrimary,
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
                   height: 1.2,

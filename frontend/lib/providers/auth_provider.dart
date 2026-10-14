@@ -8,8 +8,7 @@ import "../services/auth_service.dart";
 class AuthProvider extends ChangeNotifier {
   final AuthService _service;
 
-  AuthProvider({http.Client? client})
-      : _service = AuthService(client: client) {
+  AuthProvider({http.Client? client}) : _service = AuthService(client: client) {
     _service.addListener(notifyListeners);
   }
 

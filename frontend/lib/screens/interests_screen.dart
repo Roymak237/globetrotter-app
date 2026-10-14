@@ -169,7 +169,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: AppTheme.onPrimary,
                               ),
                             )
                           : Text(localizations.interestsSave),

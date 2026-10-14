@@ -198,7 +198,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       width: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2.2,
-                        color: Colors.white,
+                        color: AppTheme.onPrimary,
                       ),
                     )
                   : Text(_codeIssued ? "Set new password" : "Send reset code"),

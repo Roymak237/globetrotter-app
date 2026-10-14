@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: AppTheme.onPrimary,
                               ),
                             )
                           : const Icon(Icons.arrow_forward_rounded, size: 20),

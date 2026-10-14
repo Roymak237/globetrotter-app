@@ -36,7 +36,7 @@ class MapActionButton extends StatelessWidget {
         color: active ? AppTheme.primary : AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
         elevation: 4,
-        shadowColor: AppTheme.primaryDark.withValues(alpha: 0.2),
+        shadowColor: AppTheme.shadow.withValues(alpha: 0.5),
         child: InkWell(
           onTap: locating ? null : onPressed,
           borderRadius: BorderRadius.circular(16),
@@ -53,7 +53,7 @@ class MapActionButton extends StatelessWidget {
                         ? Icons.navigation_rounded
                         : Icons.my_location_rounded,
                     color: active
-                        ? Colors.white
+                        ? AppTheme.onPrimary
                         : hasCurrentLocation
                             ? AppTheme.primary
                             : AppTheme.textSecondary,

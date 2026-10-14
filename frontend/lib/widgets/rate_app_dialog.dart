@@ -170,7 +170,7 @@ class _RateAppDialogState extends State<RateAppDialog> {
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white,
+                    color: AppTheme.onPrimary,
                   ),
                 )
               : Text(localizations.rateAppSubmit),

@@ -61,7 +61,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   /// Members of this room holding an open call socket right now.
   Set<String> _online = const {};
 
-  ChatWallpaper _wallpaper = ChatWallpaper.sand;
+  ChatWallpaper _wallpaper = ChatWallpaper.charcoal;
 
   @override
   void initState() {
@@ -739,11 +739,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: Colors.white,
+                                color: AppTheme.onPrimary,
                               ),
                             )
                           : const Icon(Icons.send_rounded,
-                              color: Colors.white, size: 20),
+                              color: AppTheme.onPrimary, size: 20),
                     ),
                   ),
                 ),
@@ -813,15 +813,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
 /// A call button that carries its own dark backing.
 ///
-/// The app bar gradient runs `primaryDark → primary → clay → secondary` from
-/// left to right, and `AppBar.actions` render at the right-hand end. White
-/// icons on that amber `secondary` measure roughly 2.67:1, under the 3:1 that
-/// WCAG asks for on interface icons. That is why these two buttons were
-/// reported as hard to make out while the title, sitting over the dark left
-/// end at about 9:1, read perfectly well. Painting a solid `primaryDark` disc
-/// behind each icon pins the contrast near 9.4:1 wherever the gradient
-/// happens to fall, and reads as a deliberate action chip rather than an
-/// accident of the background.
+/// `AppBar.actions` render at the right-hand end of the bar, which is where
+/// the gradient is lightest. These two buttons were once drawn straight onto
+/// it and were reported as hard to make out, while the title — sitting over
+/// the dark left end — read perfectly well. Painting a solid [AppTheme.callDisc]
+/// behind each icon pins the contrast near 17:1 wherever the gradient happens
+/// to fall, and reads as a deliberate action chip rather than an accident of
+/// the background.
 class _CallAction extends StatelessWidget {
   final String tooltip;
   final IconData icon;
@@ -838,7 +836,7 @@ class _CallAction extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
       child: Material(
-        color: AppTheme.primaryDark,
+        color: AppTheme.callDisc,
         shape: const CircleBorder(),
         clipBehavior: Clip.antiAlias,
         child: IconButton(
@@ -921,8 +919,10 @@ class _MessageBubble extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                   decoration: BoxDecoration(
-                    // Outgoing borrows the brand terracotta; incoming uses the
-                    // cool indigo tint so the two never read as the same voice.
+                    // Outgoing borrows the pale brand steel; incoming uses the
+                    // deep indigo tint so the two never read as the same
+                    // voice. The two fills sit at opposite ends of the ramp,
+                    // so each takes the opposite ink.
                     color: mine ? AppTheme.primary : AppTheme.indigoSoft,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
@@ -955,7 +955,9 @@ class _MessageBubble extends StatelessWidget {
                               ? localizations.chatDeleted
                               : message.text,
                           style: TextStyle(
-                            color: mine ? Colors.white : AppTheme.textPrimary,
+                            color: mine
+                                ? AppTheme.onPrimary
+                                : AppTheme.textPrimary,
                             fontStyle: message.deleted
                                 ? FontStyle.italic
                                 : FontStyle.normal,
@@ -1013,13 +1015,16 @@ class _MessageBubble extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
         // Incoming bubbles are `indigoSoft`, so the quote needs its own
-        // surface to read as inset. It used pure white, which separated only
-        // by being colder than everything around it.
-        color: mine ? Colors.white24 : AppTheme.surfaceSunken,
+        // surface to read as inset. Outgoing bubbles are a pale fill, so the
+        // inset there has to go the other way — a wash of the dark ink rather
+        // than of white.
+        color: mine
+            ? AppTheme.onPrimary.withValues(alpha: 0.12)
+            : AppTheme.surfaceSunken,
         borderRadius: BorderRadius.circular(8),
         border: Border(
           left: BorderSide(
-            color: mine ? Colors.white : AppTheme.primary,
+            color: mine ? AppTheme.onPrimary : AppTheme.primary,
             width: 3,
           ),
         ),
@@ -1032,7 +1037,7 @@ class _MessageBubble extends StatelessWidget {
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: mine ? Colors.white : AppTheme.primary,
+              color: mine ? AppTheme.onPrimary : AppTheme.primary,
             ),
           ),
           Text(
@@ -1041,7 +1046,9 @@ class _MessageBubble extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 11,
-              color: mine ? Colors.white70 : AppTheme.textSecondary,
+              color: mine
+                  ? AppTheme.onPrimary.withValues(alpha: 0.75)
+                  : AppTheme.textSecondary,
             ),
           ),
         ],

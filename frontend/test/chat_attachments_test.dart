@@ -164,21 +164,24 @@ void main() {
     });
   });
 
-  group("Surfaces are warm, not clinical", () {
-    test("the shared surface colour is not pure white", () {
-      // The complaint was that the app read as "too white". Every card, tile,
-      // input and chip takes its background from here, so a regression to
-      // Colors.white would undo the fix everywhere at once.
+  group("Surfaces sit on the page, not above it", () {
+    test("the shared surface colour is neither pure black nor pure white", () {
+      // The app follows the marketing site's forced-dark palette. Every card,
+      // tile, input and chip takes its background from here, so a regression
+      // to either extreme would undo the fix everywhere at once.
       expect(AppTheme.surface, isNot(Colors.white));
+      expect(AppTheme.surface, isNot(Colors.black));
 
-      // Still lighter than the page, or cards would dissolve into it.
+      // Still lifted off the page, or cards would dissolve into it. The site
+      // holds the same four-step gap between --bg and --surface.
       int luminance(Color c) => ((c.r + c.g + c.b) * 255 / 3).round();
       expect(luminance(AppTheme.surface),
           greaterThan(luminance(AppTheme.background)));
 
-      // And still warm: the ochre end must outweigh the blue end, which is
-      // exactly what pure white fails to do.
-      expect(AppTheme.surface.r, greaterThan(AppTheme.surface.b));
+      // And still neutral: the site's surface is a pure grey, so no channel
+      // may pull ahead and tint every card in the app.
+      expect(AppTheme.surface.r, AppTheme.surface.b);
+      expect(AppTheme.surface.g, AppTheme.surface.b);
     });
   });
 }

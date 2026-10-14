@@ -33,7 +33,7 @@ class DestinationCard extends StatelessWidget {
           border: Border.all(color: AppTheme.border),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primaryDark.withValues(alpha: 0.06),
+              color: AppTheme.shadow.withValues(alpha: 0.4),
               blurRadius: 18,
               offset: const Offset(0, 8),
             ),

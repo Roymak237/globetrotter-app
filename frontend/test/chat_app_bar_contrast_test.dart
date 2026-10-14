@@ -139,9 +139,9 @@ void main() {
           (left.g - right.g).abs() +
           (left.b - right.b).abs();
 
-      // brandGradientHorizontal runs primaryDark -> secondary, so the ends
-      // must differ. Equal ends means flexibleSpace painted nothing and we
-      // read the same fallback colour twice.
+      // brandGradientHorizontal runs the page colour through to brandDeep, so
+      // the ends must differ. Equal ends means flexibleSpace painted nothing
+      // and we read the same fallback colour twice.
       expect(
         delta,
         greaterThan(0.08),

@@ -88,7 +88,9 @@ class LanguageSwitcher extends StatelessWidget {
                     child: Text(
                       _code(locale),
                       style: TextStyle(
-                        color: selected ? Colors.white : AppTheme.textSecondary,
+                        color: selected
+                            ? AppTheme.onPrimary
+                            : AppTheme.textSecondary,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
                       ),

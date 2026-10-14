@@ -322,7 +322,7 @@ class _RoomTile extends StatelessWidget {
                   child: Text(
                     room.unread > 99 ? "99+" : "${room.unread}",
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppTheme.onPrimary,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                     ),

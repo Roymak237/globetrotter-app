@@ -635,7 +635,7 @@ class _SelectedDestinationCard extends StatelessWidget {
       color: AppTheme.surface,
       borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       elevation: 5,
-      shadowColor: AppTheme.primaryDark.withValues(alpha: 0.18),
+      shadowColor: AppTheme.shadow.withValues(alpha: 0.5),
       child: InkWell(
         onTap: onOpen,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -713,10 +713,13 @@ class _TrackerButton extends StatelessWidget {
       button: true,
       label: semanticLabel,
       child: Material(
-        color: sharing ? AppTheme.indigo : AppTheme.surface,
+        // `indigo` is a foreground tone on this palette, so it cannot be a
+        // fill under a white glyph; the brand colour is the fill that carries
+        // one, and it carries `onPrimary` rather than white.
+        color: sharing ? AppTheme.primary : AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
         elevation: 4,
-        shadowColor: AppTheme.primaryDark.withValues(alpha: 0.2),
+        shadowColor: AppTheme.shadow.withValues(alpha: 0.5),
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(16),
@@ -730,7 +733,7 @@ class _TrackerButton extends StatelessWidget {
                   sharing
                       ? Icons.share_location_rounded
                       : Icons.location_off_rounded,
-                  color: sharing ? Colors.white : AppTheme.textSecondary,
+                  color: sharing ? AppTheme.onPrimary : AppTheme.textSecondary,
                   size: 22,
                 ),
                 if (companionCount > 0)
@@ -749,7 +752,7 @@ class _TrackerButton extends StatelessWidget {
                       child: Text(
                         "$companionCount",
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppTheme.onPrimary,
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                         ),

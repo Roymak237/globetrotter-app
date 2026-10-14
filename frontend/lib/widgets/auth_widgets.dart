@@ -89,12 +89,15 @@ class AuthFormCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 26, 24, 22),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.82),
+            // A frosted panel, not a white one. The card floats over a
+            // photograph and holds body copy in `textPrimary`, which is now a
+            // near-white; a pale pane under it would leave the form invisible.
+            color: AppTheme.surface.withValues(alpha: 0.72),
             borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: AppTheme.shadow.withValues(alpha: 0.45),
                 blurRadius: 30,
                 offset: const Offset(0, 15),
               ),
@@ -193,21 +196,24 @@ class AuthErrorBanner extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(13),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF0F0),
+          // A dark wash of the error tone rather than a pale pink slab. The
+          // banner sits inside a frosted dark card, where a near-white block
+          // would be the brightest thing on the screen.
+          color: const Color(0xFF2A1316),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.secondary.withValues(alpha: 0.22)),
+          border: Border.all(color: AppTheme.error.withValues(alpha: 0.35)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(Icons.info_outline_rounded,
-                color: AppTheme.secondary, size: 20),
+                color: AppTheme.error, size: 20),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 message,
                 style: const TextStyle(
-                  color: Color(0xFF8A1721),
+                  color: Color(0xFFFFC9CB),
                   height: 1.35,
                   fontWeight: FontWeight.w600,
                 ),

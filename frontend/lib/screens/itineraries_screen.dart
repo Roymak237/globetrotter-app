@@ -90,7 +90,7 @@ class _ItinerariesScreenState extends State<ItinerariesScreen> {
                 },
                 style: IconButton.styleFrom(
                   backgroundColor: AppTheme.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppTheme.onPrimary,
                 ),
                 icon: const Icon(Icons.add_rounded),
               ),

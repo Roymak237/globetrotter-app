@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- The sand behind the compass, matching AppTheme.background. This was
-         pure black, which framed the icon in a colour the app never uses. -->
-    <color name="ic_launcher_background">#FAF5EE</color>
+    <!-- The slate disc behind the compass, matching the icon artwork. This
+         was pure black, and then the old warm sand; both framed the icon in a
+         colour the app no longer uses. -->
+    <color name="ic_launcher_background">#101820</color>
 </resources>

@@ -14,10 +14,10 @@ void main() {
 
       for (final wallpaper in ChatWallpaper.presets) {
         for (final color in ChatWallpaper.authorColors) {
-          // The darkest stop is the worst case for dark text, so that is what
-          // gets measured rather than the flattering end of the gradient.
+          // The lightest stop is the worst case for light text, so that is
+          // what gets measured rather than the flattering end of the gradient.
           final ratio =
-              ChatWallpaper.contrastRatio(color, wallpaper.darkestStop);
+              ChatWallpaper.contrastRatio(color, wallpaper.lightestStop);
           if (ratio < aa) {
             failures.add(
               "${wallpaper.id} vs "
@@ -35,17 +35,17 @@ void main() {
 
     test("the old muted grey would not have passed on every wallpaper", () {
       // Documents what was replaced. The author name used AppTheme's muted
-      // secondary brown; this records how much less contrast that carried
-      // than the colours now used, so the change is measurable rather than
-      // a matter of opinion.
+      // secondary tone; this records how much less contrast that carried than
+      // the colours now used, so the change is measurable rather than a
+      // matter of opinion.
       const oldColor = Color(0xFF7B6553);
 
       final oldWorst = ChatWallpaper.presets
-          .map((w) => ChatWallpaper.contrastRatio(oldColor, w.darkestStop))
+          .map((w) => ChatWallpaper.contrastRatio(oldColor, w.lightestStop))
           .reduce((a, b) => a < b ? a : b);
       final newWorst = ChatWallpaper.presets
           .expand((w) => ChatWallpaper.authorColors
-              .map((c) => ChatWallpaper.contrastRatio(c, w.darkestStop)))
+              .map((c) => ChatWallpaper.contrastRatio(c, w.lightestStop)))
           .reduce((a, b) => a < b ? a : b);
 
       expect(newWorst, greaterThan(oldWorst),
@@ -56,13 +56,16 @@ void main() {
               "changing it was wrong");
     });
 
-    test("every preset is light enough for dark text", () {
+    test("every preset is dark enough for light text", () {
+      // The wallpapers carry the same near-black the rest of the app sits on.
+      // A preset that drifted light would swallow the light bubble text, which
+      // no per-colour check would catch.
       for (final wallpaper in ChatWallpaper.presets) {
         expect(
-          wallpaper.darkestStop.computeLuminance(),
-          greaterThan(0.5),
-          reason: "${wallpaper.id} is dark enough to swallow the dark bubble "
-              "text, which no per-colour check would catch",
+          wallpaper.lightestStop.computeLuminance(),
+          lessThan(0.25),
+          reason: "${wallpaper.id} is light enough to swallow the light "
+              "bubble text",
         );
       }
     });
@@ -97,8 +100,9 @@ void main() {
     test("an unknown id falls back to the default", () {
       // Storage outlives code. A preset that is renamed or removed must not
       // make a conversation unopenable.
-      expect(ChatWallpaper.byId("no-such-wallpaper").id, ChatWallpaper.sand.id);
-      expect(ChatWallpaper.byId(null).id, ChatWallpaper.sand.id);
+      expect(ChatWallpaper.byId("no-such-wallpaper").id,
+          ChatWallpaper.charcoal.id);
+      expect(ChatWallpaper.byId(null).id, ChatWallpaper.charcoal.id);
     });
 
     test("ids are unique", () {

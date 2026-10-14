@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import "../utils/theme.dart";
+
 /// The green dot that says someone is reachable right now.
 ///
 /// "Reachable" here means exactly one thing: they hold an open signalling
@@ -13,14 +15,16 @@ class OnlineDot extends StatelessWidget {
 
   /// Colour of the ring drawn around the dot. It exists to keep the dot
   /// visible against whatever sits behind it, so it should match that
-  /// background rather than the dot.
+  /// background rather than the dot. The default is the colour of the cards
+  /// and tiles these badges are almost always pinned to; white would now cut
+  /// a bright hole in them.
   final Color borderColor;
 
   const OnlineDot({
     super.key,
     required this.online,
     this.size = 11,
-    this.borderColor = Colors.white,
+    this.borderColor = AppTheme.surface,
   });
 
   @override
@@ -56,7 +60,7 @@ class OnlineBadge extends StatelessWidget {
     required this.child,
     required this.online,
     this.dotSize = 12,
-    this.borderColor = Colors.white,
+    this.borderColor = AppTheme.surface,
   });
 
   @override

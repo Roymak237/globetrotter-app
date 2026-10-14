@@ -5,14 +5,15 @@ import "package:flutter/material.dart";
 /// Two requirements are in tension here. A wallpaper should be personal, and
 /// message text has to stay readable on whichever one is chosen. Letting
 /// people pick an arbitrary photo satisfies the first and quietly destroys the
-/// second: dark text on a dark holiday snap is unreadable, and the app has no
-/// way to know that happened.
+/// second: light text on a bright holiday snap is unreadable, and the app has
+/// no way to know that happened.
 ///
-/// So the choice is a curated set of light tints rather than a free-form
-/// image. Every preset here is deliberately pale, which keeps a single dark
-/// text treatment readable across all of them. That claim is not a matter of
-/// taste — [contrastRatio] measures it and a test asserts every author colour
-/// clears WCAG AA against every wallpaper.
+/// So the choice is a curated set of dark tints rather than a free-form image.
+/// Every preset here is deliberately deep, which keeps a single light text
+/// treatment readable across all of them and keeps the conversation on the
+/// same near-black page as the rest of the product. That claim is not a matter
+/// of taste — [contrastRatio] measures it and a test asserts every author
+/// colour clears WCAG AA against every wallpaper.
 @immutable
 class ChatWallpaper {
   /// Stable key written to storage. Renaming a label is safe; renaming this
@@ -31,15 +32,24 @@ class ChatWallpaper {
     required this.colors,
   });
 
-  /// The palest point of the wallpaper, used for contrast checks.
-  ///
-  /// Text can land anywhere on the gradient, so the honest thing to test
-  /// against is the extreme that gives the *worst* contrast with dark text —
-  /// that is the darkest stop, not the lightest.
+  /// The deepest point of the wallpaper.
   Color get darkestStop {
     var worst = colors.first;
     for (final color in colors) {
       if (color.computeLuminance() < worst.computeLuminance()) worst = color;
+    }
+    return worst;
+  }
+
+  /// The palest point of the wallpaper, used for contrast checks.
+  ///
+  /// Text can land anywhere on the gradient, so the honest thing to test
+  /// against is the extreme that gives the *worst* contrast with light text —
+  /// that is the lightest stop, not the flattering dark end.
+  Color get lightestStop {
+    var worst = colors.first;
+    for (final color in colors) {
+      if (color.computeLuminance() > worst.computeLuminance()) worst = color;
     }
     return worst;
   }
@@ -53,38 +63,38 @@ class ChatWallpaper {
       );
 
   /// The default, matching the app background so an unset room looks unchanged.
-  static const ChatWallpaper sand = ChatWallpaper(
-    id: "sand",
-    label: "Sand",
-    colors: [Color(0xFFFAF5EE), Color(0xFFF3E8D8)],
+  static const ChatWallpaper charcoal = ChatWallpaper(
+    id: "charcoal",
+    label: "Charcoal",
+    colors: [Color(0xFF0A0A0A), Color(0xFF151515)],
   );
 
   static const List<ChatWallpaper> presets = [
-    sand,
+    charcoal,
     ChatWallpaper(
-      id: "dune",
-      label: "Dune",
-      colors: [Color(0xFFFBF1E3), Color(0xFFF0DCC0)],
-    ),
-    ChatWallpaper(
-      id: "palm",
-      label: "Palm",
-      colors: [Color(0xFFEFF7F0), Color(0xFFDDEEE1)],
+      id: "slate",
+      label: "Slate",
+      colors: [Color(0xFF0D1016), Color(0xFF1A1F29)],
     ),
     ChatWallpaper(
       id: "harmattan",
       label: "Harmattan",
-      colors: [Color(0xFFEDF3FA), Color(0xFFDAE7F5)],
+      colors: [Color(0xFF0B1118), Color(0xFF16242F)],
+    ),
+    ChatWallpaper(
+      id: "palm",
+      label: "Palm",
+      colors: [Color(0xFF0A1210), Color(0xFF15231C)],
     ),
     ChatWallpaper(
       id: "hibiscus",
       label: "Hibiscus",
-      colors: [Color(0xFFFBEFEF), Color(0xFFF5DEDE)],
+      colors: [Color(0xFF140C10), Color(0xFF26181E)],
     ),
     ChatWallpaper(
-      id: "clay",
-      label: "Clay",
-      colors: [Color(0xFFFAF0EA), Color(0xFFF2DCCF)],
+      id: "dune",
+      label: "Dune",
+      colors: [Color(0xFF13100A), Color(0xFF241E14)],
     ),
   ];
 
@@ -95,31 +105,30 @@ class ChatWallpaper {
   /// unopenable over a cosmetic setting.
   static ChatWallpaper byId(String? id) => presets.firstWhere(
         (wallpaper) => wallpaper.id == id,
-        orElse: () => sand,
+        orElse: () => charcoal,
       );
 
   /// Colours used to label who said what.
   ///
-  /// Names were previously drawn in the muted secondary brown at 11px, which
+  /// Names were previously drawn in the muted secondary grey at 11px, which
   /// is where "the names are not visible" came from: it is the same weight as
   /// the timestamp and recedes into the background at a glance. Giving each
   /// speaker a distinct, saturated colour makes a group conversation readable
-  /// at speed, which a single grey cannot do however dark it is.
+  /// at speed, which a single grey cannot do however bright it is.
   ///
-  /// Every entry is a deep tone chosen to clear AA on all the pale wallpapers
-  /// above; see the contrast test.
+  /// Every entry is a light tone chosen to clear AA on all the deep wallpapers
+  /// above; see the contrast test. They were deep tones while the wallpapers
+  /// were pale, and inverting the wallpapers without inverting these would
+  /// have reproduced the original bug exactly.
   static const List<Color> authorColors = [
-    Color(0xFF0D47A1), // deep blue
-    Color(0xFF1B5E20), // deep green
-    Color(0xFF4A148C), // deep purple
-    // Material's deep-orange 900 (#BF360C) was the first choice here and
-    // measured 4.25 against the warmer wallpapers — under AA. The contrast
-    // test caught it; this is the darker tone that clears it.
-    Color(0xFF8D2C08), // burnt orange
-    Color(0xFF006064), // deep teal
-    Color(0xFF880E4F), // deep magenta
-    Color(0xFF33691E), // olive
-    Color(0xFF3E2723), // dark brown
+    Color(0xFF7FB3FF), // blue
+    Color(0xFF7FD79C), // green
+    Color(0xFFC49BFF), // purple
+    Color(0xFFFFA97A), // burnt orange
+    Color(0xFF6FD8D8), // teal
+    Color(0xFFFF93BE), // magenta
+    Color(0xFFC8DB7A), // olive
+    Color(0xFFD7AE93), // tan
   ];
 
   /// A stable colour for [username].

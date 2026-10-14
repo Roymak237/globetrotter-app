@@ -202,7 +202,7 @@ void main() {
           matching: find.byWidgetPredicate(
             (widget) =>
                 widget is Material &&
-                widget.color == AppTheme.primaryDark &&
+                widget.color == AppTheme.callDisc &&
                 widget.shape is CircleBorder,
           ),
         );

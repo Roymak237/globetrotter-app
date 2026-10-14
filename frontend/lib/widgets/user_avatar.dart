@@ -40,14 +40,17 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolved = resolveMediaUrl(avatarUrl);
-    final background = backgroundColor ?? AppTheme.accent;
+    // The initial is drawn in the pale accent on a dark tint rather than the
+    // other way round. An avatar is a filled disc, and on this palette the
+    // only fill that can carry `textPrimary` is a dark one.
+    final background = backgroundColor ?? AppTheme.primarySoft;
 
     final fallback = Text(
       _initial,
       style: TextStyle(
         fontFamily: AppTheme.displayFontFamily,
         fontSize: radius * 0.82,
-        color: AppTheme.textPrimary,
+        color: AppTheme.accent,
         fontWeight: FontWeight.w700,
       ),
     );

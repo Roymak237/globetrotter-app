@@ -67,7 +67,8 @@ MockClient _server({
         200,
       );
     }
-    return http.Response(json.encode({"error": "unexpected ${request.url}"}), 404);
+    return http.Response(
+        json.encode({"error": "unexpected ${request.url}"}), 404);
   });
 }
 
@@ -129,8 +130,7 @@ void main() {
       await relaunched.loadToken();
 
       expect(relaunched.isAuthenticated, isTrue);
-      expect(calls, 0,
-          reason: "launch must not depend on having a signal");
+      expect(calls, 0, reason: "launch must not depend on having a signal");
     });
 
     test("a revoked session is cleared", () async {

@@ -192,8 +192,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showError(Object error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(error.toString().replaceFirst("Exception: ", "")),
-        backgroundColor: AppTheme.secondary,
+        content: Text(
+          error.toString().replaceFirst("Exception: ", ""),
+          // Stated here because the bar overrides the themed background, and
+          // the themed near-white content colour cannot be read on it.
+          style: const TextStyle(color: AppTheme.onPrimary),
+        ),
+        // Was the secondary ochre, which read as caution on the old warm
+        // ramp. On a palette with no warm tone left, only `error` still says
+        // something went wrong.
+        backgroundColor: AppTheme.error,
       ),
     );
   }
@@ -234,11 +242,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AppTheme.primary, AppTheme.primaryDark],
-              ),
+              // Everything in this card is white, so it needs a sweep that is
+              // dark end to end. It used to run `primary -> primaryDark`,
+              // which on this palette is pale to paler.
+              gradient: AppTheme.brandGradient,
             ),
             child: Row(
               children: [

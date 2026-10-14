@@ -105,7 +105,7 @@ Future<String?> showShareItineraryDialog(
                       height: 16,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.white,
+                        color: AppTheme.onPrimary,
                       ),
                     )
                   : const Icon(Icons.ios_share_rounded, size: 17),

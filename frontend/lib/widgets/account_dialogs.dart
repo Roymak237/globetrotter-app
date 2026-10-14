@@ -344,7 +344,7 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: Colors.white,
+                    color: AppTheme.onPrimary,
                   ),
                 )
               : const Icon(Icons.check_rounded, size: 18),
@@ -708,7 +708,10 @@ Future<bool> showConfirmAccountAction(
         ),
         ElevatedButton(
           style: destructive
-              ? ElevatedButton.styleFrom(backgroundColor: AppTheme.secondary)
+              ? ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.error,
+                  foregroundColor: AppTheme.onPrimary,
+                )
               : null,
           onPressed: () => Navigator.pop(dialogContext, true),
           child: Text(confirmLabel),
@@ -788,7 +791,10 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
           child: const Text("Keep account"),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: AppTheme.secondary),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.error,
+            foregroundColor: AppTheme.onPrimary,
+          ),
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
               Navigator.pop(context, _passwordController.text);

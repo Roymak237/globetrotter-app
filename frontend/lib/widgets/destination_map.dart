@@ -437,7 +437,7 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: AppTheme.shadow.withValues(alpha: 0.35),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -446,7 +446,9 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
                 child: Text(
                   dest.name,
                   style: const TextStyle(
-                    color: Colors.white,
+                    // The pill is a pale fill on a light map tile, so the
+                    // label takes the dark ink rather than white.
+                    color: AppTheme.onPrimary,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),

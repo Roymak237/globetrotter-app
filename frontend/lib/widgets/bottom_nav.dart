@@ -99,7 +99,7 @@ class _BottomNavState extends State<BottomNav> {
           border: Border.all(color: AppTheme.border),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primaryDark.withValues(alpha: 0.12),
+              color: AppTheme.shadow.withValues(alpha: 0.45),
               blurRadius: 24,
               offset: const Offset(0, 10),
             ),
@@ -170,7 +170,7 @@ class _NavItem extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: selected ? Colors.white : AppTheme.textSecondary,
+                color: selected ? AppTheme.onPrimary : AppTheme.textSecondary,
                 size: 21,
               ),
               if (selected) ...[
@@ -181,7 +181,7 @@ class _NavItem extends StatelessWidget {
                     label,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppTheme.onPrimary,
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                     ),

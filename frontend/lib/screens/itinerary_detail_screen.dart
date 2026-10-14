@@ -98,8 +98,8 @@ class ItineraryDetailScreen extends StatelessWidget {
                   tooltip: "Delete itinerary",
                   onPressed: () => _deleteItinerary(context, itinerary),
                   style: IconButton.styleFrom(
-                    foregroundColor: AppTheme.secondary,
-                    side: const BorderSide(color: AppTheme.secondary),
+                    foregroundColor: AppTheme.error,
+                    side: const BorderSide(color: AppTheme.error),
                     fixedSize: const Size(52, 52),
                   ),
                   icon: const Icon(Icons.delete_outline_rounded),
@@ -143,7 +143,8 @@ class ItineraryDetailScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.secondary,
+                  backgroundColor: AppTheme.error,
+                  foregroundColor: AppTheme.onPrimary,
                 ),
                 onPressed: () => Navigator.pop(dialogContext, true),
                 child: const Text("Delete"),
