@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Raw HSL triples, no hsl() wrapper — Tailwind supplies it, which is what
+       lets a colour be used with an opacity modifier such as bg-surface/30. */
+    --bg: 0 0% 4%;
+    --surface: 0 0% 8%;
+    --text: 0 0% 96%;
+    --muted: 0 0% 53%;
+    --stroke: 0 0% 12%;
+    --accent: 0 0% 96%;
+  }
+
+  * {
+    @apply border-stroke;
+  }
+
+  html {
+    /* The navbar is fixed, so an anchor jump would otherwise land with the
+       heading tucked underneath it. */
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    @apply bg-bg text-text-primary font-body antialiased;
+    /* The parallax section is wider than the viewport mid-animation; without
+       this the whole page gains a horizontal scrollbar. */
+    overflow-x: hidden;
+  }
+
+  /* Someone who has asked their system to stop animating things means it. The
+     entrance timelines and marquee are decorative, so they are simply skipped
+     rather than sped up. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  ::selection {
+    @apply bg-text-primary text-bg;
+  }
+}
+
+@layer components {
+  /* The single accent in an otherwise monochrome page. Used on the logo ring,
+     hover borders and the loading progress bar. */
+  .accent-gradient {
+    background-image: linear-gradient(90deg, #89aacc 0%, #4e85bf 100%);
+  }
+
+  .accent-gradient-reverse {
+    background-image: linear-gradient(90deg, #4e85bf 0%, #89aacc 100%);
+  }
+
+  /* A gradient *border* has no CSS primitive, so it is painted as a background
+     on a slightly larger element sitting behind the content. The 200% width is
+     what gives gradient-shift something to travel across. */
+  .gradient-ring {
+    background-image: linear-gradient(90deg, #89aacc 0%, #4e85bf 50%, #89aacc 100%);
+    background-size: 200% 100%;
+  }
+
+  /* Breaks the photographs up just enough that the grid reads as a designed
+     surface rather than a stock-photo wall. */
+  .halftone {
+    background-image: radial-gradient(circle, #000 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+}
+
+@layer utilities {
+  /* GSAP sets the final values; these are only the pre-animation state, so the
+     text cannot flash at full size before the timeline's first frame. */
+  .name-reveal,
+  .blur-in {
+    will-change: transform, opacity, filter;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}

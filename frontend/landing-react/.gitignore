@@ -1,0 +1,3 @@
+# Build output, produced by `npm run build` and published by CI.
+dist/
+node_modules/

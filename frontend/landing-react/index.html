@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kamer-Go — Plan your day in Cameroon</title>
+    <meta
+      name="description"
+      content="Discover the landmarks, culture and nature of Cameroon — with an itinerary planner that builds your day for you."
+    />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <meta property="og:title" content="Kamer-Go — Plan your day in Cameroon" />
+    <meta
+      property="og:description"
+      content="Discover the landmarks, culture and nature of Cameroon — with an itinerary planner that builds your day for you."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kamer-go.duckdns.org/" />
+    <meta property="og:image" content="/app-icon-384.jpg" />
+
+    <!-- The tab icon is the launcher icon, so the browser tab, the home-screen
+         shortcut and the installed app all show the same mark. -->
+    <link rel="icon" href="/app-icon-192.jpg" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/app-icon-192.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <!-- The background is set as an attribute rather than a <style> block so the
+       page is already black before the bundle's stylesheet arrives, without
+       putting a second CSS entry point into the build. -->
+  <body style="background: #0a0a0a">
+    <div id="root"></div>
+    <noscript>
+      <div style="padding: 2rem; color: #f5f5f5; font-family: sans-serif">
+        <h1>Kamer-Go</h1>
+        <p>This page needs JavaScript. You can still open the app directly:</p>
+        <p><a href="/app/" style="color: #89aacc">Launch the web app</a></p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

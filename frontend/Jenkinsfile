@@ -33,8 +33,14 @@ pipeline {
         // Dart version that the dependency tree rejects.
         FLUTTER_IMAGE  = 'ghcr.io/cirruslabs/flutter:3.41.6'
         PYTHON_IMAGE   = 'python:3.11-slim'
+        // The landing page is a Vite build, so CI needs a Node toolchain. Pinned
+        // to the active LTS rather than :lts, which would silently roll the
+        // major version under the pipeline mid-release.
+        NODE_IMAGE     = 'node:22-alpine'
         // Path to the Flutter app, relative to the workspace root.
         APP_ROOT       = 'frontend'
+        // Path to the marketing landing page, likewise relative.
+        LANDING_ROOT   = 'frontend/landing-react'
 
         // Build containers are capped, and capped without swap.
         //
@@ -66,6 +72,7 @@ pipeline {
         MEM_ANDROID    = '4608m'
         MEM_FLUTTER    = '3g'
         MEM_PYTHON     = '1g'
+        MEM_NODE       = '1536m'
     }
 
     stages {
@@ -223,6 +230,47 @@ flutter build web --release --base-href /app/ --dart-define=BACKEND_BASE_URL=htt
 " || exit 1
 
 test -f "${WORKSPACE}/${APP_ROOT}/build/web/index.html"
+'''
+            }
+        }
+
+        stage('Landing build') {
+            steps {
+                sh '''#!/usr/bin/env bash
+set -uo pipefail
+
+# Same reclaim as the Flutter stage, and for the same reason: npm runs as root
+# in the container and leaves root-owned node_modules/ and dist/ behind, which
+# the next build's `git clean` cannot remove. Trapped on EXIT so a failed build
+# still hands the workspace back.
+reclaim() {
+    docker run --rm \
+        -v "${JENKINS_VOLUME}:/var/jenkins_home" \
+        "${PYTHON_IMAGE}" \
+        chown -R "$(id -u):$(id -g)" "${WORKSPACE}" || true
+}
+trap reclaim EXIT
+
+# `npm ci`, not `npm install`: it installs the lockfile exactly and fails if
+# the lockfile and package.json disagree. A marketing page is not worth a
+# surprise minor-version bump of GSAP discovered in production.
+docker run --rm \
+    --memory "${MEM_NODE}" --memory-swap "${MEM_NODE}" \
+    -v "${JENKINS_VOLUME}:/var/jenkins_home" \
+    -w "${WORKSPACE}/${LANDING_ROOT}" \
+    -e npm_config_cache=/var/jenkins_home/.npm \
+    -e CI=true \
+    "${NODE_IMAGE}" \
+    sh -c '
+set -eu
+node --version
+npm ci --no-audit --no-fund
+npm run build
+' || exit 1
+
+# The build script runs tsc before vite, so reaching here means the page both
+# type-checks and bundles. This only confirms the artefact landed on disk.
+test -f "${WORKSPACE}/${LANDING_ROOT}/dist/index.html"
 '''
             }
         }
@@ -398,8 +446,12 @@ mkdir -p "${APP_DIR}/site/app" "${APP_DIR}/site/downloads" "${APP_DIR}/site/medi
 # The document root is assembled here: landing page at the top level, the
 # Flutter app under app/, release artefacts under downloads/. app/ and
 # downloads/ are excluded from the landing sync so they survive it.
+#
+# The landing page is now a Vite build, so the source is its dist/ rather than
+# a folder of hand-written files. Everything in there is content-hashed except
+# index.html, which nginx revalidates on every request.
 rsync -a --delete --exclude 'app/' --exclude 'downloads/' --exclude 'media/' \
-    "${APP_ROOT}/landing/" "${APP_DIR}/site/"
+    "${LANDING_ROOT}/dist/" "${APP_DIR}/site/"
 rsync -a --delete "${APP_ROOT}/build/web/" "${APP_DIR}/site/app/"
 
 # Stamp the shipped commit onto the app shell's bootstrap URL. See the comment
