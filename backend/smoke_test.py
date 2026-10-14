@@ -169,9 +169,10 @@ def start_server(port, data_dir):
 def register(base, username):
     """Create an account and return a bearer token for it.
 
-    Registration deliberately does not hand back a token — it confirms the
-    account and leaves the caller to sign in — so the login step here mirrors
-    exactly what the app does after a successful sign-up.
+    Registration now signs the account in and returns a token directly, so a
+    new arrival is not sent back to the sign-in screen. The login round trip
+    below is kept because it also checks that the freshly created credentials
+    really do work, which registration alone would not prove.
     """
     status, body = call("POST", base + "/api/auth/register", body={
         "username": username,
@@ -180,12 +181,24 @@ def register(base, username):
     if status not in (200, 201):
         raise SystemExit("could not register " + username + ": " + str(body))
 
+    check("register signs the new account in", isinstance(body, dict) and bool(body.get("token")))
+    check(
+        "register returns the new profile",
+        isinstance(body, dict)
+        and isinstance(body.get("user"), dict)
+        and body["user"].get("username") == username,
+    )
+
     status, body = call("POST", base + "/api/auth/login", body={
         "username": username,
         "password": "TestPass123!",
     })
     if status != 200 or not isinstance(body, dict) or "token" not in body:
         raise SystemExit("could not sign in as " + username + ": " + str(body))
+    check(
+        "login returns the profile alongside the token",
+        isinstance(body.get("user"), dict) and body["user"].get("username") == username,
+    )
     return body["token"]
 
 

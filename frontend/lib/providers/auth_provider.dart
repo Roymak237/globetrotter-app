@@ -1,13 +1,15 @@
 import "package:flutter/material.dart";
+import "package:http/http.dart" as http;
 
 import "../models/itinerary.dart";
 import "../models/user.dart";
 import "../services/auth_service.dart";
 
 class AuthProvider extends ChangeNotifier {
-  final AuthService _service = AuthService();
+  final AuthService _service;
 
-  AuthProvider() {
+  AuthProvider({http.Client? client})
+      : _service = AuthService(client: client) {
     _service.addListener(notifyListeners);
   }
 
@@ -24,6 +26,10 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> loadToken() async {
     await _service.loadToken();
+  }
+
+  Future<bool> refreshSession() {
+    return _service.refreshSession();
   }
 
   Future<bool> register({

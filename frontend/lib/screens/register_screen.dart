@@ -48,7 +48,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             preferences: preferences,
           );
       if (mounted) {
-        Navigator.pushReplacementNamed(context, "/login");
+        // Registering signs you in. Sending a new arrival to the sign-in
+        // screen to retype credentials they entered seconds earlier adds a
+        // hurdle at the exact point they are most likely to give up.
+        final signedIn = context.read<AuthProvider>().isAuthenticated;
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          signedIn ? "/home" : "/login",
+          (route) => false,
+        );
       }
     } catch (e) {
       if (mounted) {

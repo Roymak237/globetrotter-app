@@ -12,6 +12,12 @@ class AuthService extends ChangeNotifier {
   String? _token;
   User? _currentUser;
 
+  /// Injectable so tests can drive sign-up and sign-in against a stub server.
+  /// Defaults to a real client, so production behaviour is unchanged.
+  final http.Client _client;
+
+  AuthService({http.Client? client}) : _client = client ?? http.Client();
+
   String? get token => _token;
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _token != null;
@@ -28,7 +34,31 @@ class AuthService extends ChangeNotifier {
   }) async {
     await _persistToken(token);
     _currentUser = user;
+    await _cacheUser(user);
     notifyListeners();
+  }
+
+  /// Keep the signed-in profile beside the token.
+  ///
+  /// Without this a relaunch knows it is signed in but not as whom, so the
+  /// first frame shows a blank name until the network answers. Storing the
+  /// profile lets the app open fully formed and offline.
+  Future<void> _cacheUser(User user) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("auth_user", json.encode(user.toJson()));
+  }
+
+  User? _readCachedUser(SharedPreferences prefs) {
+    final raw = prefs.getString("auth_user");
+    if (raw == null || raw.isEmpty) return null;
+    try {
+      final decoded = json.decode(raw);
+      if (decoded is Map<String, dynamic>) return User.fromJson(decoded);
+    } catch (_) {
+      // A profile we cannot parse is not worth crashing the launch over;
+      // the session is still valid and the server can supply a fresh one.
+    }
+    return null;
   }
 
   Map<String, dynamic> _decodeBody(http.Response response) {
@@ -55,17 +85,47 @@ class AuthService extends ChangeNotifier {
     return user;
   }
 
+  /// Restore a previous session from disk.
+  ///
+  /// Deliberately offline: it reports what was stored, not whether the server
+  /// still honours it. Launching must not depend on the network, otherwise a
+  /// traveller with no signal is shown the sign-in screen and cannot get past
+  /// it. [refreshSession] does the server-side check afterwards.
   Future<void> loadToken() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString("auth_token");
     if (_token != null) {
-      _currentUser = User(
-        id: "",
-        username: "",
-        preferences: const [],
-      );
+      _currentUser = _readCachedUser(prefs) ??
+          User(id: "", username: "", preferences: const []);
     }
     notifyListeners();
+  }
+
+  /// Confirm a restored session with the server and roll the token forward.
+  ///
+  /// Returns true if the session is still good. A rejection is permanent —
+  /// the password changed, sessions were revoked, or the token finally
+  /// expired — so the stored session is cleared. A network failure is not a
+  /// rejection: the session is left alone and the traveller stays signed in.
+  Future<bool> refreshSession() async {
+    if (_token == null) return false;
+    try {
+      await refreshToken();
+      return true;
+    } on Exception catch (error) {
+      if (_isRejection(error)) {
+        await logout();
+        return false;
+      }
+      return true;
+    }
+  }
+
+  /// Distinguish "the server says no" from "there was no server".
+  bool _isRejection(Exception error) {
+    final text = error.toString().toLowerCase();
+    return text.contains("authentication required") ||
+        text.contains("user not found");
   }
 
   Future<bool> register({
@@ -76,7 +136,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/register",
     );
-    final response = await http
+    final response = await _client
         .post(
           uri,
           headers: {"Content-Type": "application/json"},
@@ -88,7 +148,18 @@ class AuthService extends ChangeNotifier {
         )
         .timeout(AppConstants.apiTimeout);
 
-    if (response.statusCode == 201) return true;
+    if (response.statusCode == 201) {
+      final body = _decodeBody(response);
+      final token = body["token"] as String?;
+      final userJson = body["user"];
+      // A server that creates the account but withholds a session is still a
+      // successful registration. Report it, and let the caller fall back to
+      // the sign-in screen rather than losing the new account.
+      if (token != null && userJson is Map<String, dynamic>) {
+        await _replaceSession(token: token, user: User.fromJson(userJson));
+      }
+      return true;
+    }
     final body = _decodeBody(response);
     throw Exception(body["error"] ?? "Registration failed");
   }
@@ -100,7 +171,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/login",
     );
-    final response = await http
+    final response = await _client
         .post(
           uri,
           headers: {"Content-Type": "application/json"},
@@ -115,13 +186,16 @@ class AuthService extends ChangeNotifier {
       final data = _decodeBody(response);
       final token = data["token"] as String?;
       if (token == null) throw Exception("Login failed");
-      await _persistToken(token);
-      _currentUser = User(
-        id: "",
-        username: username,
-        preferences: const [],
+      final userJson = data["user"];
+      await _replaceSession(
+        token: token,
+        // Older servers answer with a token alone. Falling back to the typed
+        // username keeps those working instead of signing in to a nameless
+        // account.
+        user: userJson is Map<String, dynamic>
+            ? User.fromJson(userJson)
+            : User(id: "", username: username, preferences: const []),
       );
-      notifyListeners();
       return true;
     }
     final body = _decodeBody(response);
@@ -140,7 +214,7 @@ class AuthService extends ChangeNotifier {
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}"
       "/auth/request-password-reset",
     );
-    final response = await http
+    final response = await _client
         .post(
           uri,
           headers: {"Content-Type": "application/json"},
@@ -165,7 +239,7 @@ class AuthService extends ChangeNotifier {
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}"
       "/auth/reset-password",
     );
-    final response = await http
+    final response = await _client
         .post(
           uri,
           headers: {"Content-Type": "application/json"},
@@ -183,10 +257,20 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    await _clearSession();
+  }
+
+  /// Forget the session completely.
+  ///
+  /// The cached profile is removed alongside the token. Leaving it behind
+  /// would mean the next person to open the app on a shared phone sees the
+  /// previous owner's name on the sign-in screen.
+  Future<void> _clearSession() async {
     _token = null;
     _currentUser = null;
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove("auth_token");
+    await prefs.remove("auth_user");
     notifyListeners();
   }
 
@@ -195,12 +279,13 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/me",
     );
-    final response = await http.get(
+    final response = await _client.get(
       uri,
       headers: {"Authorization": "Bearer $_token"},
     ).timeout(AppConstants.apiTimeout);
     if (response.statusCode == 200) {
       _currentUser = User.fromJson(_decodeBody(response));
+      await _cacheUser(_currentUser!);
       notifyListeners();
       return _currentUser!;
     }
@@ -213,7 +298,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/refresh",
     );
-    final response = await http.post(
+    final response = await _client.post(
       uri,
       headers: {"Authorization": "Bearer $_token"},
     ).timeout(AppConstants.apiTimeout);
@@ -242,7 +327,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/profile",
     );
-    final response = await http
+    final response = await _client
         .patch(
           uri,
           headers: {
@@ -274,7 +359,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/username",
     );
-    final response = await http
+    final response = await _client
         .patch(
           uri,
           headers: {
@@ -301,7 +386,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/password",
     );
-    final response = await http
+    final response = await _client
         .patch(
           uri,
           headers: {
@@ -325,7 +410,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/sessions/revoke",
     );
-    final response = await http.post(
+    final response = await _client.post(
       uri,
       headers: {"Authorization": "Bearer $_token"},
     ).timeout(AppConstants.apiTimeout);
@@ -340,7 +425,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/auth/account",
     );
-    final response = await http
+    final response = await _client
         .delete(
           uri,
           headers: {
@@ -354,11 +439,7 @@ class AuthService extends ChangeNotifier {
       final body = _decodeBody(response);
       throw Exception(body["error"] ?? "Failed to delete account");
     }
-    _token = null;
-    _currentUser = null;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("auth_token");
-    notifyListeners();
+    await _clearSession();
   }
 
   Future<List<Itinerary>> fetchItineraries() async {
@@ -366,7 +447,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/itineraries",
     );
-    final response = await http.get(
+    final response = await _client.get(
       uri,
       headers: {"Authorization": "Bearer $_token"},
     ).timeout(AppConstants.apiTimeout);
@@ -388,7 +469,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/itineraries",
     );
-    final response = await http
+    final response = await _client
         .post(
           uri,
           headers: {
@@ -429,7 +510,7 @@ class AuthService extends ChangeNotifier {
     if (endDate != null) body["end_date"] = endDate;
     if (notes != null) body["notes"] = notes;
 
-    final response = await http
+    final response = await _client
         .put(
           uri,
           headers: {
@@ -450,7 +531,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/itineraries/$itineraryId",
     );
-    final response = await http.delete(
+    final response = await _client.delete(
       uri,
       headers: {"Authorization": "Bearer $_token"},
     ).timeout(AppConstants.apiTimeout);
@@ -468,7 +549,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/itineraries/$itineraryId/share",
     );
-    final response = await http
+    final response = await _client
         .post(
           uri,
           headers: {
@@ -489,7 +570,7 @@ class AuthService extends ChangeNotifier {
     final uri = Uri.parse(
       "${AppConstants.backendBaseUrl}${AppConstants.apiPrefix}/shares/$shareId",
     );
-    final response = await http.delete(
+    final response = await _client.delete(
       uri,
       headers: {"Authorization": "Bearer $_token"},
     ).timeout(AppConstants.apiTimeout);

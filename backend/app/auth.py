@@ -36,6 +36,15 @@ _EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 RESET_CODE_TTL_MINUTES = 15
 RESET_MAX_ATTEMPTS = 5
 
+# How long an issued session stays valid. Sixty days covers the gap between
+# a traveller planning one trip and planning the next without forcing them
+# through the sign-in screen again. Override with TOKEN_TTL_HOURS if a
+# deployment wants a tighter window.
+try:
+    TOKEN_TTL_HOURS = int(os.environ.get("TOKEN_TTL_HOURS", "1440"))
+except ValueError:
+    TOKEN_TTL_HOURS = 1440
+
 
 @auth_bp.before_request
 def _check_json_object():
@@ -127,13 +136,22 @@ def _issue_token(user: dict) -> str:
 
 
 def create_token(username: str, secret: str, session_version: int = 0) -> str:
-    """Return a signed JWT for *username* valid for 24 hours."""
+    """Return a signed JWT for *username*.
+
+    The lifetime is deliberately long. Most of our traffic is the Android
+    build, where being asked to sign in again every day is the difference
+    between an app someone keeps and an app someone deletes. A short window
+    would only help if a stolen token could not be withdrawn, and it can be:
+    every token carries the account's ``session_version``, so changing the
+    password or revoking other sessions invalidates all outstanding tokens
+    immediately, whatever their expiry says.
+    """
     now = datetime.datetime.now(datetime.timezone.utc)
     payload = {
         "sub": username,
         "sv": session_version,
         "iat": now,
-        "exp": now + datetime.timedelta(hours=24),
+        "exp": now + datetime.timedelta(hours=TOKEN_TTL_HOURS),
     }
     return jwt.encode(payload, secret, algorithm="HS256")
 
@@ -199,7 +217,17 @@ def register():
         "session_version": 0,
     }
     save_user(user)
-    return jsonify({"message": "user registered successfully", "username": username}), 201
+    # Registration signs the account in rather than handing back to the login
+    # screen. The credentials were just verified well enough to create the
+    # account, so asking for them again a second later proves nothing and only
+    # costs the new arrival a form. "username" and "message" are kept so any
+    # older client still reads the response it expects.
+    return jsonify({
+        "message": "user registered successfully",
+        "username": username,
+        "token": _issue_token(user),
+        "user": _public_user(user),
+    }), 201
 
 
 @auth_bp.route("/api/auth/login", methods=["POST"])
@@ -214,7 +242,11 @@ def login():
     if not user or not check_password_hash(user["password_hash"], password):
         return jsonify({"error": "invalid credentials"}), 401
 
-    return jsonify({"token": _issue_token(user)}), 200
+    # "user" is additive. The client used to invent a placeholder profile from
+    # the typed username because login gave it nothing else, which meant a
+    # restored session displayed a blank identity until something else
+    # happened to fetch the real one.
+    return jsonify({"token": _issue_token(user), "user": _public_user(user)}), 200
 
 
 @auth_bp.route("/api/auth/me", methods=["GET"])

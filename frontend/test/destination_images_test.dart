@@ -36,8 +36,7 @@ Set<String> bundledFolders() {
   // Checked in with CRLF on Windows. Dart keeps the \r that Python's
   // read_text() silently drops, so normalise before matching or the regex
   // quietly returns nothing and every asset looks unbundled.
-  final text =
-      File("pubspec.yaml").readAsStringSync().replaceAll("\r\n", "\n");
+  final text = File("pubspec.yaml").readAsStringSync().replaceAll("\r\n", "\n");
   final block = RegExp(r"\n  assets:\n((?:\s+[-#].*\n)+)").firstMatch(text);
   if (block == null) {
     // Failing to parse is not the same as finding nothing. Say so, otherwise
@@ -109,7 +108,8 @@ void main() {
       }
     }
     expect(unbundled, isEmpty,
-        reason: "present on disk but not shipped:\n  ${unbundled.join("\n  ")}");
+        reason:
+            "present on disk but not shipped:\n  ${unbundled.join("\n  ")}");
   });
 
   test("no two destinations claim the same photograph", () {

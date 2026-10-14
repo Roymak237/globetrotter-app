@@ -28,4 +28,19 @@ class User {
       preferences: List<String>.from(json["preferences"] ?? []),
     );
   }
+
+  /// Keys match [User.fromJson] exactly so a cached profile round-trips.
+  /// They are the server's field names, not Dart's, which keeps a stored
+  /// profile and a freshly fetched one interchangeable.
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "username": username,
+      "display_name": displayName,
+      "email": email,
+      "home_region": homeRegion,
+      "avatar_url": avatarUrl,
+      "preferences": preferences,
+    };
+  }
 }

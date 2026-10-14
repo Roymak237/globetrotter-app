@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:http/http.dart" as http;
 import "package:provider/provider.dart";
 
 import "localization/app_localizations.dart";
@@ -22,7 +23,11 @@ import "services/call_service.dart";
 import "utils/theme.dart";
 
 class GlobetrotterApp extends StatelessWidget {
-  const GlobetrotterApp({super.key});
+  /// Supplied only by tests, so the startup gate can be exercised against a
+  /// stub server instead of the live one. Null in the shipped app.
+  final http.Client? authClient;
+
+  const GlobetrotterApp({super.key, this.authClient});
 
   /// Held at the app level so an incoming call can open its screen from
   /// wherever the traveller happens to be, including a background tab.
@@ -33,7 +38,7 @@ class GlobetrotterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider(client: authClient)),
         ChangeNotifierProvider(
           create: (_) => FavoritesProvider()..load(),
         ),
@@ -52,7 +57,7 @@ class GlobetrotterApp extends StatelessWidget {
             onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
             debugShowCheckedModeBanner: false,
             theme: AppTheme.theme,
-            initialRoute: "/login",
+            home: const StartupGate(),
             builder: (context, child) =>
                 _CallGateway(child: child ?? const SizedBox.shrink()),
             routes: {
@@ -74,6 +79,80 @@ class GlobetrotterApp extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+/// Decides whether a cold launch opens the app or the sign-in screen.
+///
+/// Signing in stores a token, but nothing ever read it back, so every launch
+/// began at the sign-in screen no matter how recently the traveller signed in.
+/// This reads the stored session before the first screen is chosen.
+///
+/// The decision is made offline, from disk alone. Confirming with the server
+/// first would mean that a traveller with no signal — on a bus, in a valley,
+/// out of credit — is shown a sign-in screen they cannot get past, which is
+/// worse than briefly trusting a session that turns out to be stale. The
+/// server is consulted immediately afterwards, and only a definite rejection
+/// sends anyone back to sign in.
+class StartupGate extends StatefulWidget {
+  /// Overridable so tests can assert which way the gate went without
+  /// mounting the whole home screen, whose timers and animations never
+  /// settle under the test binding. Default to the real screens.
+  final WidgetBuilder signedIn;
+  final WidgetBuilder signedOut;
+
+  const StartupGate({
+    super.key,
+    this.signedIn = _buildHome,
+    this.signedOut = _buildLogin,
+  });
+
+  static Widget _buildHome(BuildContext _) => const HomeScreen();
+  static Widget _buildLogin(BuildContext _) => const LoginScreen();
+
+  @override
+  State<StartupGate> createState() => _StartupGateState();
+}
+
+class _StartupGateState extends State<StartupGate> {
+  bool _checking = true;
+  bool _signedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _restore();
+  }
+
+  Future<void> _restore() async {
+    final auth = context.read<AuthProvider>();
+    try {
+      await auth.loadToken();
+    } catch (_) {
+      // Unreadable storage is not a reason to fail the launch; it just means
+      // there is no session to restore.
+    }
+    if (!mounted) return;
+    setState(() {
+      _checking = false;
+      _signedIn = auth.isAuthenticated;
+    });
+    if (!auth.isAuthenticated) return;
+
+    // Verify in the background. The traveller is already in the app by now.
+    final stillValid = await auth.refreshSession();
+    if (!mounted || stillValid) return;
+    setState(() => _signedIn = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_checking) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    return _signedIn ? widget.signedIn(context) : widget.signedOut(context);
   }
 }
 
