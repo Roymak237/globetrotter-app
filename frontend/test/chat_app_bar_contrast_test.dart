@@ -42,9 +42,7 @@ Color pixelAt(ByteData data, int x, int y) {
 double _relativeLuminance(Color c) {
   double channel(double v) =>
       v <= 0.03928 ? v / 12.92 : math.pow((v + 0.055) / 1.055, 2.4).toDouble();
-  return 0.2126 * channel(c.r) +
-      0.7152 * channel(c.g) +
-      0.0722 * channel(c.b);
+  return 0.2126 * channel(c.r) + 0.7152 * channel(c.g) + 0.0722 * channel(c.b);
 }
 
 /// Contrast ratio of white against [background], per WCAG 2.1.
@@ -114,8 +112,7 @@ void main() {
         expect(c.a, greaterThan(0.99), reason: "bar pixel $c is see-through");
       }
 
-      final worst =
-          samples.map(whiteContrast).reduce((a, b) => a < b ? a : b);
+      final worst = samples.map(whiteContrast).reduce((a, b) => a < b ? a : b);
       expect(
         worst,
         greaterThanOrEqualTo(kIconFloor),
