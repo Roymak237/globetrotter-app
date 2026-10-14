@@ -370,7 +370,7 @@
   },
   {
     "id": "dest-school-008",
-    "name": "Lycee de l'Observatoire (filename identification)",
+    "name": "Lycee de l'Observatoire",
     "region": "Unverified",
     "description": "A secondary school in Cameroon. We have not yet confirmed which town it is in.",
     "tags": [
@@ -1403,7 +1403,7 @@
   },
   {
     "id": "dest-yao-035",
-    "name": "Parc Biyemassi (filename identification)",
+    "name": "Parc Biyemassi",
     "region": "Centre",
     "description": "A green space in Biyem-Assi, in the south-west of Yaounde.",
     "tags": [
@@ -1431,7 +1431,7 @@
   },
   {
     "id": "dest-yao-036",
-    "name": "Independence Monument (filename identification)",
+    "name": "Independence Monument",
     "region": "Unverified",
     "description": "A monument photographed in Cameroon. We have not yet confirmed which monument it is or where it stands.",
     "tags": [
@@ -1484,7 +1484,7 @@
   },
   {
     "id": "dest-yao-038",
-    "name": "Parcours Vita (filename identification)",
+    "name": "Parcours Vita",
     "region": "Centre",
     "description": "A public exercise trail on the Febe hill, busy with runners and walkers on weekend mornings.",
     "tags": [
@@ -1597,7 +1597,7 @@
       "nightlife",
       "entertainment"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 5000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Black&White sportsbar.jpg",
@@ -1609,8 +1609,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No price recorded for this venue yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative spend for an evening out with a few drinks. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-090",
@@ -1621,7 +1621,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Bois d'ebene.jpg",
@@ -1635,8 +1635,8 @@
     "latitude": 3.869655,
     "longitude": 11.5237918,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-091",
@@ -1701,7 +1701,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Chez kalli.jpg",
@@ -1715,8 +1715,8 @@
     "latitude": 3.8949411,
     "longitude": 11.5082877,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-094",
@@ -1727,7 +1727,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Chez wou.jpg",
@@ -1741,8 +1741,8 @@
     "latitude": 3.8910666,
     "longitude": 11.5142767,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-095",
@@ -1754,7 +1754,7 @@
       "dining",
       "relaxation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Cosy pool.jpg",
@@ -1768,8 +1768,8 @@
     "latitude": 3.886677,
     "longitude": 11.5117895,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-096",
@@ -1781,7 +1781,7 @@
       "accommodation",
       "pool"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 90000,
     "highlights": [],
     "image_url": "",
     "image_asset": "hilton yaounde pool-exterior.jpg",
@@ -1795,8 +1795,8 @@
     "latitude": 3.8645784,
     "longitude": 11.5156674,
     "location_precision": "exact",
-    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a room at this hotel. Confirm current rates when booking.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-097",
@@ -1807,7 +1807,7 @@
       "hotel",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 25000,
     "highlights": [],
     "image_url": "",
     "image_asset": "hotel merina yaounde facade-de-l-hotel-a-la.jpg",
@@ -1821,8 +1821,8 @@
     "latitude": 3.8645784,
     "longitude": 11.519098,
     "location_precision": "exact",
-    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-098",
@@ -1833,7 +1833,7 @@
       "hotel",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 25000,
     "highlights": [],
     "image_url": "",
     "image_asset": "hotel-la-falaise.jpg",
@@ -1847,8 +1847,8 @@
     "latitude": 3.8705916,
     "longitude": 11.5154153,
     "location_precision": "exact",
-    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-099",
@@ -1859,7 +1859,7 @@
       "nightlife",
       "entertainment"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 5000,
     "highlights": [],
     "image_url": "",
     "image_asset": "inside-salsa.jpg",
@@ -1871,8 +1871,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No price recorded for this venue yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative spend for an evening out with a few drinks. Not a quoted price.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-100",
@@ -1883,7 +1883,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "L'orient rouge.jpg",
@@ -1897,8 +1897,8 @@
     "latitude": 3.8947377,
     "longitude": 11.5072718,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-101",
@@ -1909,7 +1909,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Le Bacchus plus.jpg",
@@ -1923,8 +1923,8 @@
     "latitude": 3.8775347,
     "longitude": 11.5256694,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-102",
@@ -1935,7 +1935,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Le Bayama Obala.jpg",
@@ -1949,8 +1949,8 @@
     "latitude": 4.1561789,
     "longitude": 11.5313482,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-103",
@@ -1962,7 +1962,7 @@
       "restaurant",
       "food"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Le Moulin de france.jpg",
@@ -1976,8 +1976,8 @@
     "latitude": 3.8626868,
     "longitude": 11.5195897,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-104",
@@ -1988,7 +1988,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "maison blanche.jpg",
@@ -2002,8 +2002,8 @@
     "latitude": 3.8658761,
     "longitude": 11.5273556,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-105",
@@ -2015,7 +2015,7 @@
       "culture",
       "history"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 2000,
     "highlights": [],
     "image_url": "",
     "image_asset": "musee-ethnographique.jpg",
@@ -2029,8 +2029,8 @@
     "latitude": 3.8712749,
     "longitude": 11.5236132,
     "location_precision": "exact",
-    "cost_notes": "No admission price recorded yet.",
-    "cost_basis": "none"
+    "cost_notes": "Typical museum admission for one adult. Check current prices before travelling.",
+    "cost_basis": "per_visit"
   },
   {
     "id": "dest-yao-106",
@@ -2042,7 +2042,7 @@
       "supermarket",
       "groceries"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 0,
     "highlights": [],
     "image_url": "",
     "image_asset": "my-second-visit-to-mahima.jpg",
@@ -2056,8 +2056,8 @@
     "latitude": 3.8740015,
     "longitude": 11.5410119,
     "location_precision": "exact",
-    "cost_notes": "Spend depends entirely on what you buy.",
-    "cost_basis": "none"
+    "cost_notes": "Free to enter. Spending depends on your shopping.",
+    "cost_basis": "free"
   },
   {
     "id": "dest-yao-107",
@@ -2068,7 +2068,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "o-paletuvier.jpg",
@@ -2082,8 +2082,8 @@
     "latitude": 3.8790916,
     "longitude": 11.5225297,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-108",
@@ -2095,7 +2095,7 @@
       "restaurant",
       "nightlife"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Ole! Vins et Tapas.jpg",
@@ -2107,8 +2107,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-109",
@@ -2145,7 +2145,7 @@
       "hotel",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 25000,
     "highlights": [],
     "image_url": "",
     "image_asset": "prodiges-hotel.jpg",
@@ -2157,8 +2157,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-111",
@@ -2169,7 +2169,7 @@
       "lodging",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 20000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Residence la paix.jpg",
@@ -2181,8 +2181,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No room rate recorded. Contact the property for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a guest room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-112",
@@ -2193,7 +2193,7 @@
       "lodging",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 20000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Residence Massou.jpg",
@@ -2205,8 +2205,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No room rate recorded. Contact the property for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a guest room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-113",
@@ -2217,7 +2217,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "Restaurant le colisse.jpg",
@@ -2231,8 +2231,8 @@
     "latitude": 3.8940043,
     "longitude": 11.5149342,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-114",
@@ -2243,7 +2243,7 @@
       "hotel",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 25000,
     "highlights": [],
     "image_url": "",
     "image_asset": "safyad-hotel.jpg",
@@ -2255,8 +2255,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-115",
@@ -2267,7 +2267,7 @@
       "dining",
       "restaurant"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 6000,
     "highlights": [],
     "image_url": "",
     "image_asset": "seven hills yaounde.jpg",
@@ -2281,8 +2281,8 @@
     "latitude": 3.8709816,
     "longitude": 11.5235992,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this kitchen yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative cost of a sit-down meal for one. Menus were not surveyed.",
+    "cost_basis": "per_meal"
   },
   {
     "id": "dest-yao-116",
@@ -2293,7 +2293,7 @@
       "hotel",
       "accommodation"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 25000,
     "highlights": [],
     "image_url": "",
     "image_asset": "starland hotel bastos.jpg",
@@ -2305,8 +2305,8 @@
     "latitude": null,
     "longitude": null,
     "location_precision": "",
-    "cost_notes": "No room rate recorded. Contact the hotel for current prices.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative nightly rate for a mid-range room. Rates were not confirmed with the property.",
+    "cost_basis": "per_night"
   },
   {
     "id": "dest-yao-117",
@@ -2317,7 +2317,7 @@
       "nightlife",
       "entertainment"
     ],
-    "avg_cost_per_day": null,
+    "avg_cost_per_day": 5000,
     "highlights": [],
     "image_url": "",
     "image_asset": "The Famous.jpg",
@@ -2331,7 +2331,7 @@
     "latitude": 3.892699,
     "longitude": 11.5181771,
     "location_precision": "exact",
-    "cost_notes": "No price recorded for this venue yet.",
-    "cost_basis": "none"
+    "cost_notes": "Indicative spend for an evening out with a few drinks. Not a quoted price.",
+    "cost_basis": "per_visit"
   }
 ]
