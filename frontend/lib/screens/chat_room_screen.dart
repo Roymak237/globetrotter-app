@@ -237,7 +237,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Future<void> _showAttachMenu(AppLocalizations localizations) async {
     final choice = await showModalBottomSheet<List<String>>(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.of(context).surface,
       shape: const RoundedRectangleBorder(
         borderRadius:
             BorderRadius.vertical(top: Radius.circular(AppTheme.radiusLarge)),
@@ -248,21 +248,22 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           children: [
             const SizedBox(height: 8),
             ListTile(
-              leading: const Icon(Icons.image_rounded, color: AppTheme.primary),
+              leading: Icon(Icons.image_rounded,
+                  color: AppTheme.of(context).primary),
               title: Text(localizations.chatAttachPhoto),
               onTap: () =>
                   Navigator.pop(sheetContext, MediaService.imageExtensions),
             ),
             ListTile(
-              leading:
-                  const Icon(Icons.videocam_rounded, color: AppTheme.primary),
+              leading: Icon(Icons.videocam_rounded,
+                  color: AppTheme.of(context).primary),
               title: Text(localizations.chatAttachVideo),
               onTap: () =>
                   Navigator.pop(sheetContext, MediaService.videoExtensions),
             ),
             ListTile(
-              leading: const Icon(Icons.description_rounded,
-                  color: AppTheme.primary),
+              leading: Icon(Icons.description_rounded,
+                  color: AppTheme.of(context).primary),
               title: Text(localizations.chatAttachDocument),
               onTap: () =>
                   Navigator.pop(sheetContext, MediaService.documentExtensions),
@@ -355,7 +356,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     final localizations = AppLocalizations.of(context);
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.of(context).surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppTheme.radiusLarge),
@@ -392,11 +393,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
             ),
             if (message.mine)
               ListTile(
-                leading: const Icon(Icons.delete_outline_rounded,
-                    color: AppTheme.error),
+                leading: Icon(Icons.delete_outline_rounded,
+                    color: AppTheme.of(context).error),
                 title: Text(
                   localizations.chatDelete,
-                  style: const TextStyle(color: AppTheme.error),
+                  style: TextStyle(color: AppTheme.of(context).error),
                 ),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
@@ -479,7 +480,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           // make the caret and hint harder to read for no gain.
           Expanded(
             child: DecoratedBox(
-              decoration: _wallpaper.decoration,
+              decoration:
+                  _wallpaper.decorationFor(Theme.of(context).brightness),
               child: _buildMessages(localizations),
             ),
           ),
@@ -524,8 +526,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   width: 22,
                   height: 22,
                   decoration: BoxDecoration(
-                    gradient: wallpaper.decoration.gradient,
-                    border: Border.all(color: AppTheme.border),
+                    gradient: wallpaper
+                        .decorationFor(Theme.of(context).brightness)
+                        .gradient,
+                    border: Border.all(color: AppTheme.of(context).border),
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
@@ -533,8 +537,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 Text(wallpaper.label),
                 if (wallpaper.id == _wallpaper.id) ...[
                   const Spacer(),
-                  const Icon(Icons.check_rounded,
-                      size: 17, color: AppTheme.primary),
+                  Icon(Icons.check_rounded,
+                      size: 17, color: AppTheme.of(context).primary),
                 ],
               ],
             ),
@@ -550,8 +554,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
   Widget _buildMessages(AppLocalizations localizations) {
     if (_loading) {
-      return const Center(
-          child: CircularProgressIndicator(color: AppTheme.primary));
+      return Center(
+          child:
+              CircularProgressIndicator(color: AppTheme.of(context).primary));
     }
 
     // Pull to refresh sits on top of the five-second poll. The poll handles
@@ -560,7 +565,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     // request.
     return RefreshIndicator(
       onRefresh: _refresh,
-      color: AppTheme.primary,
+      color: AppTheme.of(context).primary,
       child: _error != null || _messages.isEmpty
           ? _buildPlaceholder(localizations)
           : ListView.builder(
@@ -611,8 +616,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   : Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.chat_bubble_outline_rounded,
-                            size: 48, color: AppTheme.textSecondary),
+                        Icon(Icons.chat_bubble_outline_rounded,
+                            size: 48,
+                            color: AppTheme.of(context).textSecondary),
                         const SizedBox(height: 12),
                         Text(
                           localizations.chatNoMessages,
@@ -625,7 +631,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall
-                              ?.copyWith(color: AppTheme.textSecondary),
+                              ?.copyWith(
+                                  color: AppTheme.of(context).textSecondary),
                         ),
                       ],
                     ),
@@ -639,11 +646,11 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Widget _buildReplyBanner(AppLocalizations localizations) {
     final target = _replyTarget!;
     return Container(
-      color: AppTheme.primarySoft,
+      color: AppTheme.of(context).primarySoft,
       padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
       child: Row(
         children: [
-          Container(width: 3, height: 34, color: AppTheme.primary),
+          Container(width: 3, height: 34, color: AppTheme.of(context).primary),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -651,10 +658,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
               children: [
                 Text(
                   localizations.chatReply,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: AppTheme.primary,
+                    color: AppTheme.of(context).primary,
                   ),
                 ),
                 Text(
@@ -680,9 +687,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       top: false,
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-        decoration: const BoxDecoration(
-          color: AppTheme.surface,
-          border: Border(top: BorderSide(color: AppTheme.border)),
+        decoration: BoxDecoration(
+          color: AppTheme.of(context).surface,
+          border: Border(top: BorderSide(color: AppTheme.of(context).border)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -699,16 +706,16 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                       : () => _showAttachMenu(localizations),
                   tooltip: localizations.chatAttach,
                   icon: _uploading
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppTheme.primary,
+                            color: AppTheme.of(context).primary,
                           ),
                         )
                       : const Icon(Icons.attach_file_rounded),
-                  color: AppTheme.primary,
+                  color: AppTheme.of(context).primary,
                 ),
                 Expanded(
                   child: TextField(
@@ -726,7 +733,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 ),
                 const SizedBox(width: 8),
                 Material(
-                  color: AppTheme.primary,
+                  color: AppTheme.of(context).primary,
                   shape: const CircleBorder(),
                   child: InkWell(
                     customBorder: const CircleBorder(),
@@ -734,16 +741,16 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: _sending
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppTheme.onPrimary,
+                                color: AppTheme.of(context).onPrimary,
                               ),
                             )
-                          : const Icon(Icons.send_rounded,
-                              color: AppTheme.onPrimary, size: 20),
+                          : Icon(Icons.send_rounded,
+                              color: AppTheme.of(context).onPrimary, size: 20),
                     ),
                   ),
                 ),
@@ -770,24 +777,24 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
       decoration: BoxDecoration(
-        color: AppTheme.primarySoft,
+        color: AppTheme.of(context).primarySoft,
         borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-        border: Border.all(color: AppTheme.primary),
+        border: Border.all(color: AppTheme.of(context).primary),
       ),
       child: Row(
         children: [
           Icon(_attachmentIcon(attachment.kind),
-              size: 18, color: AppTheme.primaryDark),
+              size: 18, color: AppTheme.of(context).primaryDark),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.primaryDark,
+                color: AppTheme.of(context).primaryDark,
               ),
             ),
           ),
@@ -796,7 +803,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 _sending ? null : () => setState(() => _attachment = null),
             tooltip: localizations.chatAttachRemove,
             icon: const Icon(Icons.close_rounded, size: 18),
-            color: AppTheme.primaryDark,
+            color: AppTheme.of(context).primaryDark,
           ),
         ],
       ),
@@ -909,7 +916,10 @@ class _MessageBubble extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.1,
-                      color: ChatWallpaper.authorColor(message.username),
+                      color: ChatWallpaper.authorColor(
+                        message.username,
+                        brightness: Theme.of(context).brightness,
+                      ),
                     ),
                   ),
                 ),
@@ -923,7 +933,9 @@ class _MessageBubble extends StatelessWidget {
                     // deep indigo tint so the two never read as the same
                     // voice. The two fills sit at opposite ends of the ramp,
                     // so each takes the opposite ink.
-                    color: mine ? AppTheme.primary : AppTheme.indigoSoft,
+                    color: mine
+                        ? AppTheme.of(context).primary
+                        : AppTheme.of(context).indigoSoft,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
                       topRight: const Radius.circular(16),
@@ -934,7 +946,7 @@ class _MessageBubble extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (message.replyTo != null) _replyQuote(mine),
+                      if (message.replyTo != null) _replyQuote(context, mine),
                       if (attachment != null && token != null) ...[
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -956,8 +968,8 @@ class _MessageBubble extends StatelessWidget {
                               : message.text,
                           style: TextStyle(
                             color: mine
-                                ? AppTheme.onPrimary
-                                : AppTheme.textPrimary,
+                                ? AppTheme.of(context).onPrimary
+                                : AppTheme.of(context).textPrimary,
                             fontStyle: message.deleted
                                 ? FontStyle.italic
                                 : FontStyle.normal,
@@ -983,13 +995,13 @@ class _MessageBubble extends StatelessWidget {
                                 horizontal: 7, vertical: 3),
                             decoration: BoxDecoration(
                               color: reaction.reacted
-                                  ? AppTheme.primarySoft
-                                  : AppTheme.background,
+                                  ? AppTheme.of(context).primarySoft
+                                  : AppTheme.of(context).background,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: reaction.reacted
-                                    ? AppTheme.primary
-                                    : AppTheme.border,
+                                    ? AppTheme.of(context).primary
+                                    : AppTheme.of(context).border,
                               ),
                             ),
                             child: Text(
@@ -1008,7 +1020,7 @@ class _MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _replyQuote(bool mine) {
+  Widget _replyQuote(BuildContext context, bool mine) {
     final quote = message.replyTo!;
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
@@ -1019,12 +1031,14 @@ class _MessageBubble extends StatelessWidget {
         // inset there has to go the other way — a wash of the dark ink rather
         // than of white.
         color: mine
-            ? AppTheme.onPrimary.withValues(alpha: 0.12)
-            : AppTheme.surfaceSunken,
+            ? AppTheme.of(context).onPrimary.withValues(alpha: 0.12)
+            : AppTheme.of(context).surfaceSunken,
         borderRadius: BorderRadius.circular(8),
         border: Border(
           left: BorderSide(
-            color: mine ? AppTheme.onPrimary : AppTheme.primary,
+            color: mine
+                ? AppTheme.of(context).onPrimary
+                : AppTheme.of(context).primary,
             width: 3,
           ),
         ),
@@ -1037,7 +1051,9 @@ class _MessageBubble extends StatelessWidget {
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: mine ? AppTheme.onPrimary : AppTheme.primary,
+              color: mine
+                  ? AppTheme.of(context).onPrimary
+                  : AppTheme.of(context).primary,
             ),
           ),
           Text(
@@ -1047,8 +1063,8 @@ class _MessageBubble extends StatelessWidget {
             style: TextStyle(
               fontSize: 11,
               color: mine
-                  ? AppTheme.onPrimary.withValues(alpha: 0.75)
-                  : AppTheme.textSecondary,
+                  ? AppTheme.of(context).onPrimary
+                  : AppTheme.of(context).textSecondary,
             ),
           ),
         ],

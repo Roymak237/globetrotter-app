@@ -94,12 +94,12 @@ class _BottomNavState extends State<BottomNav> {
         height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: AppTheme.surface,
+          color: AppTheme.of(context).surface,
           borderRadius: BorderRadius.circular(26),
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(color: AppTheme.of(context).border),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.shadow.withValues(alpha: 0.45),
+              color: AppTheme.of(context).shadow.withValues(alpha: 0.45),
               blurRadius: 24,
               offset: const Offset(0, 10),
             ),
@@ -162,7 +162,7 @@ class _NavItem extends StatelessWidget {
           constraints: BoxConstraints(minWidth: selected ? 96 : 52),
           padding: EdgeInsets.symmetric(horizontal: selected ? 13 : 14),
           decoration: BoxDecoration(
-            color: selected ? AppTheme.primary : Colors.transparent,
+            color: selected ? AppTheme.of(context).primary : Colors.transparent,
             borderRadius: BorderRadius.circular(18),
           ),
           child: Row(
@@ -170,7 +170,9 @@ class _NavItem extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                color: selected ? AppTheme.onPrimary : AppTheme.textSecondary,
+                color: selected
+                    ? AppTheme.of(context).onPrimary
+                    : AppTheme.of(context).textSecondary,
                 size: 21,
               ),
               if (selected) ...[
@@ -180,8 +182,8 @@ class _NavItem extends StatelessWidget {
                   child: Text(
                     label,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppTheme.onPrimary,
+                    style: TextStyle(
+                      color: AppTheme.of(context).onPrimary,
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                     ),

@@ -30,7 +30,7 @@ class AboutDeveloperScreen extends StatelessWidget {
     final t = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.of(context).background,
       appBar: AppBar(
         title: Text(t.aboutDeveloperTitle),
         flexibleSpace: AppTheme.appBarBackground,
@@ -45,10 +45,10 @@ class AboutDeveloperScreen extends StatelessWidget {
             title: t.aboutDeveloperWhoTitle,
             child: Text(
               t.aboutDeveloperWhoBody,
-              style: const TextStyle(
+              style: TextStyle(
                 height: 1.55,
                 fontSize: 14.5,
-                color: AppTheme.textSecondary,
+                color: AppTheme.of(context).textSecondary,
               ),
             ),
           ),
@@ -84,10 +84,10 @@ class AboutDeveloperScreen extends StatelessWidget {
             title: t.aboutDeveloperAppTitle,
             child: Text(
               t.aboutDeveloperAppBody,
-              style: const TextStyle(
+              style: TextStyle(
                 height: 1.55,
                 fontSize: 14.5,
-                color: AppTheme.textSecondary,
+                color: AppTheme.of(context).textSecondary,
               ),
             ),
           ),
@@ -100,10 +100,10 @@ class AboutDeveloperScreen extends StatelessWidget {
               children: [
                 Text(
                   t.aboutDeveloperStackBody,
-                  style: const TextStyle(
+                  style: TextStyle(
                     height: 1.55,
                     fontSize: 14.5,
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.of(context).textSecondary,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -143,7 +143,7 @@ class _DeveloperHero extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadow.withValues(alpha: 0.5),
+            color: AppTheme.of(context).shadow.withValues(alpha: 0.5),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -192,7 +192,9 @@ class _DeveloperHero extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.18),
+              // A darker pill keeps the white label above 4.5:1 even at the
+              // light end of the brand gradient; a white wash fell short.
+              color: Colors.black.withValues(alpha: 0.22),
               borderRadius: BorderRadius.circular(999),
               border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
             ),
@@ -234,8 +236,8 @@ class _Portrait extends StatelessWidget {
     return Image.asset(
       "assets/developer.jpg",
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => const ColoredBox(
-        color: AppTheme.primarySoft,
+      errorBuilder: (context, error, stackTrace) => ColoredBox(
+        color: AppTheme.of(context).primarySoft,
         child: Center(
           child: Text(
             "FN",
@@ -243,7 +245,7 @@ class _Portrait extends StatelessWidget {
               fontFamily: AppTheme.displayFontFamily,
               fontSize: 34,
               fontWeight: FontWeight.w700,
-              color: AppTheme.primaryDark,
+              color: AppTheme.of(context).primaryDark,
             ),
           ),
         ),
@@ -271,9 +273,9 @@ class _Section extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,20 +285,21 @@ class _Section extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.primarySoft,
+                  color: AppTheme.of(context).primarySoft,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, size: 18, color: AppTheme.primaryDark),
+                child: Icon(icon,
+                    size: 18, color: AppTheme.of(context).primaryDark),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: AppTheme.displayFontFamily,
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
-                    color: AppTheme.textPrimary,
+                    color: AppTheme.of(context).textPrimary,
                   ),
                 ),
               ),
@@ -335,21 +338,21 @@ class _Fact extends StatelessWidget {
             children: [
               Text(
                 label.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.9,
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.of(context).textSecondary,
                 ),
               ),
               const SizedBox(height: 5),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   height: 1.4,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.of(context).textPrimary,
                 ),
               ),
             ],
@@ -361,7 +364,7 @@ class _Fact extends StatelessWidget {
             margin: const EdgeInsets.only(top: 2),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: AppTheme.success.withValues(alpha: 0.12),
+              color: AppTheme.of(context).success.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(999),
             ),
             child: Row(
@@ -370,18 +373,18 @@ class _Fact extends StatelessWidget {
                 Container(
                   width: 7,
                   height: 7,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.success,
+                    color: AppTheme.of(context).success,
                   ),
                 ),
                 const SizedBox(width: 6),
                 Text(
                   AppLocalizations.of(context).aboutDeveloperOngoing,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w700,
-                    color: AppTheme.success,
+                    color: AppTheme.of(context).success,
                   ),
                 ),
               ],
@@ -410,21 +413,21 @@ class _ToolChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.accentSoft,
+        color: AppTheme.of(context).accentSoft,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(tool.icon, size: 15, color: AppTheme.primaryDark),
+          Icon(tool.icon, size: 15, color: AppTheme.of(context).primaryDark),
           const SizedBox(width: 7),
           Text(
             tool.label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12.5,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
+              color: AppTheme.of(context).textPrimary,
             ),
           ),
         ],
@@ -447,22 +450,22 @@ class _VersionFooter extends StatelessWidget {
         Text(
           t.aboutDeveloperThanks,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: AppTheme.displayFontFamily,
             fontSize: 14,
             height: 1.5,
             fontStyle: FontStyle.italic,
-            color: AppTheme.textSecondary,
+            color: AppTheme.of(context).textSecondary,
           ),
         ),
         const SizedBox(height: 14),
         Text(
           t.aboutDeveloperVersion,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11.5,
             letterSpacing: 0.6,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textSecondary,
+            color: AppTheme.of(context).textSecondary,
           ),
         ),
       ],

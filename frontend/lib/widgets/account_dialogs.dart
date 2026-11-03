@@ -272,7 +272,8 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
-                                ?.copyWith(color: AppTheme.textSecondary),
+                                ?.copyWith(
+                                    color: AppTheme.of(context).textSecondary),
                           ),
                           const SizedBox(height: 8),
                           Wrap(
@@ -320,8 +321,8 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
                   const SizedBox(height: 12),
                   Text(
                     _error!,
-                    style: const TextStyle(
-                      color: AppTheme.secondary,
+                    style: TextStyle(
+                      color: AppTheme.of(context).secondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -339,12 +340,12 @@ class _AccountDetailsDialogState extends State<_AccountDetailsDialog> {
         ElevatedButton.icon(
           onPressed: busy ? null : _save,
           icon: _saving
-              ? const SizedBox(
+              ? SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: AppTheme.onPrimary,
+                    color: AppTheme.of(context).onPrimary,
                   ),
                 )
               : const Icon(Icons.check_rounded, size: 18),
@@ -486,8 +487,8 @@ class _UsernameChangeDialogState extends State<_UsernameChangeDialog> {
               const SizedBox(height: 12),
               Text(
                 _error!,
-                style: const TextStyle(
-                  color: AppTheme.secondary,
+                style: TextStyle(
+                  color: AppTheme.of(context).secondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -618,8 +619,8 @@ class _PasswordChangeDialogState extends State<_PasswordChangeDialog> {
                 const SizedBox(height: 12),
                 Text(
                   _error!,
-                  style: const TextStyle(
-                    color: AppTheme.secondary,
+                  style: TextStyle(
+                    color: AppTheme.of(context).secondary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -709,8 +710,8 @@ Future<bool> showConfirmAccountAction(
         ElevatedButton(
           style: destructive
               ? ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.error,
-                  foregroundColor: AppTheme.onPrimary,
+                  backgroundColor: AppTheme.of(context).error,
+                  foregroundColor: AppTheme.of(context).onPrimary,
                 )
               : null,
           onPressed: () => Navigator.pop(dialogContext, true),
@@ -792,8 +793,8 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.error,
-            foregroundColor: AppTheme.onPrimary,
+            backgroundColor: AppTheme.of(context).error,
+            foregroundColor: AppTheme.of(context).onPrimary,
           ),
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {

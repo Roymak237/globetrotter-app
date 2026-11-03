@@ -90,7 +90,7 @@ class _SavedDestinationsScreenState extends State<SavedDestinationsScreen> {
                     ),
                   )
                 : RefreshIndicator(
-                    color: AppTheme.primary,
+                    color: AppTheme.of(context).primary,
                     onRefresh: _loadSaved,
                     child: CustomScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),

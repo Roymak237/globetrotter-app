@@ -187,12 +187,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _loading ? null : _submit,
                       icon: _loading
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppTheme.onPrimary,
+                                color: AppTheme.of(context).onPrimary,
                               ),
                             )
                           : const Icon(Icons.auto_awesome_rounded, size: 20),
@@ -217,7 +217,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             localizations.registerFooter,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTheme.textSecondary,
+                  color: Colors.white70,
                   height: 1.4,
                 ),
           ),

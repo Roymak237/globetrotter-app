@@ -3,6 +3,7 @@ import "package:provider/provider.dart";
 
 import "../providers/auth_provider.dart";
 import "../utils/theme.dart";
+import "../widgets/theme_toggle.dart";
 
 /// Two-step password reset: ask for a code, then use it to set a new password.
 ///
@@ -115,15 +116,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Reset password")),
+      appBar: AppBar(
+        title: const Text("Reset password"),
+        actions: const [ThemeToggle()],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
           children: [
             Text(
               _codeIssued ? "Step 2 of 2" : "Step 1 of 2",
-              style: const TextStyle(
-                color: AppTheme.primaryDark,
+              style: TextStyle(
+                color: AppTheme.of(context).primaryDark,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0.8,
                 fontSize: 12,
@@ -185,7 +189,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(height: 16),
               Text(
                 _error!,
-                style: const TextStyle(color: AppTheme.error),
+                style: TextStyle(color: AppTheme.of(context).error),
               ),
             ],
             const SizedBox(height: 24),
@@ -193,12 +197,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               onPressed:
                   _busy ? null : (_codeIssued ? _submitReset : _requestCode),
               child: _busy
-                  ? const SizedBox(
+                  ? SizedBox(
                       height: 18,
                       width: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2.2,
-                        color: AppTheme.onPrimary,
+                        color: AppTheme.of(context).onPrimary,
                       ),
                     )
                   : Text(_codeIssued ? "Set new password" : "Send reset code"),
@@ -213,9 +217,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppTheme.primarySoft,
+        color: AppTheme.of(context).primarySoft,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,18 +231,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           const SizedBox(height: 6),
           SelectableText(
             _issuedCode!,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               letterSpacing: 4,
               fontWeight: FontWeight.w700,
-              color: AppTheme.primaryDark,
+              color: AppTheme.of(context).primaryDark,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             "This app has no mail server yet, so the code is shown here "
             "instead of being emailed. It expires in 15 minutes.",
-            style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            style: TextStyle(
+                fontSize: 12, color: AppTheme.of(context).textSecondary),
           ),
         ],
       ),

@@ -29,7 +29,7 @@ class FavoriteButton extends StatelessWidget {
           : "Save ${destination.name} to favorites",
       child: Material(
         color: filledBackground
-            ? AppTheme.surface.withValues(alpha: 0.92)
+            ? AppTheme.of(context).surface.withValues(alpha: 0.92)
             : Colors.transparent,
         shape: const CircleBorder(),
         child: IconButton(
@@ -60,7 +60,9 @@ class FavoriteButton extends StatelessWidget {
                   ? Icons.favorite_rounded
                   : Icons.favorite_border_rounded,
               key: ValueKey(isFavorite),
-              color: isFavorite ? AppTheme.secondary : AppTheme.primaryDark,
+              color: isFavorite
+                  ? AppTheme.of(context).secondary
+                  : AppTheme.of(context).primaryDark,
               size: 20,
             ),
           ),

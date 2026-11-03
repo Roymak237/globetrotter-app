@@ -62,6 +62,23 @@ class ChatWallpaper {
         ),
       );
 
+  /// Keep the chosen wallpaper hue/id while adapting the canvas to the mode.
+  /// The default is pure white in light mode, matching the app's page.
+  BoxDecoration decorationFor(Brightness brightness) {
+    if (brightness == Brightness.dark) return decoration;
+    return BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: id == charcoal.id
+            ? const [Colors.white, Colors.white]
+            : colors
+                .map((color) => Color.lerp(color, Colors.white, 0.94)!)
+                .toList(),
+      ),
+    );
+  }
+
   /// The default, matching the app background so an unset room looks unchanged.
   static const ChatWallpaper charcoal = ChatWallpaper(
     id: "charcoal",
@@ -136,13 +153,20 @@ class ChatWallpaper {
   /// Deterministic so the same person keeps the same colour between sessions
   /// and across devices; a random pick per build would make the colour noise
   /// rather than information.
-  static Color authorColor(String username) {
-    if (username.isEmpty) return authorColors.first;
+  static Color authorColor(
+    String username, {
+    Brightness brightness = Brightness.dark,
+  }) {
     var hash = 0;
     for (final unit in username.codeUnits) {
       hash = (hash * 31 + unit) & 0x7FFFFFFF;
     }
-    return authorColors[hash % authorColors.length];
+    final color = authorColors[hash % authorColors.length];
+    return brightness == Brightness.dark
+        ? color
+        // Saturated orange/olive need a deeper lightness than blue to clear
+        // AA on even the darkest stop of the light wallpaper variants.
+        : HSLColor.fromColor(color).withLightness(0.25).toColor();
   }
 
   /// WCAG 2.1 relative contrast between two opaque colours, 1.0 to 21.0.

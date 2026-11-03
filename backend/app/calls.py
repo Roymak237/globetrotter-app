@@ -34,6 +34,7 @@ import datetime
 import json
 import os
 import threading
+import time
 import uuid
 
 import jwt
@@ -58,7 +59,10 @@ _CONNECTIONS_LOCK = threading.Lock()
 
 # call_id -> live call state, discarded when the call ends.
 _ACTIVE_CALLS: dict[str, dict] = {}
+# Registry locks are held only for snapshots/mutations, never socket I/O.
+# Each call has its own lock to serialize selection, delivery and teardown.
 _CALLS_LOCK = threading.Lock()
+_INVITATION_TTL = 60.0
 
 # Signal types forwarded to the peer without inspection.
 _RELAY_TYPES = {"offer", "answer", "ice", "renegotiate"}
@@ -88,25 +92,19 @@ def is_online(username: str) -> bool:
         return bool(_CONNECTIONS.get(username))
 
 
-def _send_to(username: str, payload: dict) -> int:
-    """Deliver *payload* to every socket held by *username*.
-
-    Returns how many sockets accepted it. A send can fail when a browser has
-    gone away without closing cleanly, so dead sockets are reaped here rather
-    than accumulating.
-    """
+def _send_socket(username: str, ws, payload: dict) -> bool:
+    """Send to an exact registered device, never fan out selected signalling."""
     with _CONNECTIONS_LOCK:
-        sockets = list(_CONNECTIONS.get(username, ()))
-
-    body = json.dumps(payload)
-    delivered = 0
-    for ws in sockets:
-        try:
-            ws.send(body)
-            delivered += 1
-        except Exception:
-            _unregister(username, ws)
-    return delivered
+        if ws not in _CONNECTIONS.get(username, ()):
+            return False
+    try:
+        ws.send(json.dumps(payload))
+        return True
+    except Exception:
+        # The current call handles failed delivery; socket finalization cleans
+        # up any other calls. Never acquire another call lock while sending.
+        _unregister(username, ws)
+        return False
 
 
 def _authenticate(token: str) -> str | None:
@@ -128,7 +126,11 @@ def _authenticate(token: str) -> str | None:
     user = get_user_by_username(username)
     if user is None:
         return None
-    if int(user.get("session_version", 0) or 0) != int(payload.get("sv", 0)):
+    try:
+        valid_session = int(user.get("session_version", 0) or 0) == int(payload.get("sv", 0))
+    except (TypeError, ValueError):
+        return None
+    if not valid_session:
         return None
     return username
 
@@ -150,7 +152,7 @@ def _avatar_for(username: str) -> str:
     return user.get("avatar_url", "") or ""
 
 
-def _begin_call(caller: str, message: dict) -> dict:
+def _begin_call(caller: str, message: dict, ws) -> dict | None:
     """Ring everyone else in a room and record the attempt."""
     room_id = str(message.get("room_id", "") or "")
     room = get_room_by_id(room_id)
@@ -166,7 +168,7 @@ def _begin_call(caller: str, message: dict) -> dict:
     if caller not in members:
         return {"type": "error", "error": "you are not a member of this room"}
 
-    targets = [m for m in members if m != caller]
+    targets = sorted(set(members) - {caller})
     if not targets:
         return {"type": "error", "error": "there is nobody to call"}
 
@@ -184,10 +186,6 @@ def _begin_call(caller: str, message: dict) -> dict:
         "status": "ringing",
     }
 
-    with _CALLS_LOCK:
-        _ACTIVE_CALLS[call_id] = {"accepted_by": set(), "record": call}
-    save_call(call)
-
     ring = {
         "type": "ring",
         "call_id": call_id,
@@ -198,120 +196,225 @@ def _begin_call(caller: str, message: dict) -> dict:
         "from_avatar_url": _avatar_for(caller),
     }
 
-    reached = 0
-    for target in targets:
-        if not _may_call(caller, target):
-            continue
-        reached += _send_to(target, ring)
-        # A missed call should still be discoverable later, so it is also
-        # recorded as a notification.
-        save_notification({
-            "id": str(uuid.uuid4()),
-            "username": target,
-            "type": "call",
-            "actor": caller,
-            "room_id": room_id,
-            "text": f"{_display_name(caller)} called you",
-            "created_at": _now(),
-            "read": False,
-        })
-
-    return {
-        "type": "ringing",
-        "call_id": call_id,
-        "room_id": room_id,
-        "video": video,
-        "reached": reached,
+    state = {
+        "record": call,
+        "lock": threading.Lock(),
+        "caller_ws": ws,
+        "selected": None,  # (username, socket), set exactly once
+        "invited": {},  # socket -> username; only successful ring deliveries
+        "pending": {},
+        "expires_at": time.monotonic() + _INVITATION_TTL,
+        "timer": None,
+        "ended": False,
     }
+    with state["lock"]:
+        save_call(call)
+        with _CALLS_LOCK:
+            _ACTIVE_CALLS[call_id] = state
+        try:
+            for target in targets:
+                if not _may_call(caller, target):
+                    continue
+                with _CONNECTIONS_LOCK:
+                    sockets = list(_CONNECTIONS.get(target, ()))
+                for target_ws in sockets:
+                    if _send_socket(target, target_ws, ring):
+                        state["invited"][target_ws] = target
+                save_notification({
+                    "id": str(uuid.uuid4()),
+                    "username": target,
+                    "type": "call",
+                    "actor": caller,
+                    "room_id": room_id,
+                    "text": f"{_display_name(caller)} called you",
+                    "created_at": _now(),
+                    "read": False,
+                })
+            state["pending"] = dict(state["invited"])
+            reached = len(state["pending"])
+            # Send under the call lock: even an immediate accept must not reach
+            # the caller before it has received its call_id in this frame.
+            delivered = _send_socket(caller, ws, {
+                "type": "ringing", "call_id": call_id, "room_id": room_id,
+                "video": video, "reached": reached,
+            })
+            if not delivered or not reached:
+                _finish_call_locked(state, caller, "disconnect" if not delivered else "unavailable", ws)
+            else:
+                timer = threading.Timer(
+                    max(0, state["expires_at"] - time.monotonic()),
+                    _expire_call, args=(call_id,),
+                )
+                timer.daemon = True
+                state["timer"] = timer
+                timer.start()
+        except Exception:
+            _finish_call_locked(state, caller, "error")
+            raise
+    return None
 
 
-def _end_call(call_id: str, username: str, reason: str) -> None:
-    """Tear down a call and tell everyone still connected."""
-    with _CALLS_LOCK:
-        state = _ACTIVE_CALLS.pop(call_id, None)
-    if state is None:
+def _finish_call_locked(state: dict, username: str, reason: str, exclude_ws=None) -> None:
+    """Internal teardown only; caller must hold the state lock and authorize."""
+    if state["ended"]:
         return
-
+    state["ended"] = True
     record = state["record"]
+    call_id = record["id"]
+    with _CALLS_LOCK:
+        _ACTIVE_CALLS.pop(call_id, None)
+    if state["timer"] is not None:
+        state["timer"].cancel()
+    recipients = dict(state["pending"])
+    recipients[state["caller_ws"]] = record["caller"]
+    if state["selected"] is not None:
+        selected_user, selected_ws = state["selected"]
+        recipients[selected_ws] = selected_user
+    state["pending"].clear()
     answered = bool(record.get("answered_at"))
-    update_call(call_id, {
+    changes = {
         "ended_at": _now(),
         "status": "completed" if answered else (
             "declined" if reason == "decline" else "missed"
         ),
-    })
+    }
+    record.update(changes)
+    try:
+        update_call(call_id, changes)
+    finally:
+        for peer_ws, participant in recipients.items():
+            if peer_ws is not exclude_ws:
+                _send_socket(participant, peer_ws, {
+                    "type": "hangup", "call_id": call_id,
+                    "by": username, "reason": reason,
+                })
 
-    for participant in record.get("participants", []):
-        if participant == username:
-            continue
-        _send_to(participant, {
-            "type": "hangup",
-            "call_id": call_id,
-            "by": username,
-            "reason": reason,
-        })
+
+def _expire_call(call_id: str) -> None:
+    """Expire unanswered invitations even when no more client frames arrive."""
+    with _CALLS_LOCK:
+        state = _ACTIVE_CALLS.get(call_id)
+    if state is not None:
+        with state["lock"]:
+            if (not state["ended"] and state["selected"] is None
+                    and time.monotonic() >= state["expires_at"]):
+                _finish_call_locked(state, state["record"]["caller"], "timeout")
 
 
-def _handle(username: str, message: dict) -> dict | None:
+def _disconnect(username: str, ws) -> None:
+    """A lost owner ends its call; a lost invitee removes only that invitation."""
+    _unregister(username, ws)
+    with _CALLS_LOCK:
+        states = list(_ACTIVE_CALLS.values())
+    for state in states:
+        with state["lock"]:
+            if state["ended"]:
+                continue
+            if ((username == state["record"]["caller"] and ws is state["caller_ws"])
+                    or state["selected"] == (username, ws)):
+                _finish_call_locked(state, username, "disconnect", ws)
+            elif state["pending"].get(ws) == username:
+                state["pending"].pop(ws)
+                if not state["pending"]:
+                    _finish_call_locked(state, username, "disconnect", ws)
+
+
+def _eligible_peer(state: dict, username: str) -> bool:
+    """Recheck membership and blocking, including changes since the ring."""
+    caller = state["record"]["caller"]
+    room = get_room_by_id(state["record"]["room_id"])
+    return bool(room and room.get("type") != "community"
+                and caller in (room.get("members") or [])
+                and username in (room.get("members") or [])
+                and _may_call(caller, username))
+
+
+def _handle(username: str, message: dict, ws) -> dict | None:
     """Process one inbound signalling frame and return an optional reply."""
     kind = str(message.get("type", "") or "")
 
     if kind == "ping":
         return {"type": "pong"}
 
+    with _CONNECTIONS_LOCK:
+        if ws not in _CONNECTIONS.get(username, ()):
+            return {"type": "error", "error": "socket is not registered"}
     if kind == "call":
-        return _begin_call(username, message)
+        return _begin_call(username, message, ws)
+    if kind not in _RELAY_TYPES | {"accept", "decline", "hangup"}:
+        return {"type": "error", "error": f"unsupported message type: {kind or 'missing'}"}
 
-    if kind in _RELAY_TYPES:
-        target = str(message.get("to", "") or "")
-        call_id = str(message.get("call_id", "") or "")
-        if not target or not call_id:
-            return {"type": "error", "error": "to and call_id are required"}
+    call_id = str(message.get("call_id", "") or "")
+    with _CALLS_LOCK:
+        state = _ACTIVE_CALLS.get(call_id)
+    if state is None:
+        return {"type": "error", "error": "that call has ended"}
 
-        with _CALLS_LOCK:
-            state = _ACTIVE_CALLS.get(call_id)
-        # Only a participant may inject signalling into a call, which stops a
-        # third party from hijacking a negotiation by guessing a call id.
-        if state is None or username not in state["record"].get("participants", []):
-            return {"type": "error", "error": "unknown call"}
-        if target not in state["record"].get("participants", []):
-            return {"type": "error", "error": "that person is not in this call"}
+    with state["lock"]:
+        if (not state["ended"] and state["selected"] is None
+                and time.monotonic() >= state["expires_at"]):
+            _finish_call_locked(state, state["record"]["caller"], "timeout")
+        if state["ended"]:
+            return {"type": "error", "error": "that call has ended"}
+        caller = state["record"]["caller"]
+        is_caller = username == caller and ws is state["caller_ws"]
+        is_selected = state["selected"] == (username, ws)
+        is_invited = state["pending"].get(ws) == username
+        elsewhere = {"type": "hangup", "call_id": call_id, "reason": "answered_elsewhere"}
 
-        _send_to(target, {**message, "from": username})
+        if kind in _RELAY_TYPES:
+            if state["selected"] is None or not (is_caller or is_selected):
+                return {"type": "error", "error": "not a selected call socket"}
+            selected_user, selected_ws = state["selected"]
+            peer_user, peer_ws = (selected_user, selected_ws) if is_caller else (caller, state["caller_ws"])
+            if message.get("to") != peer_user or not _eligible_peer(state, selected_user):
+                return {"type": "error", "error": "that person is not in this call"}
+            if not _send_socket(peer_user, peer_ws, {**message, "from": username}):
+                _finish_call_locked(state, peer_user, "disconnect", peer_ws)
+            return None
+
+        if kind == "accept":
+            if is_selected:
+                return None  # Retransmission must not create a second offer.
+            if state["selected"] is not None and state["invited"].get(ws) == username:
+                return elsewhere
+            if not is_invited or username == caller:
+                return {"type": "error", "error": "not an invited call socket"}
+            if not _eligible_peer(state, username):
+                state["pending"].pop(ws)
+                if not state["pending"]:
+                    _finish_call_locked(state, username, "unavailable", ws)
+                return {"type": "hangup", "call_id": call_id, "reason": "unavailable"}
+            state["selected"] = (username, ws)
+            losers = dict(state["pending"])
+            losers.pop(ws)
+            state["pending"].clear()
+            if state["timer"] is not None:
+                state["timer"].cancel()
+            changes = {"answered_at": _now(), "status": "active"}
+            state["record"].update(changes)
+            update_call(call_id, changes)
+            for loser_ws, loser in losers.items():
+                _send_socket(loser, loser_ws, elsewhere)
+            if not _send_socket(caller, state["caller_ws"], {
+                "type": "accepted", "call_id": call_id, "by": username,
+            }):
+                _finish_call_locked(state, caller, "disconnect", state["caller_ws"])
+            return None
+
+        if is_caller or is_selected:
+            _finish_call_locked(state, username, kind, ws)
+        elif state["selected"] is not None and state["invited"].get(ws) == username:
+            return elsewhere
+        elif is_invited:
+            # A busy device (including a sibling tab) cannot decline on behalf
+            # of every other invitee. Only the last invitation ends the call.
+            state["pending"].pop(ws)
+            if not state["pending"]:
+                _finish_call_locked(state, username, kind, ws)
+        else:
+            return {"type": "error", "error": "not a call socket"}
         return None
-
-    if kind == "accept":
-        call_id = str(message.get("call_id", "") or "")
-        with _CALLS_LOCK:
-            state = _ACTIVE_CALLS.get(call_id)
-            if state is None:
-                return {"type": "error", "error": "that call has ended"}
-            if username not in state["record"].get("participants", []):
-                return {"type": "error", "error": "unknown call"}
-            state["accepted_by"].add(username)
-            first_answer = state["record"].get("answered_at") is None
-            if first_answer:
-                state["record"]["answered_at"] = _now()
-                state["record"]["status"] = "active"
-            participants = list(state["record"].get("participants", []))
-
-        if first_answer:
-            update_call(call_id, {"answered_at": _now(), "status": "active"})
-
-        for participant in participants:
-            if participant != username:
-                _send_to(participant, {
-                    "type": "accepted",
-                    "call_id": call_id,
-                    "by": username,
-                })
-        return None
-
-    if kind in ("decline", "hangup"):
-        _end_call(str(message.get("call_id", "") or ""), username, kind)
-        return None
-
-    return {"type": "error", "error": f"unsupported message type: {kind or 'missing'}"}
 
 
 def register_socket(sock) -> None:
@@ -330,9 +433,9 @@ def register_socket(sock) -> None:
             return
 
         _register(username, ws)
-        ws.send(json.dumps({"type": "ready", "username": username}))
 
         try:
+            ws.send(json.dumps({"type": "ready", "username": username}))
             while True:
                 raw = ws.receive()
                 if raw is None:
@@ -345,7 +448,7 @@ def register_socket(sock) -> None:
                 if not isinstance(message, dict):
                     continue
 
-                reply = _handle(username, message)
+                reply = _handle(username, message, ws)
                 if reply is not None:
                     ws.send(json.dumps(reply))
         except Exception:
@@ -353,17 +456,7 @@ def register_socket(sock) -> None:
             # below runs either way, so it needs no special handling.
             pass
         finally:
-            _unregister(username, ws)
-            # End any call this user was in once their last socket has gone, so
-            # a closed laptop lid does not leave a call ringing forever.
-            if not is_online(username):
-                with _CALLS_LOCK:
-                    stale = [
-                        call_id for call_id, state in _ACTIVE_CALLS.items()
-                        if username in state["record"].get("participants", [])
-                    ]
-                for call_id in stale:
-                    _end_call(call_id, username, "disconnect")
+            _disconnect(username, ws)
 
 
 @calls_bp.route("/api/chat/calls", methods=["GET"])

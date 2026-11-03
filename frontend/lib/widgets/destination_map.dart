@@ -174,7 +174,7 @@ class _DestinationMapState extends State<DestinationMap> {
                 Polyline(
                   points: widget.routePoints,
                   strokeWidth: 5.0,
-                  color: AppTheme.secondary,
+                  color: AppTheme.of(context).secondary,
                 ),
               ],
             ),
@@ -237,7 +237,9 @@ class _DestinationMapState extends State<DestinationMap> {
             onTap: () => widget.onDestinationSelected?.call(destination),
             child: Icon(
               Icons.location_on_rounded,
-              color: selected ? AppTheme.secondary : AppTheme.primary,
+              color: selected
+                  ? AppTheme.of(context).secondary
+                  : AppTheme.of(context).primary,
               size: 30,
             ),
           ),
@@ -302,7 +304,8 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
       decoration: BoxDecoration(
         color: const Color(0xFFE8F2EC),
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        border: Border.all(color: AppTheme.primarySoft.withValues(alpha: 0.8)),
+        border: Border.all(
+            color: AppTheme.of(context).primarySoft.withValues(alpha: 0.8)),
       ),
       child: Stack(
         fit: StackFit.expand,
@@ -317,6 +320,7 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
               borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
               child: CustomPaint(
                 painter: _CameroonMapPainter(
+                  routeColor: AppTheme.of(context).secondary,
                   destinations: widget.destinations,
                   selectedDestination: widget.selectedDestination,
                   currentLocation: widget.currentLocation,
@@ -380,7 +384,7 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
       // Matches every other raised control in the app. These float over map
       // tiles rather than the page background, so the warm surface reads as
       // part of the product instead of as a piece of the basemap's own chrome.
-      color: AppTheme.surface,
+      color: AppTheme.of(context).surface,
       elevation: 3,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
@@ -388,7 +392,7 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Icon(icon, size: 18, color: AppTheme.primaryDark),
+          child: Icon(icon, size: 18, color: AppTheme.of(context).primaryDark),
         ),
       ),
     );
@@ -433,11 +437,14 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppTheme.secondary : AppTheme.primaryDark,
+                  color: isSelected
+                      ? AppTheme.of(context).secondary
+                      : AppTheme.of(context).primaryDark,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.shadow.withValues(alpha: 0.35),
+                      color:
+                          AppTheme.of(context).shadow.withValues(alpha: 0.35),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -445,10 +452,10 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
                 ),
                 child: Text(
                   dest.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     // The pill is a pale fill on a light map tile, so the
                     // label takes the dark ink rather than white.
-                    color: AppTheme.onPrimary,
+                    color: AppTheme.of(context).onPrimary,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
@@ -456,7 +463,9 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
               ),
               Icon(
                 Icons.location_on_rounded,
-                color: isSelected ? AppTheme.secondary : AppTheme.primary,
+                color: isSelected
+                    ? AppTheme.of(context).secondary
+                    : AppTheme.of(context).primary,
                 size: 26,
               ),
             ],
@@ -516,6 +525,7 @@ class _InteractiveVectorMapState extends State<_InteractiveVectorMap> {
 }
 
 class _CameroonMapPainter extends CustomPainter {
+  final Color routeColor;
   final List<Destination> destinations;
   final Destination? selectedDestination;
   final LatLng? currentLocation;
@@ -524,6 +534,7 @@ class _CameroonMapPainter extends CustomPainter {
   final Offset panOffset;
 
   _CameroonMapPainter({
+    required this.routeColor,
     required this.destinations,
     required this.selectedDestination,
     required this.currentLocation,
@@ -565,7 +576,7 @@ class _CameroonMapPainter extends CustomPainter {
 
     if (routePoints.length >= 2) {
       final routePaint = ui.Paint()
-        ..color = AppTheme.secondary
+        ..color = routeColor
         ..strokeWidth = 4.0 * zoomLevel
         ..style = ui.PaintingStyle.stroke
         ..strokeCap = ui.StrokeCap.round
@@ -608,6 +619,7 @@ class _CameroonMapPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _CameroonMapPainter oldDelegate) {
+    if (routeColor != oldDelegate.routeColor) return true;
     return oldDelegate.zoomLevel != zoomLevel ||
         oldDelegate.panOffset != panOffset ||
         oldDelegate.selectedDestination != selectedDestination ||
@@ -630,19 +642,19 @@ class _MapMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppTheme.primarySoft,
+      color: AppTheme.of(context).primarySoft,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppTheme.primary, size: 32),
+          Icon(icon, color: AppTheme.of(context).primary, size: 32),
           const SizedBox(height: 10),
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppTheme.primaryDark,
+            style: TextStyle(
+              color: AppTheme.of(context).primaryDark,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -650,7 +662,7 @@ class _MapMessage extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppTheme.textSecondary),
+            style: TextStyle(color: AppTheme.of(context).textSecondary),
           ),
         ],
       ),
@@ -702,24 +714,24 @@ class _CompanionMarker extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const _LiveDot(color: AppTheme.indigo, size: 16),
+        _LiveDot(color: AppTheme.of(context).indigo, size: 16),
         const SizedBox(height: 3),
         Flexible(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: AppTheme.surface.withValues(alpha: 0.94),
+              color: AppTheme.of(context).surface.withValues(alpha: 0.94),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppTheme.border),
+              border: Border.all(color: AppTheme.of(context).border),
             ),
             child: Text(
               companion.displayName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.indigo,
+                color: AppTheme.of(context).indigo,
               ),
             ),
           ),

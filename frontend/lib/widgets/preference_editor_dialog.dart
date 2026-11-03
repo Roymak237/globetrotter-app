@@ -52,8 +52,8 @@ Future<bool> showPreferenceEditor(
                       const SizedBox(height: 12),
                       Text(
                         error!,
-                        style: const TextStyle(
-                          color: AppTheme.secondary,
+                        style: TextStyle(
+                          color: AppTheme.of(context).secondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -91,12 +91,12 @@ Future<bool> showPreferenceEditor(
                         }
                       },
                 icon: saving
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppTheme.onPrimary,
+                          color: AppTheme.of(context).onPrimary,
                         ),
                       )
                     : const Icon(Icons.check_rounded, size: 18),

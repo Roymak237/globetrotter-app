@@ -27,7 +27,7 @@ class AppLoadingView extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.of(context).textSecondary,
                   ),
             ),
           ],
@@ -62,11 +62,11 @@ class EmptyStateView extends StatelessWidget {
             Container(
               width: 70,
               height: 70,
-              decoration: const BoxDecoration(
-                color: AppTheme.primarySoft,
+              decoration: BoxDecoration(
+                color: AppTheme.of(context).primarySoft,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: AppTheme.primary, size: 32),
+              child: Icon(icon, color: AppTheme.of(context).primary, size: 32),
             ),
             const SizedBox(height: 18),
             Text(
@@ -81,7 +81,7 @@ class EmptyStateView extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.of(context).textSecondary,
                     height: 1.45,
                   ),
             ),

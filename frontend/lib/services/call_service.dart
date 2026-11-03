@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:convert";
+import "dart:math" as math;
 
 import "package:flutter/foundation.dart";
 import "package:flutter_webrtc/flutter_webrtc.dart";
@@ -33,6 +34,11 @@ class CallSession {
   String get title => peerDisplayName.isNotEmpty ? peerDisplayName : peer;
 }
 
+/// Thrown when a call ends while its media is still being set up.
+class _CallCancelled implements Exception {
+  const _CallCancelled();
+}
+
 /// Peer-to-peer audio and video calling.
 ///
 /// Signalling runs over a websocket to the backend; the audio and video
@@ -49,12 +55,28 @@ class CallService extends ChangeNotifier {
   /// the screen, which is indistinguishable from the app being broken.
   static const Duration ringTimeout = Duration(seconds: 45);
 
+  /// How long media may take to flow once both sides have agreed to talk.
+  static const Duration connectTimeout = Duration(seconds: 30);
+
   WebSocketChannel? _channel;
   StreamSubscription<dynamic>? _subscription;
   Timer? _heartbeat;
   Timer? _ringTimer;
   Timer? _settleTimer;
+  Timer? _connectTimer;
+  Timer? _reconnectTimer;
   bool _disposed = false;
+
+  /// Bumped whenever the socket is replaced, so callbacks from an old socket
+  /// cannot tear down a newer one.
+  int _generation = 0;
+  Future<void>? _connecting;
+  int _reconnectAttempts = 0;
+
+  /// Bumped on every teardown, so async work for an ended call stops instead
+  /// of leaking a microphone or touching the next call.
+  int _callGeneration = 0;
+  Future<void>? _preparing;
 
   /// How a signalling socket gets opened.
   ///
@@ -64,6 +86,11 @@ class CallService extends ChangeNotifier {
   /// hard-wired.
   @visibleForTesting
   WebSocketChannel Function(Uri uri) channelFactory = WebSocketChannel.connect;
+
+  /// How the ICE server list is fetched; injectable for the same reason.
+  @visibleForTesting
+  Future<http.Response> Function(Uri url, {Map<String, String>? headers})
+      httpGet = http.get;
 
   RTCPeerConnection? _peerConnection;
   MediaStream? _localStream;
@@ -120,23 +147,51 @@ class CallService extends ChangeNotifier {
   // ---------------------------------------------------------------------
 
   /// Open the signalling socket. Safe to call repeatedly.
-  Future<void> connect(String token, String username) async {
-    if (_channel != null && _token == token) return;
+  ///
+  /// Concurrent calls for the same session share one attempt; a different
+  /// session replaces the old socket instead of leaking it.
+  Future<void> connect(String token, String username) {
+    if (_token == token) {
+      _username = username;
+      if (_channel != null) return Future<void>.value();
+      final pending = _connecting;
+      if (pending != null) return pending;
+    } else {
+      _reconnectAttempts = 0;
+      if (inCall) unawaited(hangUp());
+    }
+    _cancelReconnect();
+    _closeChannel();
     _token = token;
     _username = username;
 
-    // Best-effort, deliberately. The socket is what lets an incoming call
-    // reach this device at all; the video surfaces are only needed once a
-    // call is actually answered, and _preparePeerConnection initialises them
-    // again before use. Letting a renderer failure abort here would take out
-    // signalling — and with it every incoming call — over a problem that
-    // only affects video.
-    try {
-      await _ensureRenderers();
-    } catch (_) {
-      // Surfaced later by _preparePeerConnection, which needs them for real.
-    }
+    final generation = _generation;
+    late final Future<void> attempt;
+    attempt = _open(token, generation).whenComplete(() {
+      if (identical(_connecting, attempt)) _connecting = null;
+    });
+    _connecting = attempt;
+    return attempt;
+  }
+
+  /// Reconnect now if signed in but offline, e.g. when the app resumes.
+  void ensureConnected() {
+    final token = _token;
+    final username = _username;
+    if (_disposed || token == null || username == null) return;
+    if (_channel != null || _connecting != null) return;
+    _cancelReconnect();
+    unawaited(connect(token, username));
+  }
+
+  Future<void> _open(String token, int generation) async {
+    // Video renderers are deliberately not initialised here. The socket is
+    // what lets an incoming call reach this device at all; the renderers are
+    // only needed once a call is answered, and _preparePeerConnection sets
+    // them up then. Tying the two together let a renderer problem stall
+    // (re)connection, and with it every incoming call.
     await _loadIceServers(token);
+    if (_disposed || generation != _generation || _token != token) return;
 
     final base = Uri.parse(AppConstants.backendBaseUrl);
     final uri = base.replace(
@@ -152,9 +207,9 @@ class CallService extends ChangeNotifier {
       final channel = channelFactory(uri);
       _channel = channel;
       _subscription = channel.stream.listen(
-        _onFrame,
-        onDone: _onSocketClosed,
-        onError: (_) => _onSocketClosed(),
+        _handleRaw,
+        onDone: () => _onSocketClosed(generation),
+        onError: (_) => _onSocketClosed(generation),
         cancelOnError: true,
       );
       // Idle websockets are dropped by proxies; a periodic ping keeps the
@@ -166,33 +221,84 @@ class CallService extends ChangeNotifier {
       );
     } catch (_) {
       _channel = null;
+      _subscription = null;
+      _scheduleReconnect();
     }
     _notify();
   }
 
+  /// Sign-out: end any call, close the socket and stop reconnecting.
   Future<void> disconnect() async {
+    _token = null;
+    _username = null;
+    _cancelReconnect();
+    _reconnectAttempts = 0;
+    if (inCall) await hangUp();
+    final subscription = _subscription;
+    final channel = _channel;
+    _generation++;
+    _connecting = null;
+    _subscription = null;
+    _channel = null;
     _heartbeat?.cancel();
     _heartbeat = null;
     _ringTimer?.cancel();
     _ringTimer = null;
-    await _subscription?.cancel();
-    _subscription = null;
-    await _channel?.sink.close();
-    _channel = null;
+    await subscription?.cancel();
+    try {
+      await channel?.sink.close();
+    } catch (_) {}
     _notify();
   }
 
-  void _onSocketClosed() {
+  void _closeChannel() {
+    _generation++;
+    _connecting = null;
+    _heartbeat?.cancel();
+    _heartbeat = null;
+    final subscription = _subscription;
+    final channel = _channel;
+    _subscription = null;
     _channel = null;
+    if (subscription != null) unawaited(subscription.cancel());
+    if (channel != null) {
+      unawaited(Future<void>.sync(() => channel.sink.close())
+          .catchError((Object _) {}));
+    }
+  }
+
+  void _onSocketClosed(int generation) {
+    // A socket that has already been replaced must not disturb its successor.
+    if (generation != _generation) return;
+    _channel = null;
+    _subscription = null;
     _heartbeat?.cancel();
     _heartbeat = null;
     if (inCall) _fail("The connection dropped.");
+    // Without this a dropped socket left the traveller unreachable for
+    // incoming calls until they signed out and back in.
+    _scheduleReconnect();
     _notify();
+  }
+
+  void _scheduleReconnect() {
+    if (_disposed || _token == null || _reconnectTimer != null) return;
+    final seconds = math.min(30, 1 << math.min(_reconnectAttempts, 5));
+    _reconnectAttempts++;
+    _reconnectTimer = Timer(Duration(seconds: seconds), () {
+      _reconnectTimer = null;
+      ensureConnected();
+    });
+  }
+
+  void _cancelReconnect() {
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
   }
 
   Future<void> _loadIceServers(String token) async {
     try {
-      final response = await http.get(
+      final response = await httpGet(
         Uri.parse("${AppConstants.backendBaseUrl}"
             "${AppConstants.apiPrefix}/chat/calls/ice"),
         headers: {"Authorization": "Bearer $token"},
@@ -217,12 +323,39 @@ class CallService extends ChangeNotifier {
   void _send(Map<String, dynamic> message) {
     final channel = _channel;
     if (channel == null) return;
-    channel.sink.add(jsonEncode(message));
+    try {
+      channel.sink.add(jsonEncode(message));
+    } catch (_) {
+      // A closing socket reports itself through onDone/onError.
+    }
   }
 
   // ---------------------------------------------------------------------
   // Inbound frames
   // ---------------------------------------------------------------------
+
+  /// Run a frame handler, ending the call cleanly if it throws.
+  ///
+  /// Handlers await media and SDP operations. Their failures used to vanish
+  /// inside the stream listener, leaving both sides stuck on "connecting".
+  void _handleRaw(dynamic raw) {
+    final generation = _callGeneration;
+    unawaited(_onFrame(raw).catchError((Object error) {
+      if (error is _CallCancelled || generation != _callGeneration) return;
+      _abortCall("The call could not connect.");
+    }));
+  }
+
+  /// Whether [message] belongs to the call in progress.
+  ///
+  /// Without this a hangup or ICE candidate for a different call (say, one
+  /// declined because the line was busy) could tear down the current call.
+  bool _isCurrentCall(Map<String, dynamic> message) {
+    final session = _session;
+    return session != null &&
+        session.callId.isNotEmpty &&
+        message["call_id"]?.toString() == session.callId;
+  }
 
   Future<void> _onFrame(dynamic raw) async {
     Map<String, dynamic> message;
@@ -233,6 +366,9 @@ class CallService extends ChangeNotifier {
     }
 
     switch (message["type"]) {
+      case "ready":
+        _reconnectAttempts = 0;
+        break;
       case "ring":
         await _onRing(message);
         break;
@@ -252,14 +388,41 @@ class CallService extends ChangeNotifier {
         await _onRemoteCandidate(message);
         break;
       case "hangup":
-        await _teardown(
-          message["reason"] == "decline" ? "Call declined." : null,
-        );
+        await _onHangup(message);
         break;
       case "error":
-        _fail(message["error"]?.toString() ?? "Call failed.");
+        // Errors carry no call id. Only a call still being set up can have
+        // caused one; anything later is a reply to a stale frame and must not
+        // end the call in progress.
+        if (_stage == CallStage.dialling || _stage == CallStage.connecting) {
+          _abortCall(message["error"]?.toString() ?? "Call failed.");
+        }
         break;
     }
+  }
+
+  Future<void> _onHangup(Map<String, dynamic> message) async {
+    if (!_isCurrentCall(message)) return;
+    final incoming = _session?.incoming ?? false;
+    String? reason;
+    switch (message["reason"]) {
+      case "decline":
+        reason = incoming ? null : "Call declined.";
+        break;
+      case "timeout":
+        reason = incoming ? null : "No answer.";
+        break;
+      case "unavailable":
+        reason = incoming
+            ? "This call is no longer available."
+            : "No one is available to take this call right now.";
+        break;
+      case "disconnect":
+        reason = "The other person lost their connection.";
+        break;
+      // "answered_elsewhere" and a normal hangup end quietly.
+    }
+    await _teardown(reason);
   }
 
   /// The server accepted the request and rang whoever it could find.
@@ -272,7 +435,12 @@ class CallService extends ChangeNotifier {
   /// is indistinguishable from the network being broken.
   void _onRinging(Map<String, dynamic> message) {
     final session = _session;
-    if (session == null) return;
+    // Only the reply to our own pending request; never re-key a live call.
+    if (session == null ||
+        _stage != CallStage.dialling ||
+        session.callId.isNotEmpty) {
+      return;
+    }
 
     final reached = (message["reached"] as num?)?.toInt() ?? 0;
     if (reached <= 0) {
@@ -306,14 +474,18 @@ class CallService extends ChangeNotifier {
   }
 
   Future<void> _onRing(Map<String, dynamic> message) async {
+    final callId = message["call_id"]?.toString() ?? "";
+    if (callId.isEmpty) return;
     // Already busy: decline rather than leaving the caller ringing forever.
     if (inCall) {
-      _send({"type": "decline", "call_id": message["call_id"]});
+      if (_session?.callId != callId) {
+        _send({"type": "decline", "call_id": callId});
+      }
       return;
     }
 
     _session = CallSession(
-      callId: message["call_id"]?.toString() ?? "",
+      callId: callId,
       roomId: message["room_id"]?.toString() ?? "",
       peer: message["from"]?.toString() ?? "",
       peerDisplayName: message["from_display_name"]?.toString() ?? "",
@@ -329,7 +501,12 @@ class CallService extends ChangeNotifier {
 
   Future<void> _onAccepted(Map<String, dynamic> message) async {
     final session = _session;
-    if (session == null || session.incoming) return;
+    if (session == null ||
+        session.incoming ||
+        !_isCurrentCall(message) ||
+        _stage != CallStage.ringing) {
+      return;
+    }
 
     // Someone picked up, so the unanswered-call timer no longer applies.
     _ringTimer?.cancel();
@@ -351,12 +528,24 @@ class CallService extends ChangeNotifier {
       incoming: false,
     );
 
-    await _preparePeerConnection(video: session.video);
+    try {
+      await _preparePeerConnection(video: session.video);
+    } on _CallCancelled {
+      return;
+    } catch (_) {
+      // Without this the callee waited on a caller that could never send an
+      // offer, because the caller's microphone had been refused.
+      _abortCall("Microphone or camera permission was refused.");
+      return;
+    }
     final connection = _peerConnection;
-    if (connection == null) return;
+    if (connection == null || _session?.callId != session.callId) return;
+    _startConnectTimer();
 
     final offer = await connection.createOffer();
+    if (!identical(_peerConnection, connection)) return;
     await connection.setLocalDescription(offer);
+    if (!identical(_peerConnection, connection)) return;
     _send({
       "type": "offer",
       "call_id": session.callId,
@@ -368,7 +557,12 @@ class CallService extends ChangeNotifier {
 
   Future<void> _onOffer(Map<String, dynamic> message) async {
     final session = _session;
-    if (session == null) return;
+    if (session == null ||
+        !session.incoming ||
+        !_isCurrentCall(message) ||
+        _remoteDescriptionSet) {
+      return;
+    }
 
     await _preparePeerConnection(video: session.video);
     final connection = _peerConnection;
@@ -378,11 +572,14 @@ class CallService extends ChangeNotifier {
       message["sdp"]?.toString(),
       message["sdp_type"]?.toString() ?? "offer",
     ));
+    if (!identical(_peerConnection, connection)) return;
     _remoteDescriptionSet = true;
     await _flushPendingCandidates();
 
     final answer = await connection.createAnswer();
+    if (!identical(_peerConnection, connection)) return;
     await connection.setLocalDescription(answer);
+    if (!identical(_peerConnection, connection)) return;
     _send({
       "type": "answer",
       "call_id": session.callId,
@@ -390,12 +587,18 @@ class CallService extends ChangeNotifier {
       "sdp": answer.sdp,
       "sdp_type": answer.type,
     });
-
-    _stage = CallStage.active;
-    _notify();
+    // The stage becomes active only when media actually connects; finishing
+    // SDP used to show "in call" for calls that never carried any audio.
   }
 
   Future<void> _onAnswer(Map<String, dynamic> message) async {
+    final session = _session;
+    if (session == null ||
+        session.incoming ||
+        !_isCurrentCall(message) ||
+        _remoteDescriptionSet) {
+      return;
+    }
     final connection = _peerConnection;
     if (connection == null) return;
 
@@ -403,32 +606,43 @@ class CallService extends ChangeNotifier {
       message["sdp"]?.toString(),
       message["sdp_type"]?.toString() ?? "answer",
     ));
+    if (!identical(_peerConnection, connection)) return;
     _remoteDescriptionSet = true;
     await _flushPendingCandidates();
-
-    _stage = CallStage.active;
-    _notify();
   }
 
   Future<void> _onRemoteCandidate(Map<String, dynamic> message) async {
+    if (!_isCurrentCall(message)) return;
+    final value = message["candidate"]?.toString();
+    if (value == null || value.isEmpty) return;
     final candidate = RTCIceCandidate(
-      message["candidate"]?.toString(),
+      value,
       message["sdp_mid"]?.toString(),
       (message["sdp_m_line_index"] as num?)?.toInt(),
     );
 
-    if (!_remoteDescriptionSet) {
+    final connection = _peerConnection;
+    if (!_remoteDescriptionSet || connection == null) {
       _pendingCandidates.add(candidate);
       return;
     }
-    await _peerConnection?.addCandidate(candidate);
+    try {
+      await connection.addCandidate(candidate);
+    } catch (_) {
+      // One unusable candidate must not end a call others can carry.
+    }
   }
 
   Future<void> _flushPendingCandidates() async {
-    for (final candidate in _pendingCandidates) {
-      await _peerConnection?.addCandidate(candidate);
-    }
+    final pending = List<RTCIceCandidate>.of(_pendingCandidates);
     _pendingCandidates.clear();
+    for (final candidate in pending) {
+      final connection = _peerConnection;
+      if (connection == null) return;
+      try {
+        await connection.addCandidate(candidate);
+      } catch (_) {}
+    }
   }
 
   // ---------------------------------------------------------------------
@@ -442,36 +656,88 @@ class CallService extends ChangeNotifier {
     _renderersReady = true;
   }
 
-  Future<void> _preparePeerConnection({required bool video}) async {
-    if (_peerConnection != null) return;
-
-    await _ensureRenderers();
-
-    final stream = await navigator.mediaDevices.getUserMedia({
-      "audio": true,
-      "video": video
-          ? {
-              "facingMode": "user",
-              "width": {"ideal": 640},
-              "height": {"ideal": 480},
-            }
-          : false,
+  /// Open media and the peer connection once per call.
+  ///
+  /// Concurrent callers share one attempt. If the call ends while the
+  /// permission prompt is open, the late stream is released rather than left
+  /// holding the microphone, and [_CallCancelled] is thrown.
+  Future<void> _preparePeerConnection({required bool video}) {
+    if (_peerConnection != null) return Future<void>.value();
+    final existing = _preparing;
+    if (existing != null) return existing;
+    late final Future<void> attempt;
+    attempt = _createPeerConnection(video: video, generation: _callGeneration)
+        .whenComplete(() {
+      if (identical(_preparing, attempt)) _preparing = null;
     });
-    _localStream = stream;
-    localRenderer.srcObject = stream;
+    _preparing = attempt;
+    return attempt;
+  }
 
-    final connection = await createPeerConnection({
-      "iceServers": _iceServers,
-      "sdpSemantics": "unified-plan",
-    });
-
-    for (final track in stream.getTracks()) {
-      await connection.addTrack(track, stream);
+  Future<void> _createPeerConnection({
+    required bool video,
+    required int generation,
+  }) async {
+    void checkCurrent() {
+      if (generation != _callGeneration) throw const _CallCancelled();
     }
 
+    try {
+      await _ensureRenderers();
+      checkCurrent();
+
+      final stream = await navigator.mediaDevices.getUserMedia({
+        "audio": true,
+        "video": video
+            ? {
+                "facingMode": "user",
+                "width": {"ideal": 640},
+                "height": {"ideal": 480},
+              }
+            : false,
+      });
+      if (generation != _callGeneration) {
+        await _disposeStream(stream);
+        throw const _CallCancelled();
+      }
+      _localStream = stream;
+      localRenderer.srcObject = stream;
+
+      final connection = await createPeerConnection({
+        "iceServers": _iceServers,
+        "sdpSemantics": "unified-plan",
+      });
+      if (generation != _callGeneration) {
+        try {
+          await connection.close();
+        } catch (_) {}
+        throw const _CallCancelled();
+      }
+      // Published before any further await, so a teardown can close it.
+      _peerConnection = connection;
+      _attachHandlers(connection);
+
+      for (final track in stream.getTracks()) {
+        await connection.addTrack(track, stream);
+        checkCurrent();
+      }
+
+      _cameraOff = !video;
+      _notify();
+    } catch (error) {
+      if (generation != _callGeneration) throw const _CallCancelled();
+      rethrow;
+    }
+  }
+
+  void _attachHandlers(RTCPeerConnection connection) {
     connection.onIceCandidate = (candidate) {
       final session = _session;
-      if (session == null || candidate.candidate == null) return;
+      if (!identical(_peerConnection, connection) ||
+          session == null ||
+          candidate.candidate == null) {
+        return;
+      }
       _send({
         "type": "ice",
         "call_id": session.callId,
@@ -483,33 +749,71 @@ class CallService extends ChangeNotifier {
     };
 
     connection.onTrack = (event) {
+      if (!identical(_peerConnection, connection)) return;
       if (event.streams.isNotEmpty) {
         remoteRenderer.srcObject = event.streams.first;
         _notify();
       }
     };
 
+    // Not every platform reports the aggregate connection state, so the ICE
+    // state is watched as well; whichever reports first wins.
     connection.onConnectionState = (state) {
+      if (!identical(_peerConnection, connection)) return;
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
-        _stage = CallStage.active;
-        _notify();
+        _markActive();
       } else if (state == RTCPeerConnectionState.RTCPeerConnectionStateFailed ||
           state == RTCPeerConnectionState.RTCPeerConnectionStateClosed) {
-        // Without a TURN relay this is the expected outcome on any network
-        // that uses symmetric NAT, which most mobile carriers do. Signalling
-        // succeeds, negotiation completes, and the media has nowhere to go.
-        // Saying so gives the caller something to act on instead of a dead
-        // end that looks like a bug in the app.
-        _teardown(_hasTurn
-            ? "The call could not connect."
-            : "The call could not connect. This often happens on mobile "
-                "data — try again on Wi-Fi.");
+        _abortCall(_noMediaMessage);
       }
     };
+    connection.onIceConnectionState = (state) {
+      if (!identical(_peerConnection, connection)) return;
+      if (state == RTCIceConnectionState.RTCIceConnectionStateConnected ||
+          state == RTCIceConnectionState.RTCIceConnectionStateCompleted) {
+        _markActive();
+      } else if (state == RTCIceConnectionState.RTCIceConnectionStateFailed) {
+        _abortCall(_noMediaMessage);
+      }
+    };
+  }
 
-    _peerConnection = connection;
-    _cameraOff = !video;
-    _notify();
+  /// Without a TURN relay a failed connection is the expected outcome on any
+  /// network that uses symmetric NAT, which most mobile carriers do.
+  String get _noMediaMessage => _hasTurn
+      ? "The call could not connect."
+      : "The call could not connect. This often happens on mobile "
+          "data — try again on Wi-Fi.";
+
+  void _markActive() {
+    _connectTimer?.cancel();
+    _connectTimer = null;
+    if (_stage == CallStage.connecting) {
+      _stage = CallStage.active;
+      _notify();
+    }
+  }
+
+  /// Bound the time between answering and media flowing. Started after the
+  /// permission prompt, so a slow tap on "Allow" does not count against it.
+  void _startConnectTimer() {
+    _connectTimer?.cancel();
+    final generation = _callGeneration;
+    _connectTimer = Timer(connectTimeout, () {
+      if (generation != _callGeneration || _stage != CallStage.connecting) {
+        return;
+      }
+      _abortCall(_noMediaMessage);
+    });
+  }
+
+  Future<void> _disposeStream(MediaStream stream) async {
+    try {
+      for (final track in stream.getTracks()) {
+        await track.stop();
+      }
+      await stream.dispose();
+    } catch (_) {}
   }
 
   // ---------------------------------------------------------------------
@@ -551,7 +855,9 @@ class CallService extends ChangeNotifier {
   /// Answer the call that is currently ringing.
   Future<void> accept() async {
     final session = _session;
-    if (session == null || !session.incoming) return;
+    if (session == null || !session.incoming || _stage != CallStage.ringing) {
+      return;
+    }
 
     _stage = CallStage.connecting;
     _notify();
@@ -560,13 +866,21 @@ class CallService extends ChangeNotifier {
     // caller is declined cleanly instead of connecting to silence.
     try {
       await _preparePeerConnection(video: session.video);
+    } on _CallCancelled {
+      return;
     } catch (_) {
+      if (_session?.callId != session.callId) return;
       _send({"type": "decline", "call_id": session.callId});
       _fail("Microphone or camera permission was refused.");
       return;
     }
 
+    // The caller may have given up while the permission prompt was open.
+    if (_session?.callId != session.callId || _stage != CallStage.connecting) {
+      return;
+    }
     _send({"type": "accept", "call_id": session.callId});
+    _startConnectTimer();
   }
 
   /// Refuse an incoming call.
@@ -627,23 +941,42 @@ class CallService extends ChangeNotifier {
     unawaited(_teardown(message));
   }
 
+  /// End the current call locally and tell the other side, so neither device
+  /// is left waiting on a call that can no longer connect.
+  void _abortCall(String message) {
+    final session = _session;
+    if (session == null) return;
+    if (session.callId.isNotEmpty) {
+      _send({"type": "hangup", "call_id": session.callId});
+    }
+    _fail(message);
+  }
+
+  /// Release everything the current call holds. Safe to call repeatedly:
+  /// state is cleared synchronously, before any await, so a second caller
+  /// finds nothing left to release and cannot overwrite the first reason.
   Future<void> _teardown(String? message) async {
+    final session = _session;
+    final stream = _localStream;
+    final connection = _peerConnection;
+    if (session == null && stream == null && connection == null) {
+      if (message != null) _error = message;
+      _notify();
+      return;
+    }
+
+    _callGeneration++;
     _ringTimer?.cancel();
     _ringTimer = null;
+    _connectTimer?.cancel();
+    _connectTimer = null;
+    _preparing = null;
     _remoteDescriptionSet = false;
     _pendingCandidates.clear();
-
-    for (final track
-        in _localStream?.getTracks() ?? const <MediaStreamTrack>[]) {
-      await track.stop();
-    }
-    await _localStream?.dispose();
     _localStream = null;
-
-    await _peerConnection?.close();
     _peerConnection = null;
 
-    if (_renderersReady) {
+    if (_renderersReady && !_disposed) {
       localRenderer.srcObject = null;
       remoteRenderer.srcObject = null;
     }
@@ -651,7 +984,7 @@ class CallService extends ChangeNotifier {
     _muted = false;
     _cameraOff = false;
     _error = message;
-    _stage = _session == null ? CallStage.idle : CallStage.ended;
+    _stage = session == null ? CallStage.idle : CallStage.ended;
     _session = null;
     _notify();
 
@@ -669,6 +1002,13 @@ class CallService extends ChangeNotifier {
         _notify();
       }
     });
+
+    if (stream != null) await _disposeStream(stream);
+    if (connection != null) {
+      try {
+        await connection.close();
+      } catch (_) {}
+    }
   }
 
   /// notifyListeners, unless this service has been disposed.
@@ -686,6 +1026,10 @@ class CallService extends ChangeNotifier {
     _heartbeat?.cancel();
     _ringTimer?.cancel();
     _settleTimer?.cancel();
+    _connectTimer?.cancel();
+    _reconnectTimer?.cancel();
+    _callGeneration++;
+    _generation++;
     _subscription?.cancel();
     _channel?.sink.close();
     _peerConnection?.close();

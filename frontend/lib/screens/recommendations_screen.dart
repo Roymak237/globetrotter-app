@@ -21,6 +21,7 @@ class RecommendationsScreen extends StatefulWidget {
 
 class _RecommendationsScreenState extends State<RecommendationsScreen> {
   final _api = ApiService();
+  late final AuthProvider _auth;
   List<Destination> _recommendations = [];
   bool _loading = true;
   bool _syncingProfile = false;
@@ -30,14 +31,14 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   @override
   void initState() {
     super.initState();
-    final auth = context.read<AuthProvider>();
-    auth.addListener(_handleAuthChanged);
+    _auth = context.read<AuthProvider>();
+    _auth.addListener(_handleAuthChanged);
     _loadRecommendations();
   }
 
   @override
   void dispose() {
-    context.read<AuthProvider>().removeListener(_handleAuthChanged);
+    _auth.removeListener(_handleAuthChanged);
     super.dispose();
   }
 
@@ -147,7 +148,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
     }
 
     return RefreshIndicator(
-      color: AppTheme.primary,
+      color: AppTheme.of(context).primary,
       onRefresh: _loadRecommendations,
       child: CustomScrollView(
         // Without this the list stops being draggable once the content is
@@ -238,7 +239,7 @@ class _RecommendationsHeader extends StatelessWidget {
                           ? localizations.recommendationsLoading
                           : localizations.recommendationsSubtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                           ),
                     ),
                   ],
@@ -256,7 +257,7 @@ class _RecommendationsHeader extends StatelessWidget {
             Text(
               localizations.recommendationsNoSignals,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppTheme.secondary,
+                    color: AppTheme.of(context).secondary,
                     fontWeight: FontWeight.w800,
                   ),
             )
@@ -269,10 +270,10 @@ class _RecommendationsHeader extends StatelessWidget {
                     (preference) => Chip(
                       label: Text(preferenceLabel(preference)),
                       avatar: const Icon(Icons.check_rounded, size: 15),
-                      backgroundColor: AppTheme.primarySoft,
+                      backgroundColor: AppTheme.of(context).primarySoft,
                       side: BorderSide.none,
-                      labelStyle: const TextStyle(
-                        color: AppTheme.primaryDark,
+                      labelStyle: TextStyle(
+                        color: AppTheme.of(context).primaryDark,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

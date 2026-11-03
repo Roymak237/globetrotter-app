@@ -9,4 +9,3 @@ gunicorn==21.2.0
 # worker would dedicate a whole process to each open call socket.
 flask-sock==0.7.0
 gevent==24.2.1
-gevent-websocket==0.10.1

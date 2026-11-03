@@ -123,7 +123,7 @@ class _ChatAttachmentViewState extends State<ChatAttachmentView> {
   Widget build(BuildContext context) {
     final a = widget.attachment;
     return Material(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           onTap: _busy ? null : _open,
@@ -164,14 +164,14 @@ class _ChatAttachmentViewState extends State<ChatAttachmentView> {
                           'audio' => Icons.audiotrack,
                           _ => Icons.picture_as_pdf_outlined
                         },
-                        color: AppTheme.primary),
+                        color: AppTheme.of(context).primary),
                     const SizedBox(width: 8),
                     Flexible(
                         child: Text(a.filename.isEmpty ? a.kind : a.filename,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style:
-                                const TextStyle(color: AppTheme.textPrimary))),
+                            style: TextStyle(
+                                color: AppTheme.of(context).textPrimary))),
                     if (_busy)
                       const SizedBox(
                           width: 20,
@@ -181,8 +181,9 @@ class _ChatAttachmentViewState extends State<ChatAttachmentView> {
                   Text(
                       '${(a.size / 1024).toStringAsFixed(0)} KB'
                       '${a.durationMs > 0 ? ' · ${(a.durationMs / 1000).round()}s' : ''}',
-                      style: const TextStyle(
-                          fontSize: 11, color: AppTheme.textSecondary)),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: AppTheme.of(context).textSecondary)),
                 ],
               )),
         ));
@@ -312,8 +313,9 @@ class _ChatMediaPlayerState extends State<ChatMediaPlayer> {
                                       aspectRatio: _video!.value.aspectRatio,
                                       child: VideoPlayer(_video!)))
                             else
-                              const Icon(Icons.graphic_eq,
-                                  size: 96, color: AppTheme.primary),
+                              Icon(Icons.graphic_eq,
+                                  size: 96,
+                                  color: AppTheme.of(context).primary),
                             Text(
                                 '${_position.inSeconds}s / ${_duration.inSeconds}s'),
                             IconButton(
@@ -324,7 +326,7 @@ class _ChatMediaPlayerState extends State<ChatMediaPlayer> {
                                     _playing
                                         ? Icons.pause_circle
                                         : Icons.play_circle,
-                                    color: AppTheme.primary)),
+                                    color: AppTheme.of(context).primary)),
                           ])),
       );
 }
@@ -473,6 +475,8 @@ class _ChatVoiceRecorderState extends State<ChatVoiceRecorder> {
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2))
                 : Icon(_recording ? Icons.stop_circle : Icons.mic_none,
-                    color: _recording ? AppTheme.error : AppTheme.primary)),
+                    color: _recording
+                        ? AppTheme.of(context).error
+                        : AppTheme.of(context).primary)),
       ]);
 }

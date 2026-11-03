@@ -5,6 +5,7 @@ import "../localization/app_localizations.dart";
 import "../utils/theme.dart";
 import "asset_slideshow.dart";
 import "language_switcher.dart";
+import "theme_toggle.dart";
 
 class AuthBackdrop extends StatelessWidget {
   final Widget child;
@@ -51,7 +52,7 @@ class AuthBackdrop extends StatelessWidget {
                   return Stack(
                     children: [
                       SingleChildScrollView(
-                        padding: const EdgeInsets.fromLTRB(20, 22, 20, 32),
+                        padding: const EdgeInsets.fromLTRB(20, 72, 20, 32),
                         child: Center(
                           child: ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 450),
@@ -62,7 +63,14 @@ class AuthBackdrop extends StatelessWidget {
                       const Positioned(
                         top: 8,
                         right: 20,
-                        child: LanguageSwitcher(),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ThemeToggle(),
+                            SizedBox(width: 8),
+                            LanguageSwitcher(),
+                          ],
+                        ),
                       ),
                     ],
                   );
@@ -89,15 +97,15 @@ class AuthFormCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 26, 24, 22),
           decoration: BoxDecoration(
-            // A frosted panel, not a white one. The card floats over a
-            // photograph and holds body copy in `textPrimary`, which is now a
-            // near-white; a pale pane under it would leave the form invisible.
-            color: AppTheme.surface.withValues(alpha: 0.72),
+            // The light form is opaque white so photographs cannot muddy ink.
+            color: AppTheme.of(context).surface.withValues(
+                  alpha: AppTheme.of(context).isDark ? 0.72 : 1,
+                ),
             borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+            border: Border.all(color: AppTheme.of(context).border),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.shadow.withValues(alpha: 0.45),
+                color: AppTheme.of(context).shadow.withValues(alpha: 0.45),
                 blurRadius: 30,
                 offset: const Offset(0, 15),
               ),
@@ -136,19 +144,22 @@ class AuthIntro extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppTheme.primarySoft,
+                color: AppTheme.of(context).primarySoft,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(icon, color: AppTheme.primaryDark, size: 25),
+              child:
+                  Icon(icon, color: AppTheme.of(context).primaryDark, size: 25),
             ),
             const SizedBox(width: 12),
-            Text(
-              localizations.brand,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppTheme.primary,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                  ),
+            Expanded(
+              child: Text(
+                localizations.brand,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppTheme.of(context).primary,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                    ),
+              ),
             ),
           ],
         ),
@@ -156,7 +167,7 @@ class AuthIntro extends StatelessWidget {
         Text(
           eyebrow,
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppTheme.secondary,
+                color: AppTheme.of(context).secondary,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.4,
               ),
@@ -173,7 +184,7 @@ class AuthIntro extends StatelessWidget {
         Text(
           subtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.textSecondary,
+                color: AppTheme.of(context).textSecondary,
                 height: 1.45,
               ),
         ),
@@ -196,24 +207,22 @@ class AuthErrorBanner extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(13),
         decoration: BoxDecoration(
-          // A dark wash of the error tone rather than a pale pink slab. The
-          // banner sits inside a frosted dark card, where a near-white block
-          // would be the brightest thing on the screen.
-          color: const Color(0xFF2A1316),
+          color: AppTheme.of(context).error.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.error.withValues(alpha: 0.35)),
+          border: Border.all(
+              color: AppTheme.of(context).error.withValues(alpha: 0.35)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.info_outline_rounded,
-                color: AppTheme.error, size: 20),
+            Icon(Icons.info_outline_rounded,
+                color: AppTheme.of(context).error, size: 20),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(
-                  color: Color(0xFFFFC9CB),
+                style: TextStyle(
+                  color: AppTheme.of(context).error,
                   height: 1.35,
                   fontWeight: FontWeight.w600,
                 ),
@@ -241,7 +250,7 @@ class AuthDivider extends StatelessWidget {
           child: Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.of(context).textSecondary,
                   letterSpacing: 0.8,
                 ),
           ),

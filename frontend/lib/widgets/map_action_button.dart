@@ -33,10 +33,12 @@ class MapActionButton extends StatelessWidget {
       toggled: active,
       label: semanticLabel ?? "Center map on my current location",
       child: Material(
-        color: active ? AppTheme.primary : AppTheme.surface,
+        color: active
+            ? AppTheme.of(context).primary
+            : AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(16),
         elevation: 4,
-        shadowColor: AppTheme.shadow.withValues(alpha: 0.5),
+        shadowColor: AppTheme.of(context).shadow.withValues(alpha: 0.5),
         child: InkWell(
           onTap: locating ? null : onPressed,
           borderRadius: BorderRadius.circular(16),
@@ -53,10 +55,10 @@ class MapActionButton extends StatelessWidget {
                         ? Icons.navigation_rounded
                         : Icons.my_location_rounded,
                     color: active
-                        ? AppTheme.onPrimary
+                        ? AppTheme.of(context).onPrimary
                         : hasCurrentLocation
-                            ? AppTheme.primary
-                            : AppTheme.textSecondary,
+                            ? AppTheme.of(context).primary
+                            : AppTheme.of(context).textSecondary,
                     size: 22,
                   ),
           ),

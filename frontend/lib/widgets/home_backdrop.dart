@@ -32,7 +32,9 @@ class HomeBackdrop extends StatelessWidget {
         ),
         IgnorePointer(
           child: ColoredBox(
-            color: AppTheme.background.withValues(alpha: 0.82),
+            color: AppTheme.of(context).background.withValues(
+                  alpha: AppTheme.of(context).isDark ? 0.82 : 1,
+                ),
           ),
         ),
         child,

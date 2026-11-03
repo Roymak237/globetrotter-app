@@ -110,5 +110,5 @@ class _AssetSlideshowState extends State<AssetSlideshow>
     );
   }
 
-  Widget get _fallback => const ColoredBox(color: AppTheme.primarySoft);
+  Widget get _fallback => ColoredBox(color: AppTheme.of(context).primarySoft);
 }

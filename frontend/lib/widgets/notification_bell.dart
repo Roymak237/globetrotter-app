@@ -67,7 +67,7 @@ class _NotificationBellState extends State<NotificationBell> {
         IconButton(
           onPressed: _open,
           icon: const Icon(Icons.notifications_none_rounded),
-          color: AppTheme.textPrimary,
+          color: AppTheme.of(context).textPrimary,
           tooltip: "Notifications",
         ),
         if (_unread > 0)
@@ -78,15 +78,16 @@ class _NotificationBellState extends State<NotificationBell> {
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
               constraints: const BoxConstraints(minWidth: 16),
               decoration: BoxDecoration(
-                color: AppTheme.primary,
+                color: AppTheme.of(context).primary,
                 borderRadius: BorderRadius.circular(9),
-                border: Border.all(color: AppTheme.background, width: 1.5),
+                border: Border.all(
+                    color: AppTheme.of(context).background, width: 1.5),
               ),
               child: Text(
                 _unread > 9 ? "9+" : "$_unread",
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppTheme.onPrimary,
+                style: TextStyle(
+                  color: AppTheme.of(context).onPrimary,
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
                   height: 1.2,

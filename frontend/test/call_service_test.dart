@@ -3,7 +3,13 @@ import "dart:convert";
 
 import "package:flutter_test/flutter_test.dart";
 import "package:globetrotter/services/call_service.dart";
+import "package:http/http.dart" as http;
 import "package:web_socket_channel/web_socket_channel.dart";
+
+/// ICE lookup that never touches the network.
+Future<http.Response> _offlineGet(Uri _,
+        {Map<String, String>? headers}) async =>
+    http.Response("", 503);
 
 /// A signalling socket that never touches the network.
 ///
@@ -23,6 +29,9 @@ class _FakeSocket implements WebSocketChannel {
 
   /// Push a frame as though the server had sent it.
   void emit(Map<String, dynamic> frame) => _incoming.add(jsonEncode(frame));
+
+  /// Close the socket as though the server or network dropped it.
+  Future<void> dropFromServer() => _incoming.close();
 
   /// Frames the service sent, by type.
   List<Map<String, dynamic>> sentOfType(String type) =>
@@ -52,7 +61,9 @@ class _FakeSink implements WebSocketSink {
 }
 
 Future<CallService> _connected(_FakeSocket socket) async {
-  final service = CallService()..channelFactory = (_) => socket;
+  final service = CallService()
+    ..httpGet = _offlineGet
+    ..channelFactory = (_) => socket;
   await service.connect("test-token", "alice");
   return service;
 }
@@ -223,6 +234,129 @@ void main() {
 
       expect(service.error, isNotNull);
       expect(service.inCall, isFalse);
+    });
+  });
+
+  group("Frames for another call", () {
+    Future<CallService> ringing(_FakeSocket socket) async {
+      final service = await _connected(socket);
+      await service.startCall(
+        roomId: "room-1",
+        peer: "bob",
+        peerDisplayName: "Bob",
+      );
+      socket.emit({"type": "ringing", "call_id": "call-a", "reached": 1});
+      await _settle();
+      return service;
+    }
+
+    test("a hangup for a different call is ignored", () async {
+      final socket = _FakeSocket();
+      final service = await ringing(socket);
+      addTearDown(service.dispose);
+
+      socket.emit({"type": "hangup", "call_id": "call-b", "reason": "decline"});
+      await _settle();
+
+      expect(service.stage, CallStage.ringing);
+      expect(service.session?.callId, "call-a");
+    });
+
+    test("a second incoming call is declined without disturbing this one",
+        () async {
+      final socket = _FakeSocket();
+      final service = await ringing(socket);
+      addTearDown(service.dispose);
+
+      socket.emit({"type": "ring", "call_id": "call-b", "from": "carol"});
+      await _settle();
+      socket.emit({"type": "hangup", "call_id": "call-b"});
+      await _settle();
+
+      expect(socket.sentOfType("decline").single["call_id"], "call-b");
+      expect(service.stage, CallStage.ringing);
+      expect(service.session?.callId, "call-a");
+    });
+
+    test("a stale server error does not end a ringing call", () async {
+      final socket = _FakeSocket();
+      final service = await ringing(socket);
+      addTearDown(service.dispose);
+
+      socket.emit({"type": "error", "error": "that call has ended"});
+      await _settle();
+
+      expect(service.stage, CallStage.ringing);
+      expect(service.error, isNull);
+    });
+  });
+
+  group("Incoming calls", () {
+    test("answered on another device ends quietly", () async {
+      final socket = _FakeSocket();
+      final service = await _connected(socket);
+      addTearDown(service.dispose);
+
+      socket.emit({"type": "ring", "call_id": "call-1", "from": "bob"});
+      await _settle();
+      expect(service.stage, CallStage.ringing);
+
+      socket.emit({
+        "type": "hangup",
+        "call_id": "call-1",
+        "reason": "answered_elsewhere",
+      });
+      await _settle();
+
+      expect(service.inCall, isFalse);
+      expect(service.error, isNull);
+    });
+  });
+
+  group("Losing the signalling socket", () {
+    test("reconnects without waiting for a new sign-in", () async {
+      final sockets = <_FakeSocket>[];
+      final service = CallService()
+        ..httpGet = _offlineGet
+        ..channelFactory = (_) {
+          final socket = _FakeSocket();
+          sockets.add(socket);
+          return socket;
+        };
+      addTearDown(service.dispose);
+      await service.connect("test-token", "alice");
+      expect(sockets, hasLength(1));
+      expect(service.isConnected, isTrue);
+
+      await sockets.first.dropFromServer();
+      await _settle();
+      expect(service.isConnected, isFalse);
+
+      // The first retry is after one second.
+      final deadline = DateTime.now().add(const Duration(seconds: 6));
+      while (sockets.length < 2 && DateTime.now().isBefore(deadline)) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      }
+      expect(sockets, hasLength(2),
+          reason: "an incoming call could never reach this device again");
+      expect(service.isConnected, isTrue);
+    });
+
+    test("does not reconnect after signing out", () async {
+      var opened = 0;
+      final service = CallService()
+        ..httpGet = _offlineGet
+        ..channelFactory = (_) {
+          opened++;
+          return _FakeSocket();
+        };
+      addTearDown(service.dispose);
+      await service.connect("test-token", "alice");
+      await service.disconnect();
+      await Future<void>.delayed(const Duration(milliseconds: 1500));
+
+      expect(opened, 1);
+      expect(service.isConnected, isFalse);
     });
   });
 }

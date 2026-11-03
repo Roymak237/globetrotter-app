@@ -25,9 +25,9 @@ class ItineraryCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 7, 16, 7),
         decoration: BoxDecoration(
-          color: AppTheme.surface,
+          color: AppTheme.of(context).surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(color: AppTheme.of(context).border),
         ),
         child: InkWell(
           onTap: onTap,
@@ -45,7 +45,8 @@ class ItineraryCard extends StatelessWidget {
                       Container(
                         width: 1,
                         height: 28,
-                        color: AppTheme.accent.withValues(alpha: 0.8),
+                        color:
+                            AppTheme.of(context).accent.withValues(alpha: 0.8),
                       ),
                       const _TimelineDot(active: false),
                     ],
@@ -83,14 +84,14 @@ class ItineraryCard extends StatelessWidget {
                                 child: Container(
                                   width: 34,
                                   height: 34,
-                                  decoration: const BoxDecoration(
-                                    color: AppTheme.accentSoft,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.of(context).accentSoft,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.ios_share_rounded,
                                     size: 17,
-                                    color: AppTheme.textPrimary,
+                                    color: AppTheme.of(context).textPrimary,
                                   ),
                                 ),
                               ),
@@ -102,7 +103,7 @@ class ItineraryCard extends StatelessWidget {
                       Text(
                         "${itinerary.startDate}  →  ${itinerary.endDate}",
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.primaryDark,
+                              color: AppTheme.of(context).primaryDark,
                               fontWeight: FontWeight.w700,
                             ),
                       ),
@@ -112,7 +113,7 @@ class ItineraryCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.textSecondary,
+                              color: AppTheme.of(context).textSecondary,
                               height: 1.35,
                             ),
                       ),
@@ -139,10 +140,13 @@ class _TimelineDot extends StatelessWidget {
       width: active ? 12 : 9,
       height: active ? 12 : 9,
       decoration: BoxDecoration(
-        color: active ? AppTheme.primary : AppTheme.accent,
+        color:
+            active ? AppTheme.of(context).primary : AppTheme.of(context).accent,
         shape: BoxShape.circle,
         border: Border.all(
-          color: active ? AppTheme.primary : AppTheme.accent,
+          color: active
+              ? AppTheme.of(context).primary
+              : AppTheme.of(context).accent,
           width: 2,
         ),
       ),

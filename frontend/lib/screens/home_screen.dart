@@ -8,6 +8,7 @@ import "../widgets/bottom_nav.dart";
 import "../widgets/home_backdrop.dart";
 import "../widgets/language_switcher.dart";
 import "../widgets/notification_bell.dart";
+import "../widgets/theme_toggle.dart";
 import "chat_screen.dart";
 import "destinations_screen.dart";
 import "itineraries_screen.dart";
@@ -53,8 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
         preferredSize: const Size.fromHeight(94),
         child: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: AppTheme.background,
-          foregroundColor: AppTheme.textPrimary,
+          backgroundColor: AppTheme.of(context).background,
+          foregroundColor: AppTheme.of(context).textPrimary,
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
@@ -68,9 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           localizations.brand,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppTheme.secondary,
+                                    color: AppTheme.of(context).secondary,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 1.2,
                                   ),
@@ -92,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const NotificationBell(),
+                  const ThemeToggle(),
                   const LanguageSwitcher(),
                 ],
               ),

@@ -43,14 +43,14 @@ class UserAvatar extends StatelessWidget {
     // The initial is drawn in the pale accent on a dark tint rather than the
     // other way round. An avatar is a filled disc, and on this palette the
     // only fill that can carry `textPrimary` is a dark one.
-    final background = backgroundColor ?? AppTheme.primarySoft;
+    final background = backgroundColor ?? AppTheme.of(context).primarySoft;
 
     final fallback = Text(
       _initial,
       style: TextStyle(
         fontFamily: AppTheme.displayFontFamily,
         fontSize: radius * 0.82,
-        color: AppTheme.accent,
+        color: AppTheme.of(context).accent,
         fontWeight: FontWeight.w700,
       ),
     );

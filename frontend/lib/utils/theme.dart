@@ -1,6 +1,14 @@
 import "package:flutter/material.dart";
 
 class AppTheme {
+  /// Semantic colors must be read during build, never cached globally.
+  static AppPalette of(BuildContext context) =>
+      AppPalette(Theme.of(context).brightness);
+
+  static ThemeData get darkTheme => theme;
+
+  static ThemeData get lightTheme => _buildTheme(Brightness.light);
+
   // The palette is the marketing site's, carried into the product so the two
   // read as one thing. The site is a forced-dark, near-monochrome page with a
   // single steel-blue accent gradient, declared in landing-react/src/index.css
@@ -177,8 +185,25 @@ class AppTheme {
   static const String displayFontFamily = "Georgia";
   static const String bodyFontFamily = "Trebuchet MS";
 
-  static ThemeData get theme {
-    final base = ThemeData.dark(useMaterial3: true);
+  /// Legacy dark entry point retained for callers that explicitly want dark UI.
+  static ThemeData get theme => _buildTheme(Brightness.dark);
+
+  static ThemeData _buildTheme(Brightness brightness) {
+    final palette = AppPalette(brightness);
+    final primary = palette.primary;
+    final onPrimary = palette.onPrimary;
+    final primarySoft = palette.primarySoft;
+    final primaryDark = palette.primaryDark;
+    final secondary = palette.secondary;
+    final accentSoft = palette.accentSoft;
+    final accent = palette.accent;
+    final surface = palette.surface;
+    final background = palette.background;
+    final border = palette.border;
+    final error = palette.error;
+    final textPrimary = palette.textPrimary;
+    final textSecondary = palette.textSecondary;
+    final base = ThemeData(brightness: brightness, useMaterial3: true);
     final textTheme = base.textTheme.apply(
       bodyColor: textPrimary,
       displayColor: textPrimary,
@@ -187,7 +212,8 @@ class AppTheme {
     );
 
     return base.copyWith(
-      colorScheme: const ColorScheme.dark(
+      colorScheme: ColorScheme(
+        brightness: brightness,
         primary: primary,
         onPrimary: onPrimary,
         primaryContainer: primarySoft,
@@ -200,12 +226,14 @@ class AppTheme {
         onTertiary: onPrimary,
         surface: surface,
         onSurface: textPrimary,
-        surfaceContainerHighest: Color(0xFF1C1C1C),
+        surfaceContainerHighest: palette.surfaceSunken,
         outline: border,
         error: error,
         onError: onPrimary,
       ),
       scaffoldBackgroundColor: background,
+      canvasColor: surface,
+      primaryColor: primary,
       textTheme: textTheme.copyWith(
         displaySmall: textTheme.displaySmall?.copyWith(
           fontFamily: displayFontFamily,
@@ -256,7 +284,7 @@ class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
-          side: const BorderSide(color: border),
+          side: BorderSide(color: border),
         ),
         clipBehavior: Clip.antiAlias,
       ),
@@ -264,29 +292,29 @@ class AppTheme {
         filled: true,
         fillColor: surface,
         isDense: false,
-        labelStyle: const TextStyle(color: textSecondary),
-        hintStyle: const TextStyle(color: textSecondary),
+        labelStyle: TextStyle(color: textSecondary),
+        hintStyle: TextStyle(color: textSecondary),
         prefixIconColor: textSecondary,
         suffixIconColor: textSecondary,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: border),
+          borderSide: BorderSide(color: border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: border),
+          borderSide: BorderSide(color: border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: primary, width: 1.8),
+          borderSide: BorderSide(color: primary, width: 1.8),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: error),
+          borderSide: BorderSide(color: error),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusInput),
-          borderSide: const BorderSide(color: error, width: 1.8),
+          borderSide: BorderSide(color: error, width: 1.8),
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -320,7 +348,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: primary,
           minimumSize: const Size(0, 50),
-          side: const BorderSide(color: primary),
+          side: BorderSide(color: primary),
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusInput),
@@ -334,15 +362,20 @@ class AppTheme {
         // M3 default derives this from the label colour, which is correct for
         // the unselected state and invisible on the selected one.
         checkmarkColor: onPrimary,
-        side: const BorderSide(color: border),
+        side: BorderSide(color: border),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
-        labelStyle: const TextStyle(
-          color: textSecondary,
+        // FilterChip uses labelStyle (not secondaryLabelStyle) when selected.
+        labelStyle: TextStyle(
+          color: WidgetStateColor.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? onPrimary
+                : textSecondary,
+          ),
           fontWeight: FontWeight.w600,
         ),
-        secondaryLabelStyle: const TextStyle(
+        secondaryLabelStyle: TextStyle(
           color: onPrimary,
           fontWeight: FontWeight.w700,
         ),
@@ -352,10 +385,10 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusLarge),
-          side: const BorderSide(color: border),
+          side: BorderSide(color: border),
         ),
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
+      bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: surface,
         surfaceTintColor: Colors.transparent,
       ),
@@ -364,18 +397,54 @@ class AppTheme {
       // error whatever it says.
       snackBarTheme: SnackBarThemeData(
         backgroundColor: primarySoft,
-        contentTextStyle: const TextStyle(color: textPrimary),
+        contentTextStyle: TextStyle(color: textPrimary),
         actionTextColor: primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusInput),
         ),
       ),
-      dividerTheme: const DividerThemeData(
+      dividerTheme: DividerThemeData(
         color: border,
         thickness: 1,
         space: 1,
       ),
     );
   }
+}
+
+/// Context-bound semantic palette. Brand gradients, photo scrims and their
+/// white foregrounds intentionally remain fixed in both modes. Static colors
+/// on AppTheme are the legacy dark palette (also used by the isolated call UI).
+@immutable
+class AppPalette {
+  final Brightness brightness;
+  const AppPalette(this.brightness);
+
+  bool get isDark => brightness == Brightness.dark;
+  Color get background => isDark ? AppTheme.background : Colors.white;
+  Color get surface => isDark ? AppTheme.surface : Colors.white;
+  Color get surfaceSunken =>
+      isDark ? AppTheme.surfaceSunken : const Color(0xFFF3F5F7);
+  Color get border => isDark ? AppTheme.border : const Color(0xFFD4D9DF);
+  Color get textPrimary =>
+      isDark ? AppTheme.textPrimary : const Color(0xFF15191E);
+  Color get textSecondary =>
+      isDark ? AppTheme.textSecondary : const Color(0xFF535E6A);
+  Color get primary => isDark ? AppTheme.primary : const Color(0xFF285C8B);
+  Color get onPrimary => isDark ? AppTheme.onPrimary : Colors.white;
+  Color get primaryDark =>
+      isDark ? AppTheme.primaryDark : const Color(0xFF214F79);
+  Color get secondary => isDark ? AppTheme.secondary : const Color(0xFF326591);
+  Color get accent => isDark ? AppTheme.accent : const Color(0xFF305879);
+  Color get primarySoft =>
+      isDark ? AppTheme.primarySoft : const Color(0xFFEAF1F8);
+  Color get accentSoft =>
+      isDark ? AppTheme.accentSoft : const Color(0xFFEDF2F7);
+  Color get indigo => isDark ? AppTheme.indigo : const Color(0xFF375C91);
+  Color get indigoSoft =>
+      isDark ? AppTheme.indigoSoft : const Color(0xFFEAF0F9);
+  Color get error => isDark ? AppTheme.error : const Color(0xFFB32635);
+  Color get success => isDark ? AppTheme.success : const Color(0xFF24713D);
+  Color get shadow => AppTheme.shadow;
 }

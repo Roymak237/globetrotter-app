@@ -189,7 +189,7 @@ class _DestinationExtrasState extends State<DestinationExtras> {
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
-                ?.copyWith(color: AppTheme.textSecondary),
+                ?.copyWith(color: AppTheme.of(context).textSecondary),
           ),
         ],
         const SizedBox(height: 12),
@@ -223,7 +223,7 @@ class _DestinationExtrasState extends State<DestinationExtras> {
                       ? Icons.star_rounded
                       : Icons.star_border_rounded,
                   size: 30,
-                  color: AppTheme.accent,
+                  color: AppTheme.of(context).accent,
                 ),
               ),
             const SizedBox(width: 10),
@@ -233,7 +233,7 @@ class _DestinationExtrasState extends State<DestinationExtras> {
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall
-                    ?.copyWith(color: AppTheme.textSecondary),
+                    ?.copyWith(color: AppTheme.of(context).textSecondary),
               ),
           ],
         ),
@@ -299,15 +299,15 @@ class _DestinationExtrasState extends State<DestinationExtras> {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       elevation: 0,
-      color: AppTheme.primarySoft.withValues(alpha: 0.45),
+      color: AppTheme.of(context).primarySoft.withValues(alpha: 0.45),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: const BorderSide(color: AppTheme.border),
+        side: BorderSide(color: AppTheme.of(context).border),
       ),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          leading: Icon(group.icon, color: AppTheme.primaryDark),
+          leading: Icon(group.icon, color: AppTheme.of(context).primaryDark),
           title: Text(
             group.label,
             style: const TextStyle(fontWeight: FontWeight.w700),
@@ -316,7 +316,8 @@ class _DestinationExtrasState extends State<DestinationExtras> {
             group.items.length == 1
                 ? "1 place"
                 : "${group.items.length} places",
-            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+            style: TextStyle(
+                color: AppTheme.of(context).textSecondary, fontSize: 12),
           ),
           childrenPadding: const EdgeInsets.only(bottom: 6),
           children: group.items.take(12).map(_amenityTile).toList(),
@@ -373,8 +374,8 @@ class _DestinationExtrasState extends State<DestinationExtras> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.border),
-          color: AppTheme.surface,
+          border: Border.all(color: AppTheme.of(context).border),
+          color: AppTheme.of(context).surface,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -388,8 +389,8 @@ class _DestinationExtrasState extends State<DestinationExtras> {
             const SizedBox(height: 6),
             Text(
               place.distanceLabel,
-              style: const TextStyle(
-                color: AppTheme.primaryDark,
+              style: TextStyle(
+                color: AppTheme.of(context).primaryDark,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -398,8 +399,8 @@ class _DestinationExtrasState extends State<DestinationExtras> {
             if (place.ratingCount > 0)
               Row(
                 children: [
-                  const Icon(Icons.star_rounded,
-                      size: 15, color: AppTheme.accent),
+                  Icon(Icons.star_rounded,
+                      size: 15, color: AppTheme.of(context).accent),
                   const SizedBox(width: 4),
                   Text(
                     "${place.ratingAverage.toStringAsFixed(1)}  ·  "
@@ -413,8 +414,8 @@ class _DestinationExtrasState extends State<DestinationExtras> {
                 place.region,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontSize: 12, color: AppTheme.textSecondary),
+                style: TextStyle(
+                    fontSize: 12, color: AppTheme.of(context).textSecondary),
               ),
           ],
         ),

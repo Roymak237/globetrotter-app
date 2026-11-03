@@ -126,8 +126,8 @@ class _WindowsGoogleMapState extends State<WindowsGoogleMap> {
     if (_error != null) return _MapError(message: _error!);
     final controller = _controller;
     if (controller == null) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppTheme.primary),
+      return Center(
+        child: CircularProgressIndicator(color: AppTheme.of(context).primary),
       );
     }
 
@@ -138,10 +138,11 @@ class _WindowsGoogleMapState extends State<WindowsGoogleMap> {
         children: [
           Webview(controller),
           if (!_isReady)
-            const ColoredBox(
-              color: Color(0xFFE8F2EC),
+            ColoredBox(
+              color: AppTheme.of(context).surface,
               child: Center(
-                child: CircularProgressIndicator(color: AppTheme.primary),
+                child: CircularProgressIndicator(
+                    color: AppTheme.of(context).primary),
               ),
             ),
         ],
@@ -257,25 +258,27 @@ class _MapError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFFE8F2EC),
+      color: AppTheme.of(context).surface,
       alignment: Alignment.center,
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.map_outlined, color: AppTheme.primary, size: 34),
+          Icon(Icons.map_outlined,
+              color: AppTheme.of(context).primary, size: 34),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             "The map could not start",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: AppTheme.primaryDark, fontWeight: FontWeight.w800),
+                color: AppTheme.of(context).primaryDark,
+                fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppTheme.textSecondary),
+            style: TextStyle(color: AppTheme.of(context).textSecondary),
           ),
         ],
       ),

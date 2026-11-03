@@ -55,7 +55,7 @@ class ItineraryDetailScreen extends StatelessWidget {
                   ? Text(
                       "No destinations added yet",
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                           ),
                     )
                   : _RouteTimeline(destinations: itinerary.destinations),
@@ -68,7 +68,7 @@ class ItineraryDetailScreen extends StatelessWidget {
                 child: Text(
                   itinerary.notes,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.of(context).textSecondary,
                         height: 1.45,
                       ),
                 ),
@@ -98,8 +98,8 @@ class ItineraryDetailScreen extends StatelessWidget {
                   tooltip: "Delete itinerary",
                   onPressed: () => _deleteItinerary(context, itinerary),
                   style: IconButton.styleFrom(
-                    foregroundColor: AppTheme.error,
-                    side: const BorderSide(color: AppTheme.error),
+                    foregroundColor: AppTheme.of(context).error,
+                    side: BorderSide(color: AppTheme.of(context).error),
                     fixedSize: const Size(52, 52),
                   ),
                   icon: const Icon(Icons.delete_outline_rounded),
@@ -143,8 +143,8 @@ class ItineraryDetailScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.error,
-                  foregroundColor: AppTheme.onPrimary,
+                  backgroundColor: AppTheme.of(context).error,
+                  foregroundColor: AppTheme.of(context).onPrimary,
                 ),
                 onPressed: () => Navigator.pop(dialogContext, true),
                 child: const Text("Delete"),
@@ -226,11 +226,7 @@ class _TripHero extends StatelessWidget {
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppTheme.primary, AppTheme.primaryDark],
-        ),
+        gradient: AppTheme.brandGradient,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,19 +327,19 @@ class _OverviewTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(13, 13, 13, 14),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppTheme.primary, size: 19),
+          Icon(icon, color: AppTheme.of(context).primary, size: 19),
           const SizedBox(height: 9),
           Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppTheme.secondary,
+                  color: AppTheme.of(context).secondary,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.8,
                 ),
@@ -406,14 +402,14 @@ class _RouteStop extends StatelessWidget {
                   width: 27,
                   height: 27,
                   alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: AppTheme.primarySoft,
+                  decoration: BoxDecoration(
+                    color: AppTheme.of(context).primarySoft,
                     shape: BoxShape.circle,
                   ),
                   child: Text(
                     "${index + 1}",
-                    style: const TextStyle(
-                      color: AppTheme.primaryDark,
+                    style: TextStyle(
+                      color: AppTheme.of(context).primaryDark,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -423,7 +419,7 @@ class _RouteStop extends StatelessWidget {
                     child: Container(
                       width: 2,
                       margin: const EdgeInsets.symmetric(vertical: 3),
-                      color: AppTheme.accent,
+                      color: AppTheme.of(context).accent,
                     ),
                   ),
               ],
@@ -464,21 +460,21 @@ class _DetailSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 15, 16, 16),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: AppTheme.primary),
+              Icon(icon, size: 18, color: AppTheme.of(context).primary),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppTheme.secondary,
+                      color: AppTheme.of(context).secondary,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.1,
                     ),

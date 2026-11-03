@@ -141,7 +141,7 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
 
     return RefreshIndicator(
       onRefresh: _loadDestinations,
-      color: AppTheme.primary,
+      color: AppTheme.of(context).primary,
       child: CustomScrollView(
         // Keeps pull-to-refresh reachable even when the results are too few to
         // fill the screen.
@@ -193,7 +193,7 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
                     Text(
                       localizations.destinationsSubtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                             height: 1.35,
                           ),
                     ),
@@ -207,13 +207,13 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
                     tooltip: localizations.mapShortcut,
                     onPressed: () => Navigator.pushNamed(context, "/map"),
                     icon: const Icon(Icons.map_outlined),
-                    color: AppTheme.primary,
+                    color: AppTheme.of(context).primary,
                   ),
                   IconButton(
                     tooltip: localizations.savedShortcut,
                     onPressed: () => Navigator.pushNamed(context, "/saved"),
                     icon: const Icon(Icons.favorite_border_rounded),
-                    color: AppTheme.secondary,
+                    color: AppTheme.of(context).secondary,
                   ),
                 ],
               ),
@@ -254,7 +254,9 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
         // Transparent while it sits in the normal flow, so the backdrop still
         // shows through exactly as before. Once it floats over the cards it
         // has to be opaque, or photographs slide past underneath the chips.
-        color: overlapsContent ? AppTheme.background : Colors.transparent,
+        color: overlapsContent
+            ? AppTheme.of(context).background
+            : Colors.transparent,
       ),
       child: Column(
         children: [
@@ -302,7 +304,7 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                             fontWeight: FontWeight.w700,
                           ),
                     ),
@@ -411,7 +413,7 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
                     Text(
                       "Combine a region and budget with your search or activity filter.",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                           ),
                     ),
                     const SizedBox(height: 18),
@@ -540,11 +542,13 @@ class _DestinationsScreenState extends State<DestinationsScreen> {
                     isSelected
                         ? Icons.radio_button_checked_rounded
                         : Icons.radio_button_off_rounded,
-                    color:
-                        isSelected ? AppTheme.primary : AppTheme.textSecondary,
+                    color: isSelected
+                        ? AppTheme.of(context).primary
+                        : AppTheme.of(context).textSecondary,
                   ),
                   title: Text(option.$2),
-                  trailing: Icon(option.$3, color: AppTheme.primary),
+                  trailing:
+                      Icon(option.$3, color: AppTheme.of(context).primary),
                   onTap: () => Navigator.pop(sheetContext, option.$1),
                 );
               },

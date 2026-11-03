@@ -156,18 +156,18 @@ class _ItineraryRouteMapState extends State<ItineraryRouteMap> {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.alt_route_rounded,
-                color: AppTheme.primary,
+                color: AppTheme.of(context).primary,
                 size: 19,
               ),
               const SizedBox(width: 8),
@@ -175,7 +175,7 @@ class _ItineraryRouteMapState extends State<ItineraryRouteMap> {
                 child: Text(
                   "ROAD PATHWAY",
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppTheme.secondary,
+                        color: AppTheme.of(context).secondary,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.1,
                       ),
@@ -184,7 +184,7 @@ class _ItineraryRouteMapState extends State<ItineraryRouteMap> {
               Text(
                 "${route.length} stop${route.length == 1 ? "" : "s"}",
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.of(context).textSecondary,
                       fontWeight: FontWeight.w700,
                     ),
               ),
@@ -198,7 +198,7 @@ class _ItineraryRouteMapState extends State<ItineraryRouteMap> {
                     ? "The line follows drivable roads in your selected order."
                     : "The line follows the order of your selected stops.",
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.of(context).textSecondary,
                   height: 1.35,
                 ),
           ),
@@ -244,20 +244,20 @@ class _RouteStatus extends StatelessWidget {
     final String message;
 
     if (isLoading) {
-      color = AppTheme.primary;
+      color = AppTheme.of(context).primary;
       icon = Icons.sync_rounded;
       message = "Finding a road route…";
     } else if (roadRoute != null) {
-      color = AppTheme.primaryDark;
+      color = AppTheme.of(context).primaryDark;
       icon = Icons.check_circle_outline_rounded;
       message =
           "${_formatDistance(roadRoute!.distanceMeters)}  •  ${_formatDuration(roadRoute!.durationSeconds)} driving";
     } else if (isFallback) {
-      color = AppTheme.textSecondary;
+      color = AppTheme.of(context).textSecondary;
       icon = Icons.info_outline_rounded;
       message = "Road routing is unavailable; showing the direct pathway.";
     } else {
-      color = AppTheme.textSecondary;
+      color = AppTheme.of(context).textSecondary;
       icon = Icons.route_outlined;
       message = "Select two or more mapped stops to calculate roads.";
     }
@@ -325,20 +325,20 @@ class _MapMessage extends StatelessWidget {
       height: height + 70,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: AppTheme.primary, size: 30),
+          Icon(icon, color: AppTheme.of(context).primary, size: 30),
           const SizedBox(height: 10),
           Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: AppTheme.of(context).textSecondary,
               fontWeight: FontWeight.w700,
             ),
           ),

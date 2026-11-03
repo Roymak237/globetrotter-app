@@ -159,9 +159,10 @@ class _GroupJoinScreenState extends State<GroupJoinScreen> {
                   for (final group in _groups)
                     Card(
                         child: ListTile(
-                      leading: const CircleAvatar(
-                          backgroundColor: AppTheme.primarySoft,
-                          child: Icon(Icons.groups, color: AppTheme.primary)),
+                      leading: CircleAvatar(
+                          backgroundColor: AppTheme.of(context).primarySoft,
+                          child: Icon(Icons.groups,
+                              color: AppTheme.of(context).primary)),
                       title: Text(group.name),
                       subtitle: Text(
                           '${group.description}\n${group.memberCount} members'),

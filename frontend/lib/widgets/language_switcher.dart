@@ -63,9 +63,9 @@ class LanguageSwitcher extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
-              color: AppTheme.surface,
+              color: AppTheme.of(context).surface,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppTheme.border),
+              border: Border.all(color: AppTheme.of(context).border),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -82,15 +82,17 @@ class LanguageSwitcher extends StatelessWidget {
                       vertical: 7,
                     ),
                     decoration: BoxDecoration(
-                      color: selected ? AppTheme.primary : Colors.transparent,
+                      color: selected
+                          ? AppTheme.of(context).primary
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(11),
                     ),
                     child: Text(
                       _code(locale),
                       style: TextStyle(
                         color: selected
-                            ? AppTheme.onPrimary
-                            : AppTheme.textSecondary,
+                            ? AppTheme.of(context).onPrimary
+                            : AppTheme.of(context).textSecondary,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
                       ),
@@ -120,26 +122,26 @@ class _LanguagePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             code,
-            style: const TextStyle(
-              color: AppTheme.primaryDark,
+            style: TextStyle(
+              color: AppTheme.of(context).primaryDark,
               fontSize: 11,
               fontWeight: FontWeight.w800,
             ),
           ),
           if (showChevron) ...[
             const SizedBox(width: 2),
-            const Icon(
+            Icon(
               Icons.expand_more_rounded,
-              color: AppTheme.textSecondary,
+              color: AppTheme.of(context).textSecondary,
               size: 17,
             ),
           ],

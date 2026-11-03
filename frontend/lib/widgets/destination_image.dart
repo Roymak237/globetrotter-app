@@ -77,15 +77,15 @@ class DestinationImage extends StatelessWidget {
       width: double.infinity,
       height: double.infinity,
       semanticLabel: _semanticLabel(attribution),
-      loadingBuilder: (_, child, progress) {
+      loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
-        return const Center(
+        return Center(
           child: SizedBox(
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: AppTheme.primary,
+              color: AppTheme.of(context).primary,
             ),
           ),
         );

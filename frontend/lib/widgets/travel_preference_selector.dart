@@ -28,8 +28,8 @@ class TravelPreferenceSelector extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.auto_awesome_outlined,
-                color: AppTheme.primary, size: 22),
+            Icon(Icons.auto_awesome_outlined,
+                color: AppTheme.of(context).primary, size: 22),
             const SizedBox(width: 9),
             Expanded(
               child: Column(
@@ -45,7 +45,7 @@ class TravelPreferenceSelector extends StatelessWidget {
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.of(context).textSecondary,
                           height: 1.35,
                         ),
                   ),
@@ -74,8 +74,9 @@ class TravelPreferenceSelector extends StatelessWidget {
                   // The chip theme carries one icon colour and this glyph
                   // needs two: the pill is a pale fill when selected and the
                   // dark surface when not.
-                  color:
-                      isSelected ? AppTheme.onPrimary : AppTheme.textSecondary,
+                  color: isSelected
+                      ? AppTheme.of(context).onPrimary
+                      : AppTheme.of(context).textSecondary,
                 ),
                 onSelected: enabled ? (_) => onToggle(option.id) : null,
               ),
@@ -87,8 +88,8 @@ class TravelPreferenceSelector extends StatelessWidget {
           preferenceCountLabel(selected.length),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: selected.isEmpty
-                    ? AppTheme.textSecondary
-                    : AppTheme.primaryDark,
+                    ? AppTheme.of(context).textSecondary
+                    : AppTheme.of(context).primaryDark,
                 fontWeight: FontWeight.w700,
               ),
         ),

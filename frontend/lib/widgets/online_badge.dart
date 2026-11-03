@@ -18,13 +18,13 @@ class OnlineDot extends StatelessWidget {
   /// background rather than the dot. The default is the colour of the cards
   /// and tiles these badges are almost always pinned to; white would now cut
   /// a bright hole in them.
-  final Color borderColor;
+  final Color? borderColor;
 
   const OnlineDot({
     super.key,
     required this.online,
     this.size = 11,
-    this.borderColor = AppTheme.surface,
+    this.borderColor,
   });
 
   @override
@@ -41,7 +41,10 @@ class OnlineDot extends StatelessWidget {
           // point; a brand colour here would read as decoration.
           color: const Color(0xFF25D366),
           shape: BoxShape.circle,
-          border: Border.all(color: borderColor, width: size * 0.18),
+          border: Border.all(
+            color: borderColor ?? AppTheme.of(context).surface,
+            width: size * 0.18,
+          ),
         ),
       ),
     );
@@ -53,14 +56,14 @@ class OnlineBadge extends StatelessWidget {
   final Widget child;
   final bool online;
   final double dotSize;
-  final Color borderColor;
+  final Color? borderColor;
 
   const OnlineBadge({
     super.key,
     required this.child,
     required this.online,
     this.dotSize = 12,
-    this.borderColor = AppTheme.surface,
+    this.borderColor,
   });
 
   @override

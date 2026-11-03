@@ -128,7 +128,8 @@ class _CommentsSectionState extends State<CommentsSection> {
       children: [
         Row(
           children: [
-            const Icon(Icons.forum_outlined, size: 18, color: AppTheme.primary),
+            Icon(Icons.forum_outlined,
+                size: 18, color: AppTheme.of(context).primary),
             const SizedBox(width: 8),
             Text(
               localizations.commentsTitle,
@@ -140,10 +141,11 @@ class _CommentsSectionState extends State<CommentsSection> {
         ),
         const SizedBox(height: 12),
         if (_loading)
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Center(
-              child: CircularProgressIndicator(color: AppTheme.primary),
+              child: CircularProgressIndicator(
+                  color: AppTheme.of(context).primary),
             ),
           )
         else if (_comments.isEmpty)
@@ -154,7 +156,7 @@ class _CommentsSectionState extends State<CommentsSection> {
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
-                  ?.copyWith(color: AppTheme.textSecondary),
+                  ?.copyWith(color: AppTheme.of(context).textSecondary),
             ),
           )
         else
@@ -177,7 +179,7 @@ class _CommentsSectionState extends State<CommentsSection> {
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
-                ?.copyWith(color: AppTheme.textSecondary),
+                ?.copyWith(color: AppTheme.of(context).textSecondary),
           ),
       ],
     );
@@ -192,7 +194,7 @@ class _CommentsSectionState extends State<CommentsSection> {
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppTheme.primarySoft,
+              color: AppTheme.of(context).primarySoft,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -201,10 +203,10 @@ class _CommentsSectionState extends State<CommentsSection> {
                   child: Text(
                     localizations.commentReplyTo
                         .replaceAll("{name}", _replyTarget!.username),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.primary,
+                      color: AppTheme.of(context).primary,
                     ),
                   ),
                 ),
@@ -233,14 +235,15 @@ class _CommentsSectionState extends State<CommentsSection> {
             const SizedBox(width: 8),
             FilledButton(
               onPressed: _posting ? null : _post,
-              style: FilledButton.styleFrom(backgroundColor: AppTheme.primary),
+              style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.of(context).primary),
               child: _posting
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 16,
                       height: 16,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppTheme.onPrimary,
+                        color: AppTheme.of(context).onPrimary,
                       ),
                     )
                   : Text(localizations.commentPost),
@@ -289,7 +292,7 @@ class _CommentTile extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: isReply ? 13 : 16,
-                backgroundColor: AppTheme.primarySoft,
+                backgroundColor: AppTheme.of(context).primarySoft,
                 foregroundImage: resolveMediaUrl(comment.avatarUrl).isEmpty
                     ? null
                     : NetworkImage(resolveMediaUrl(comment.avatarUrl)),
@@ -298,7 +301,7 @@ class _CommentTile extends StatelessWidget {
                       ? "?"
                       : comment.username[0].toUpperCase(),
                   style: TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.of(context).primary,
                     fontSize: isReply ? 11 : 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -322,9 +325,9 @@ class _CommentTile extends StatelessWidget {
                           const SizedBox(width: 6),
                           Text(
                             "· ${localizations.commentEdited}",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
-                              color: AppTheme.textSecondary,
+                              color: AppTheme.of(context).textSecondary,
                             ),
                           ),
                         ],
@@ -351,8 +354,8 @@ class _CommentTile extends StatelessWidget {
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
                               color: comment.score > 0
-                                  ? AppTheme.primary
-                                  : AppTheme.textSecondary,
+                                  ? AppTheme.of(context).primary
+                                  : AppTheme.of(context).textSecondary,
                             ),
                           ),
                         ),
@@ -387,9 +390,9 @@ class _CommentTile extends StatelessWidget {
                             ),
                             child: Text(
                               localizations.chatDelete,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
-                                color: AppTheme.error,
+                                color: AppTheme.of(context).error,
                               ),
                             ),
                           ),
@@ -436,7 +439,9 @@ class _VoteButton extends StatelessWidget {
       child: Icon(
         icon,
         size: 20,
-        color: active ? AppTheme.primary : AppTheme.textSecondary,
+        color: active
+            ? AppTheme.of(context).primary
+            : AppTheme.of(context).textSecondary,
       ),
     );
   }

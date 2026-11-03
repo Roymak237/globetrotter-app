@@ -282,10 +282,11 @@ class _GroupInfoScreenState extends State<GroupInfoScreen> {
                                   if (mounted) Navigator.pop(context, true);
                                 });
                               },
-                        icon: const Icon(Icons.exit_to_app,
-                            color: AppTheme.error),
-                        label: const Text('Leave group',
-                            style: TextStyle(color: AppTheme.error))),
+                        icon: Icon(Icons.exit_to_app,
+                            color: AppTheme.of(context).error),
+                        label: Text('Leave group',
+                            style:
+                                TextStyle(color: AppTheme.of(context).error))),
                   ],
                 ),
               ),

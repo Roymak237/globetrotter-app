@@ -152,12 +152,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _loading ? null : _submit,
                       icon: _loading
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppTheme.onPrimary,
+                                color: AppTheme.of(context).onPrimary,
                               ),
                             )
                           : const Icon(Icons.arrow_forward_rounded, size: 20),

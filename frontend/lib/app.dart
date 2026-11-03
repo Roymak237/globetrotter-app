@@ -6,6 +6,7 @@ import "localization/app_localizations.dart";
 import "providers/auth_provider.dart";
 import "providers/favorites_provider.dart";
 import "providers/locale_provider.dart";
+import "providers/theme_provider.dart";
 import "screens/about_developer_screen.dart";
 import "screens/call_screen.dart";
 import "screens/create_itinerary_screen.dart";
@@ -46,9 +47,10 @@ class GlobetrotterApp extends StatelessWidget {
           create: (_) => LocaleProvider()..load(),
         ),
         ChangeNotifierProvider(create: (_) => CallService()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()..load()),
       ],
-      child: Consumer<LocaleProvider>(
-        builder: (context, localeProvider, _) {
+      child: Consumer2<LocaleProvider, ThemeProvider>(
+        builder: (context, localeProvider, themeProvider, _) {
           return MaterialApp(
             navigatorKey: navigatorKey,
             locale: localeProvider.locale,
@@ -56,7 +58,9 @@ class GlobetrotterApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
             debugShowCheckedModeBanner: false,
-            theme: AppTheme.theme,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeProvider.mode,
             home: const StartupGate(),
             builder: (context, child) =>
                 _CallGateway(child: child ?? const SizedBox.shrink()),
@@ -170,16 +174,33 @@ class _CallGateway extends StatefulWidget {
   State<_CallGateway> createState() => _CallGatewayState();
 }
 
-class _CallGatewayState extends State<_CallGateway> {
+class _CallGatewayState extends State<_CallGateway>
+    with WidgetsBindingObserver {
   String? _connectedFor;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     context.read<CallService>().onIncomingCall = (_) {
       final navigator = GlobetrotterApp.navigatorKey.currentState;
       navigator?.pushNamed("/call");
     };
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Mobile OSes drop sockets in the background; reopen on return so the
+    // traveller is reachable again without signing out and back in.
+    if (state == AppLifecycleState.resumed) {
+      context.read<CallService>().ensureConnected();
+    }
   }
 
   @override

@@ -105,7 +105,7 @@ class _SuggestPlaceScreenState extends State<SuggestPlaceScreen> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  ?.copyWith(color: AppTheme.textSecondary),
+                  ?.copyWith(color: AppTheme.of(context).textSecondary),
             ),
             const SizedBox(height: 20),
             TextFormField(
@@ -138,16 +138,16 @@ class _SuggestPlaceScreenState extends State<SuggestPlaceScreen> {
             FilledButton(
               onPressed: _submitting ? null : _submit,
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: AppTheme.of(context).primary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               child: _submitting
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppTheme.onPrimary,
+                        color: AppTheme.of(context).onPrimary,
                       ),
                     )
                   : Text(localizations.suggestPlaceSubmit),
@@ -166,9 +166,9 @@ class _SuggestPlaceScreenState extends State<SuggestPlaceScreen> {
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: AppTheme.surface,
+                    color: AppTheme.of(context).surface,
                     borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                    border: Border.all(color: AppTheme.border),
+                    border: Border.all(color: AppTheme.of(context).border),
                   ),
                   child: Row(
                     children: [
@@ -182,15 +182,15 @@ class _SuggestPlaceScreenState extends State<SuggestPlaceScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentSoft,
+                          color: AppTheme.of(context).accentSoft,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           localizations.statusPending,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: AppTheme.textPrimary,
+                            color: AppTheme.of(context).textPrimary,
                           ),
                         ),
                       ),

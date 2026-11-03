@@ -147,8 +147,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _fab(AppLocalizations localizations) => FloatingActionButton.extended(
         onPressed: _startDirectMessage,
-        backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppTheme.of(context).primary,
+        foregroundColor: AppTheme.of(context).onPrimary,
         icon: const Icon(Icons.person_search_rounded),
         label: Text(localizations.chatFindPeople),
       );
@@ -174,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return RefreshIndicator(
       onRefresh: _load,
-      color: AppTheme.primary,
+      color: AppTheme.of(context).primary,
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         itemCount: _rooms.length,
@@ -226,11 +226,14 @@ class _RoomTile extends StatelessWidget {
     // Reusing the thread's own palette means a name learned inside a
     // conversation is recognised at a glance in the list.
     final speakerColor = last == null || last.mine
-        ? AppTheme.textPrimary
-        : ChatWallpaper.authorColor(last.username);
+        ? AppTheme.of(context).textPrimary
+        : ChatWallpaper.authorColor(
+            last.username,
+            brightness: Theme.of(context).brightness,
+          );
 
     return Material(
-      color: AppTheme.surface,
+      color: AppTheme.of(context).surface,
       borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       child: InkWell(
         onTap: onTap,
@@ -244,20 +247,20 @@ class _RoomTile extends StatelessWidget {
                 dotSize: 14,
                 // The ring separates the dot from the tile behind it, so it
                 // matches the tile rather than the page.
-                borderColor: AppTheme.surface,
+                borderColor: AppTheme.of(context).surface,
                 child: CircleAvatar(
                   radius: 24,
                   backgroundColor: room.type == ChatRoomType.community
-                      ? AppTheme.primarySoft
-                      : AppTheme.indigoSoft,
+                      ? AppTheme.of(context).primarySoft
+                      : AppTheme.of(context).indigoSoft,
                   foregroundImage: resolveMediaUrl(room.avatarUrl).isEmpty
                       ? null
                       : NetworkImage(resolveMediaUrl(room.avatarUrl)),
                   child: Icon(
                     _icon,
                     color: room.type == ChatRoomType.community
-                        ? AppTheme.primary
-                        : AppTheme.indigo,
+                        ? AppTheme.of(context).primary
+                        : AppTheme.of(context).indigo,
                   ),
                 ),
               ),
@@ -277,7 +280,7 @@ class _RoomTile extends StatelessWidget {
                             // conversation is with is the most important thing
                             // on this row and must not depend on an ancestor
                             // getting its text colour right.
-                            color: AppTheme.textPrimary,
+                            color: AppTheme.of(context).textPrimary,
                             fontWeight: FontWeight.w700,
                           ),
                     ),
@@ -303,7 +306,7 @@ class _RoomTile extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.textSecondary,
+                              color: AppTheme.of(context).textSecondary,
                             ),
                       ),
                     ],
@@ -315,14 +318,14 @@ class _RoomTile extends StatelessWidget {
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: const BoxDecoration(
-                    color: AppTheme.indigo,
+                  decoration: BoxDecoration(
+                    color: AppTheme.of(context).indigo,
                     shape: BoxShape.circle,
                   ),
                   child: Text(
                     room.unread > 99 ? "99+" : "${room.unread}",
-                    style: const TextStyle(
-                      color: AppTheme.onPrimary,
+                    style: TextStyle(
+                      color: AppTheme.of(context).onPrimary,
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                     ),
@@ -392,9 +395,9 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppTheme.surface,
-          borderRadius: BorderRadius.vertical(
+        decoration: BoxDecoration(
+          color: AppTheme.of(context).surface,
+          borderRadius: const BorderRadius.vertical(
             top: Radius.circular(AppTheme.radiusLarge),
           ),
         ),
@@ -406,7 +409,7 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
               width: 42,
               height: 4,
               decoration: BoxDecoration(
-                color: AppTheme.border,
+                color: AppTheme.of(context).border,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -422,9 +425,10 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
             ),
             const SizedBox(height: 12),
             if (_searching)
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: CircularProgressIndicator(color: AppTheme.primary),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: CircularProgressIndicator(
+                    color: AppTheme.of(context).primary),
               )
             else
               ConstrainedBox(
@@ -436,7 +440,7 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
                     final user = _results[index];
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: AppTheme.primarySoft,
+                        backgroundColor: AppTheme.of(context).primarySoft,
                         foregroundImage: resolveMediaUrl(user.avatarUrl).isEmpty
                             ? null
                             : NetworkImage(resolveMediaUrl(user.avatarUrl)),
@@ -444,7 +448,7 @@ class _UserSearchSheetState extends State<_UserSearchSheet> {
                           user.displayName.isEmpty
                               ? "?"
                               : user.displayName[0].toUpperCase(),
-                          style: const TextStyle(color: AppTheme.primary),
+                          style: TextStyle(color: AppTheme.of(context).primary),
                         ),
                       ),
                       title: Text(user.displayName),

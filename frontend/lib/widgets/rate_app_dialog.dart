@@ -95,7 +95,7 @@ class _RateAppDialogState extends State<RateAppDialog> {
     final localizations = AppLocalizations.of(context);
 
     return AlertDialog(
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.of(context).surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
       ),
@@ -109,14 +109,14 @@ class _RateAppDialogState extends State<RateAppDialog> {
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
-                ?.copyWith(color: AppTheme.textSecondary),
+                ?.copyWith(color: AppTheme.of(context).textSecondary),
           ),
           if (_count > 0) ...[
             const SizedBox(height: 6),
             Row(
               children: [
-                const Icon(Icons.star_rounded,
-                    size: 16, color: AppTheme.accent),
+                Icon(Icons.star_rounded,
+                    size: 16, color: AppTheme.of(context).accent),
                 const SizedBox(width: 4),
                 Text(
                   "${_average.toStringAsFixed(1)} · $_count",
@@ -141,7 +141,7 @@ class _RateAppDialogState extends State<RateAppDialog> {
                     star <= _stars
                         ? Icons.star_rounded
                         : Icons.star_border_rounded,
-                    color: AppTheme.accent,
+                    color: AppTheme.of(context).accent,
                     size: 32,
                   ),
                 ),
@@ -163,14 +163,15 @@ class _RateAppDialogState extends State<RateAppDialog> {
         ),
         FilledButton(
           onPressed: _stars == 0 || _saving ? null : _submit,
-          style: FilledButton.styleFrom(backgroundColor: AppTheme.primary),
+          style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.of(context).primary),
           child: _saving
-              ? const SizedBox(
+              ? SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: AppTheme.onPrimary,
+                    color: AppTheme.of(context).onPrimary,
                   ),
                 )
               : Text(localizations.rateAppSubmit),

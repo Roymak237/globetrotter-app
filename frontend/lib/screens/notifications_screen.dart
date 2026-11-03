@@ -225,7 +225,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     return RefreshIndicator(
       onRefresh: _load,
-      color: AppTheme.primary,
+      color: AppTheme.of(context).primary,
       child: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _items.length,
@@ -238,22 +238,27 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             decoration: BoxDecoration(
               // Unread rows get the soft brand wash so they stand out without
               // needing a separate badge on every row.
-              color: item.read ? AppTheme.surface : AppTheme.primarySoft,
+              color: item.read
+                  ? AppTheme.of(context).surface
+                  : AppTheme.of(context).primarySoft,
               borderRadius: BorderRadius.circular(AppTheme.radiusCard),
               border: Border.all(
-                color: item.read ? AppTheme.border : AppTheme.primary,
+                color: item.read
+                    ? AppTheme.of(context).border
+                    : AppTheme.of(context).primary,
               ),
             ),
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor:
-                      item.read ? AppTheme.background : AppTheme.surface,
+                  backgroundColor: item.read
+                      ? AppTheme.of(context).background
+                      : AppTheme.of(context).surface,
                   child: Icon(
                     _iconFor(item.type),
                     size: 18,
-                    color: AppTheme.primary,
+                    color: AppTheme.of(context).primary,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -269,8 +274,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 // A chevron is the only thing that tells someone a row leads
                 // somewhere before they tap it.
                 if (target)
-                  const Icon(Icons.chevron_right_rounded,
-                      color: AppTheme.textSecondary),
+                  Icon(Icons.chevron_right_rounded,
+                      color: AppTheme.of(context).textSecondary),
               ],
             ),
           );

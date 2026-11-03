@@ -271,7 +271,7 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
                           "Set the dates, arrange your stops, and leave yourself a few useful notes.",
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppTheme.textSecondary,
+                                    color: AppTheme.of(context).textSecondary,
                                     height: 1.35,
                                   ),
                         ),
@@ -280,17 +280,20 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
                           Container(
                             padding: const EdgeInsets.all(13),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF0F0),
+                              color: AppTheme.of(context)
+                                  .error
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
-                                color:
-                                    AppTheme.secondary.withValues(alpha: 0.22),
+                                color: AppTheme.of(context)
+                                    .error
+                                    .withValues(alpha: 0.22),
                               ),
                             ),
                             child: Text(
                               _error!,
-                              style: const TextStyle(
-                                color: Color(0xFF8A1721),
+                              style: TextStyle(
+                                color: AppTheme.of(context).error,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -439,12 +442,12 @@ class _CreateItineraryScreenState extends State<CreateItineraryScreen> {
                         ElevatedButton.icon(
                           onPressed: _saving ? null : _saveItinerary,
                           icon: _saving
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 18,
                                   height: 18,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: AppTheme.onPrimary,
+                                    color: AppTheme.of(context).onPrimary,
                                   ),
                                 )
                               : Icon(_isEditing
@@ -480,7 +483,7 @@ class _SectionHeading extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: AppTheme.primary, size: 22),
+        Icon(icon, color: AppTheme.of(context).primary, size: 22),
         const SizedBox(width: 9),
         Expanded(
           child: Column(
@@ -496,7 +499,7 @@ class _SectionHeading extends StatelessWidget {
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.of(context).textSecondary,
                       height: 1.35,
                     ),
               ),
@@ -526,23 +529,23 @@ class _RouteOrderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 14, 10, 10),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: destinations.isEmpty
           ? Padding(
               padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
               child: Row(
                 children: [
-                  const Icon(Icons.touch_app_outlined,
-                      color: AppTheme.textSecondary),
+                  Icon(Icons.touch_app_outlined,
+                      color: AppTheme.of(context).textSecondary),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       "Your route will appear here as you choose stops.",
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                             height: 1.4,
                           ),
                     ),
@@ -558,7 +561,7 @@ class _RouteOrderCard extends StatelessWidget {
                   child: Text(
                     "YOUR ROUTE / ${destinations.length} STOP${destinations.length == 1 ? "" : "S"}",
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppTheme.secondary,
+                          color: AppTheme.of(context).secondary,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1,
                         ),
@@ -592,7 +595,7 @@ class _RouteOrderCard extends StatelessWidget {
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
-                                    color: AppTheme.textSecondary,
+                                    color: AppTheme.of(context).textSecondary,
                                   ),
                             ),
                       trailing: Row(
@@ -602,15 +605,15 @@ class _RouteOrderCard extends StatelessWidget {
                             tooltip: "Remove $name",
                             onPressed: () => onRemove(name),
                             icon: const Icon(Icons.close_rounded, size: 19),
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                           ),
                           ReorderableDelayedDragStartListener(
                             index: index,
-                            child: const Padding(
-                              padding: EdgeInsets.all(8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
                               child: Icon(
                                 Icons.drag_indicator_rounded,
-                                color: AppTheme.primary,
+                                color: AppTheme.of(context).primary,
                               ),
                             ),
                           ),
@@ -636,14 +639,14 @@ class _RouteNumber extends StatelessWidget {
       width: 30,
       height: 30,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        color: AppTheme.primarySoft,
+      decoration: BoxDecoration(
+        color: AppTheme.of(context).primarySoft,
         shape: BoxShape.circle,
       ),
       child: Text(
         "$number",
-        style: const TextStyle(
-          color: AppTheme.primaryDark,
+        style: TextStyle(
+          color: AppTheme.of(context).primaryDark,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -675,21 +678,23 @@ class _CostSummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 15, 16, 16),
       decoration: BoxDecoration(
-        color: AppTheme.accentSoft,
+        color: AppTheme.of(context).accentSoft,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.accent.withValues(alpha: 0.55)),
+        border: Border.all(
+            color: AppTheme.of(context).accent.withValues(alpha: 0.55)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.calculate_outlined, color: AppTheme.primaryDark),
+              Icon(Icons.calculate_outlined,
+                  color: AppTheme.of(context).primaryDark),
               const SizedBox(width: 8),
               Text(
                 "TRIP ESTIMATE",
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppTheme.primaryDark,
+                      color: AppTheme.of(context).primaryDark,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1,
                     ),
@@ -703,7 +708,7 @@ class _CostSummaryCard extends StatelessWidget {
                   ? "Choose stops and dates to see a rough daily estimate."
                   : "Add both dates to see your rough trip estimate.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.of(context).textSecondary,
                     height: 1.4,
                   ),
             )
@@ -748,7 +753,7 @@ class _CostSummaryCard extends StatelessWidget {
           Text(
             "Estimate uses average destination costs and is meant for planning only.",
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.of(context).textSecondary,
                   height: 1.3,
                 ),
           ),
@@ -777,7 +782,7 @@ class _EstimateMetric extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.secondary,
+                color: AppTheme.of(context).secondary,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0.7,
               ),
@@ -788,7 +793,9 @@ class _EstimateMetric extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: emphasize ? AppTheme.primaryDark : AppTheme.textPrimary,
+                color: emphasize
+                    ? AppTheme.of(context).primaryDark
+                    : AppTheme.of(context).textPrimary,
                 fontWeight: FontWeight.w800,
               ),
         ),

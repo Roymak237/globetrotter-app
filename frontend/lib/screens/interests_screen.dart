@@ -108,8 +108,9 @@ class _InterestsScreenState extends State<InterestsScreen> {
         backgroundColor: Colors.transparent,
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppTheme.primary))
+          ? Center(
+              child: CircularProgressIndicator(
+                  color: AppTheme.of(context).primary))
           : _error != null
               ? Center(
                   child: Padding(
@@ -125,7 +126,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
-                          ?.copyWith(color: AppTheme.textSecondary),
+                          ?.copyWith(color: AppTheme.of(context).textSecondary),
                     ),
                     const SizedBox(height: 20),
                     Wrap(
@@ -137,18 +138,18 @@ class _InterestsScreenState extends State<InterestsScreen> {
                             label: Text(tag),
                             selected: _selected.contains(tag),
                             onSelected: (_) => _toggle(tag),
-                            backgroundColor: AppTheme.surface,
-                            selectedColor: AppTheme.primarySoft,
-                            checkmarkColor: AppTheme.primary,
+                            backgroundColor: AppTheme.of(context).surface,
+                            selectedColor: AppTheme.of(context).primarySoft,
+                            checkmarkColor: AppTheme.of(context).primary,
                             side: BorderSide(
                               color: _selected.contains(tag)
-                                  ? AppTheme.primary
-                                  : AppTheme.border,
+                                  ? AppTheme.of(context).primary
+                                  : AppTheme.of(context).border,
                             ),
                             labelStyle: TextStyle(
                               color: _selected.contains(tag)
-                                  ? AppTheme.primaryDark
-                                  : AppTheme.textPrimary,
+                                  ? AppTheme.of(context).primaryDark
+                                  : AppTheme.of(context).textPrimary,
                               fontWeight: _selected.contains(tag)
                                   ? FontWeight.w700
                                   : FontWeight.w500,
@@ -160,16 +161,16 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     FilledButton(
                       onPressed: _saving ? null : _save,
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
+                        backgroundColor: AppTheme.of(context).primary,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       child: _saving
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppTheme.onPrimary,
+                                color: AppTheme.of(context).onPrimary,
                               ),
                             )
                           : Text(localizations.interestsSave),

@@ -371,7 +371,7 @@ class _MapScreenState extends State<MapScreen> {
   void _openTrackerSheet() {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.of(context).surface,
       showDragHandle: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
@@ -419,7 +419,7 @@ class _MapScreenState extends State<MapScreen> {
                           localizations.brand,
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppTheme.secondary,
+                                    color: AppTheme.of(context).secondary,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 1.1,
                                   ),
@@ -592,9 +592,9 @@ class _MapCountPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
       decoration: BoxDecoration(
-        color: AppTheme.surface.withValues(alpha: 0.95),
+        color: AppTheme.of(context).surface.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
         boxShadow: const [
           BoxShadow(
             color: Color(0x22000000),
@@ -610,9 +610,9 @@ class _MapCountPill extends StatelessWidget {
         // The size is stated rather than inherited. This pill floats over the
         // map and had been rendering with whatever DefaultTextStyle happened
         // to be in scope, which on the pushed route was none at all.
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 13,
-          color: AppTheme.primaryDark,
+          color: AppTheme.of(context).primaryDark,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -632,10 +632,10 @@ class _SelectedDestinationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppTheme.surface,
+      color: AppTheme.of(context).surface,
       borderRadius: BorderRadius.circular(AppTheme.radiusCard),
       elevation: 5,
-      shadowColor: AppTheme.shadow.withValues(alpha: 0.5),
+      shadowColor: AppTheme.of(context).shadow.withValues(alpha: 0.5),
       child: InkWell(
         onTap: onOpen,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -647,12 +647,12 @@ class _SelectedDestinationCard extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: AppTheme.primarySoft,
+                  color: AppTheme.of(context).primarySoft,
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.place_rounded,
-                  color: AppTheme.primary,
+                  color: AppTheme.of(context).primary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -674,13 +674,14 @@ class _SelectedDestinationCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                           ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: AppTheme.primary),
+              Icon(Icons.chevron_right_rounded,
+                  color: AppTheme.of(context).primary),
             ],
           ),
         ),
@@ -716,10 +717,12 @@ class _TrackerButton extends StatelessWidget {
         // `indigo` is a foreground tone on this palette, so it cannot be a
         // fill under a white glyph; the brand colour is the fill that carries
         // one, and it carries `onPrimary` rather than white.
-        color: sharing ? AppTheme.primary : AppTheme.surface,
+        color: sharing
+            ? AppTheme.of(context).primary
+            : AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(16),
         elevation: 4,
-        shadowColor: AppTheme.shadow.withValues(alpha: 0.5),
+        shadowColor: AppTheme.of(context).shadow.withValues(alpha: 0.5),
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(16),
@@ -733,7 +736,9 @@ class _TrackerButton extends StatelessWidget {
                   sharing
                       ? Icons.share_location_rounded
                       : Icons.location_off_rounded,
-                  color: sharing ? AppTheme.onPrimary : AppTheme.textSecondary,
+                  color: sharing
+                      ? AppTheme.of(context).onPrimary
+                      : AppTheme.of(context).textSecondary,
                   size: 22,
                 ),
                 if (companionCount > 0)
@@ -746,13 +751,13 @@ class _TrackerButton extends StatelessWidget {
                         vertical: 1,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.secondary,
+                        color: AppTheme.of(context).secondary,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
                         "$companionCount",
-                        style: const TextStyle(
-                          color: AppTheme.onPrimary,
+                        style: TextStyle(
+                          color: AppTheme.of(context).onPrimary,
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                         ),
@@ -806,14 +811,16 @@ class _TrackerSheet extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               value: sharing,
               onChanged: onSharingChanged,
-              activeThumbColor: AppTheme.primary,
+              activeThumbColor: AppTheme.of(context).primary,
               title: Text(localizations.trackerSharingTitle),
               subtitle: Text(
                 sharing
                     ? localizations.trackerSharingOn
                     : localizations.trackerSharingOff,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: sharing ? AppTheme.success : AppTheme.textSecondary,
+                  color: sharing
+                      ? AppTheme.of(context).success
+                      : AppTheme.of(context).textSecondary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -821,7 +828,7 @@ class _TrackerSheet extends StatelessWidget {
             Text(
               localizations.trackerSharingExplainer,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: AppTheme.textSecondary,
+                color: AppTheme.of(context).textSecondary,
               ),
             ),
             const SizedBox(height: 18),
@@ -834,7 +841,7 @@ class _TrackerSheet extends StatelessWidget {
               Text(
                 localizations.trackerCompanionsEmpty,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.of(context).textSecondary,
                 ),
               )
             else
@@ -844,14 +851,14 @@ class _TrackerSheet extends StatelessWidget {
                 children: [
                   for (final companion in companions)
                     Chip(
-                      avatar: const Icon(
+                      avatar: Icon(
                         Icons.person_pin_circle_rounded,
                         size: 18,
-                        color: AppTheme.indigo,
+                        color: AppTheme.of(context).indigo,
                       ),
                       label: Text(companion.displayName),
-                      backgroundColor: AppTheme.background,
-                      side: const BorderSide(color: AppTheme.border),
+                      backgroundColor: AppTheme.of(context).background,
+                      side: BorderSide(color: AppTheme.of(context).border),
                     ),
                 ],
               ),

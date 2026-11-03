@@ -28,12 +28,12 @@ class DestinationCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 7, 16, 7),
         decoration: BoxDecoration(
-          color: AppTheme.surface,
+          color: AppTheme.of(context).surface,
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(color: AppTheme.of(context).border),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.shadow.withValues(alpha: 0.4),
+              color: AppTheme.of(context).shadow.withValues(alpha: 0.4),
               blurRadius: 18,
               offset: const Offset(0, 8),
             ),
@@ -53,7 +53,7 @@ class DestinationCard extends StatelessWidget {
                 clipper: _TicketBodyClipper(),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(16, 22, 16, 16),
-                  color: AppTheme.surface,
+                  color: AppTheme.of(context).surface,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -82,7 +82,7 @@ class DestinationCard extends StatelessWidget {
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(
-                                  color: AppTheme.secondary,
+                                  color: AppTheme.of(context).secondary,
                                   fontWeight: FontWeight.w800,
                                 ),
                           ),
@@ -91,10 +91,10 @@ class DestinationCard extends StatelessWidget {
                       const SizedBox(height: 9),
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.location_on_outlined,
                             size: 17,
-                            color: AppTheme.primary,
+                            color: AppTheme.of(context).primary,
                           ),
                           const SizedBox(width: 5),
                           Expanded(
@@ -106,15 +106,15 @@ class DestinationCard extends StatelessWidget {
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
-                                    color: AppTheme.textSecondary,
+                                    color: AppTheme.of(context).textSecondary,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),
                           ),
                           if (onTap != null)
-                            const Icon(
+                            Icon(
                               Icons.arrow_forward_rounded,
-                              color: AppTheme.primary,
+                              color: AppTheme.of(context).primary,
                               size: 19,
                             ),
                         ],
@@ -127,7 +127,7 @@ class DestinationCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppTheme.textSecondary,
+                                    color: AppTheme.of(context).textSecondary,
                                     letterSpacing: 0.7,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -206,7 +206,7 @@ class _DestinationImage extends StatelessWidget {
               child: Text(
                 "${destination.matchScore} SIGNAL${destination.matchScore == 1 ? "" : "S"} MATCHED",
                 style: const TextStyle(
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.onPrimary,
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.7,
@@ -226,7 +226,7 @@ class _DestinationImage extends StatelessWidget {
             child: const Text(
               "FIELD NOTE",
               style: TextStyle(
-                color: AppTheme.primaryDark,
+                color: AppTheme.onPrimary,
                 fontSize: 10,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1,

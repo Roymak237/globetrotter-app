@@ -196,12 +196,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           error.toString().replaceFirst("Exception: ", ""),
           // Stated here because the bar overrides the themed background, and
           // the themed near-white content colour cannot be read on it.
-          style: const TextStyle(color: AppTheme.onPrimary),
+          style: TextStyle(color: AppTheme.of(context).onPrimary),
         ),
         // Was the secondary ochre, which read as caution on the old warm
         // ramp. On a palette with no warm tone left, only `error` still says
         // something went wrong.
-        backgroundColor: AppTheme.error,
+        backgroundColor: AppTheme.of(context).error,
       ),
     );
   }
@@ -258,7 +258,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Text(
                         "YOUR TRAVEL PROFILE",
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.72),
+                              color: Colors.white.withValues(alpha: 0.85),
                               fontWeight: FontWeight.w800,
                               letterSpacing: 1.1,
                             ),
@@ -342,9 +342,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return Chip(
                       label: Text(preferenceLabel(preference)),
                       avatar: const Icon(Icons.check_rounded, size: 16),
-                      backgroundColor: AppTheme.primarySoft,
-                      labelStyle: const TextStyle(
-                        color: AppTheme.primaryDark,
+                      backgroundColor: AppTheme.of(context).primarySoft,
+                      labelStyle: TextStyle(
+                        color: AppTheme.of(context).primaryDark,
                         fontWeight: FontWeight.w700,
                       ),
                       side: BorderSide.none,
@@ -477,9 +477,9 @@ class _SettingsSurface extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -501,7 +501,7 @@ class _SettingsSurface extends StatelessWidget {
                     Text(
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                             height: 1.35,
                           ),
                     ),
@@ -536,7 +536,9 @@ class _SettingsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = destructive ? AppTheme.secondary : AppTheme.primary;
+    final color = destructive
+        ? AppTheme.of(context).secondary
+        : AppTheme.of(context).primary;
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(vertical: 3),
       enabled: onTap != null,
@@ -544,7 +546,9 @@ class _SettingsRow extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          color: destructive ? AppTheme.secondary : AppTheme.textPrimary,
+          color: destructive
+              ? AppTheme.of(context).secondary
+              : AppTheme.of(context).textPrimary,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -573,7 +577,7 @@ class _ProfileMessage extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: AppTheme.primary, size: 30),
+        Icon(icon, color: AppTheme.of(context).primary, size: 30),
         const SizedBox(height: 10),
         Text(
           title,
@@ -587,7 +591,7 @@ class _ProfileMessage extends StatelessWidget {
           message,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: AppTheme.textSecondary,
+                color: AppTheme.of(context).textSecondary,
                 height: 1.35,
               ),
         ),

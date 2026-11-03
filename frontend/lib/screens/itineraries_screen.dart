@@ -76,7 +76,7 @@ class _ItinerariesScreenState extends State<ItinerariesScreen> {
                     Text(
                       localizations.itinerarySubtitle,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.of(context).textSecondary,
                           ),
                     ),
                   ],
@@ -89,8 +89,8 @@ class _ItinerariesScreenState extends State<ItinerariesScreen> {
                   _loadItineraries();
                 },
                 style: IconButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
-                  foregroundColor: AppTheme.onPrimary,
+                  backgroundColor: AppTheme.of(context).primary,
+                  foregroundColor: AppTheme.of(context).onPrimary,
                 ),
                 icon: const Icon(Icons.add_rounded),
               ),
@@ -122,7 +122,7 @@ class _ItinerariesScreenState extends State<ItinerariesScreen> {
                           ),
                         )
                       : RefreshIndicator(
-                          color: AppTheme.primary,
+                          color: AppTheme.of(context).primary,
                           onRefresh: _loadItineraries,
                           child: ListView.builder(
                             padding: const EdgeInsets.only(top: 2, bottom: 24),

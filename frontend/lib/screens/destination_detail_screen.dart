@@ -33,7 +33,7 @@ class DestinationDetailScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 290,
             pinned: true,
-            backgroundColor: AppTheme.primaryDark,
+            backgroundColor: AppTheme.brandDeep,
             foregroundColor: Colors.white,
             title: Text(destination.name),
             actions: [
@@ -127,8 +127,9 @@ class DestinationDetailScreen extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.info_outline,
-                            size: 15, color: AppTheme.textSecondary),
+                        Icon(Icons.info_outline,
+                            size: 15,
+                            color: AppTheme.of(context).textSecondary),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
@@ -136,7 +137,8 @@ class DestinationDetailScreen extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
-                                ?.copyWith(color: AppTheme.textSecondary),
+                                ?.copyWith(
+                                    color: AppTheme.of(context).textSecondary),
                           ),
                         ),
                       ],
@@ -198,7 +200,7 @@ class DestinationDetailScreen extends StatelessWidget {
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: AppTheme.textSecondary,
+                                      color: AppTheme.of(context).textSecondary,
                                     ),
                               ),
                           ],
@@ -209,7 +211,7 @@ class DestinationDetailScreen extends StatelessWidget {
                           "${destination.latitude!.toStringAsFixed(3)}, ${destination.longitude!.toStringAsFixed(3)}",
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppTheme.textSecondary,
+                                    color: AppTheme.of(context).textSecondary,
                                     fontWeight: FontWeight.w700,
                                   ),
                         ),
@@ -246,7 +248,7 @@ class DestinationDetailScreen extends StatelessWidget {
                   Text(
                     destination.description,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.of(context).textSecondary,
                           height: 1.55,
                         ),
                   ),
@@ -299,11 +301,11 @@ class DestinationDetailScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 3),
                               child: Icon(
                                 Icons.check_circle_rounded,
-                                color: AppTheme.primary,
+                                color: AppTheme.of(context).primary,
                                 size: 18,
                               ),
                             ),
@@ -331,10 +333,10 @@ class DestinationDetailScreen extends StatelessWidget {
                           .map(
                             (tag) => Chip(
                               label: Text(tag),
-                              backgroundColor: AppTheme.primarySoft,
+                              backgroundColor: AppTheme.of(context).primarySoft,
                               side: BorderSide.none,
-                              labelStyle: const TextStyle(
-                                color: AppTheme.primaryDark,
+                              labelStyle: TextStyle(
+                                color: AppTheme.of(context).primaryDark,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -347,16 +349,16 @@ class DestinationDetailScreen extends StatelessWidget {
                     localizations.savePlaceMessage,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.of(context).textSecondary,
                           height: 1.4,
                         ),
                   ),
                   const SizedBox(height: 28),
-                  const Divider(color: AppTheme.border),
+                  Divider(color: AppTheme.of(context).border),
                   const SizedBox(height: 20),
                   DestinationExtras(destination: destination),
                   const SizedBox(height: 28),
-                  const Divider(color: AppTheme.border),
+                  Divider(color: AppTheme.of(context).border),
                   const SizedBox(height: 20),
                   CommentsSection(destinationId: destination.id),
                 ],
@@ -385,21 +387,21 @@ class _MetaTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 13, 12, 14),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: AppTheme.of(context).surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.of(context).border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppTheme.primary, size: 19),
+          Icon(icon, color: AppTheme.of(context).primary, size: 19),
           const SizedBox(height: 10),
           Text(
             label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppTheme.secondary,
+                  color: AppTheme.of(context).secondary,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.7,
                 ),
@@ -410,7 +412,7 @@ class _MetaTile extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.of(context).textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
           ),

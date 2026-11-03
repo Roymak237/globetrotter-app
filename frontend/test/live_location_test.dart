@@ -103,7 +103,10 @@ void main() {
           matching: find.byType(Material),
         ),
       );
-      expect(material.color, AppTheme.primary);
+      expect(
+        material.color,
+        AppTheme.of(tester.element(find.byType(MapActionButton))).primary,
+      );
     });
 
     testWidgets("stays idle-looking without a fix, even when following is set",

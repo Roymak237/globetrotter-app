@@ -30,7 +30,7 @@ Future<String?> showShareItineraryDialog(
               Text(
                 "Invite another GlobeTrotter to follow this route.",
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.of(context).textSecondary,
                       height: 1.35,
                     ),
               ),
@@ -50,8 +50,8 @@ Future<String?> showShareItineraryDialog(
                 const SizedBox(height: 10),
                 Text(
                   error!,
-                  style: const TextStyle(
-                    color: AppTheme.secondary,
+                  style: TextStyle(
+                    color: AppTheme.of(context).secondary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -100,12 +100,12 @@ Future<String?> showShareItineraryDialog(
                       }
                     },
               icon: submitting
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 16,
                       height: 16,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppTheme.onPrimary,
+                        color: AppTheme.of(context).onPrimary,
                       ),
                     )
                   : const Icon(Icons.ios_share_rounded, size: 17),

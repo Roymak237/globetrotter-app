@@ -22,8 +22,19 @@ class CallScreen extends StatelessWidget {
 
         if (session == null || service.stage == CallStage.idle) {
           // Pop after this frame; tearing the route down mid-build is not safe.
+          // The session is gone by now, so the reason the call ended would
+          // vanish with the screen; it is handed to a snackbar instead.
+          final error = service.error;
+          final messenger = ScaffoldMessenger.maybeOf(context);
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (Navigator.canPop(context)) Navigator.pop(context);
+            if (!context.mounted) return;
+            final route = ModalRoute.of(context);
+            if (route == null || !route.isCurrent) return;
+            if (!Navigator.canPop(context)) return;
+            Navigator.pop(context);
+            if (error != null && error.isNotEmpty) {
+              messenger?.showSnackBar(SnackBar(content: Text(error)));
+            }
           });
           return const SizedBox.shrink();
         }
